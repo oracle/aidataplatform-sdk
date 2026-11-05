@@ -28,6 +28,13 @@ Run final prerequisite verification once after all planned installations/upgrade
 
 ## OCI CLI
 
+The prerequisite checker reuses an existing OCI CLI from PATH or the selected
+AIDP/Python environment. When it reports an installed OCI CLI outside PATH, apply
+the returned session PATH prefix for each invocation; do not reinstall it. Keep
+the verified OCI executable path for the session. A prefix applied in an earlier
+chat or tool call is not assumed to persist, and no shell startup changes are
+needed.
+
 On macOS/Linux, when Python and pip are available, installation into the active Python environment is acceptable:
 
 ```bash

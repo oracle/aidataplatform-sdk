@@ -8,7 +8,7 @@ The helper keeps PAR URLs inside the process: CREATE → PUT → UPDATE → poll
 upload; create ZIP → poll → GET for download. It prints only progress, operation
 key, final paths, and URL-redacted error diagnostics. It neither modifies the GA CLI nor retries failed transfers.
 Use the session's validated authentication, profile, instance, and endpoint.
-Use setup’s session command environment. Only when `prerequisites.aidp_cli.path_adjustment_required` is true, prepend the `add_to_path` action’s `path_hint` to the helper process’s `PATH`; its child `aidp` calls inherit the selection. No separate CLI-path argument is needed.
+Use setup’s session command environment. When either `prerequisites.aidp_cli.path_adjustment_required` or `prerequisites.oci_cli.path_adjustment_required` is true, prepend the `add_to_path` action’s `path_hint` to the helper process’s `PATH`; its child `aidp` calls inherit the selection. No separate CLI-path argument is needed.
 `<skill_dir>` is the aidp-cli skill directory containing SKILL.md. In a restricted
 environment, obtain network access for the helper before running it; this covers
 both its AIDP CLI calls and Object Storage transfer.

@@ -498,6 +498,101 @@ class CheckPrerequisitesTest(unittest.TestCase):
         self.assertEqual(action["path_hint"], str(venv_bin))
         self.assertIn("not on PATH", action["reasons"][0])
 
+    def test_new_session_reuses_oci_beside_remembered_aidp_without_reinstall(self) -> None:
+        saved = self.new_candidate("saved bin")
+        oci = saved.with_name("oci")
+        _executable(oci, "#!/bin/sh\necho 3.96.0\n")
+        (self.bin_dir / "oci").unlink()
+        self.remember(saved)
+        summary = self.run_check("--skip-latest")
+        self.assertTrue(summary["ok"])
+        self.assertEqual(summary["blocking"], [])
+        self.assertEqual(summary["prerequisites"]["oci_cli"]["path"], str(oci))
+        self.assertEqual(summary["prerequisites"]["oci_cli"]["version"], "3.96.0")
+        self.assertTrue(summary["prerequisites"]["oci_cli"]["path_adjustment_required"])
+        self.assertEqual([action["kind"] for action in summary["actions"]], ["add_to_path"])
+        [action] = summary["actions"]
+        self.assertEqual(action["path_hint"], str(saved.parent))
+        # A separate invocation with the returned environment can run OCI.
+        environment = os.environ.copy()
+        environment["PATH"] = action["path_hint"] + os.pathsep + str(self.bin_dir)
+        result = subprocess.run(["oci", "--version"], env=environment, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stdout.strip(), "3.96.0")
+
+    def test_new_environment_discovery_reuses_off_path_oci(self) -> None:
+        home = self.make_venv_install()
+        oci = home / ".aidp-venv/bin/oci"
+        _executable(oci, "#!/bin/sh\necho 3.96.0\n")
+        (self.bin_dir / "oci").unlink()
+        summary = self.run_check("--skip-latest", HOME=str(home))
+        self.assertTrue(summary["ok"])
+        self.assertEqual(summary["prerequisites"]["oci_cli"]["path"], str(oci))
+
+    def test_existing_path_oci_remains_preferred(self) -> None:
+        saved = self.new_candidate("saved bin")
+        _executable(saved.with_name("oci"), "#!/bin/sh\necho 99.0.0\n")
+        self.remember(saved)
+        summary = self.run_check("--skip-latest")
+        self.assertEqual(summary["prerequisites"]["oci_cli"]["path"], str(self.bin_dir / "oci"))
+        self.assertEqual(summary["prerequisites"]["oci_cli"]["version"], "3.50.0")
+        self.assertFalse(summary["prerequisites"]["oci_cli"]["path_adjustment_required"])
+
+    def test_oci_only_path_adjustment_when_aidp_is_already_visible(self) -> None:
+        saved = self.new_candidate("saved bin")
+        _executable(saved.with_name("oci"), "#!/bin/sh\necho 3.96.0\n")
+        (self.bin_dir / "oci").unlink()
+        (self.bin_dir / "aidp").symlink_to(saved)
+        self.remember(saved)
+        summary = self.run_check("--skip-latest")
+        self.assertTrue(summary["ok"])
+        self.assertFalse(summary["prerequisites"]["aidp_cli"]["path_adjustment_required"])
+        self.assertTrue(summary["prerequisites"]["oci_cli"]["path_adjustment_required"])
+        self.assertEqual(summary["actions"][0]["path_hint"], str(saved.parent))
+
+    def test_oci_in_selected_python_directory_uses_combined_session_prefix(self) -> None:
+        saved = self.new_candidate("saved bin")
+        owner_bin = Path(self.temp_dir.name) / "owner bin"
+        owner_bin.mkdir()
+        python = owner_bin / "python3"
+        _executable(python, FAKE_PYTHON)
+        oci = owner_bin / "oci"
+        _executable(oci, "#!/bin/sh\necho 3.96.0\n")
+        (self.bin_dir / "oci").unlink()
+        self.remember(saved, python)
+        summary = self.run_check("--skip-latest")
+        self.assertTrue(summary["ok"])
+        prefix = summary["actions"][0]["path_hint"]
+        self.assertEqual(prefix.split(os.pathsep), [str(saved.parent), str(owner_bin)])
+        environment = os.environ.copy()
+        environment["PATH"] = prefix + os.pathsep + str(self.bin_dir)
+        result = subprocess.run(["oci", "--version"], env=environment, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stdout.strip(), "3.96.0")
+
+    def test_windows_oci_launcher_name_is_discovered_beside_selected_cli(self) -> None:
+        module = self.load_module()
+        folder = Path(self.temp_dir.name) / "Scripts"
+        folder.mkdir()
+        oci = folder / "oci.exe"
+        _executable(oci, "#!/bin/sh\necho 3.96.0\n")
+        with mock.patch.object(module, "OCI_EXE", "oci.exe"):
+            result = module._oci_cli({"status": "missing"}, str(folder / "aidp.exe"), str(folder / "python.exe"))
+        self.assertEqual(result["status"], "installed")
+        self.assertEqual(result["path"], str(oci))
+        self.assertTrue(result["path_adjustment_required"])
+
+    def test_missing_and_broken_oci_still_block_setup(self) -> None:
+        saved = self.new_candidate("saved bin")
+        self.remember(saved)
+        (self.bin_dir / "oci").unlink()
+        missing = self.run_check("--skip-latest", expected=1)
+        self.assertIn("oci_cli", missing["blocking"])
+        self.assertEqual(missing["prerequisites"]["oci_cli"]["status"], "missing")
+        _executable(saved.with_name("oci"), "#!/bin/sh\nexit 1\n")
+        broken = self.run_check("--skip-latest", expected=1)
+        self.assertEqual(broken["prerequisites"]["oci_cli"]["status"], "invalid")
+
     def test_path_python_cli_is_preferred_over_old_dedicated_environment(self) -> None:
         home = self.make_venv_install()
         self.install_aidp()

@@ -28,6 +28,7 @@ DEFAULT_INDEX_TIMEOUT_SECONDS = 20
 WINDOWS = os.name == "nt"
 VENV_BIN = "Scripts" if WINDOWS else "bin"
 AIDP_EXE = "aidp.exe" if WINDOWS else "aidp"
+OCI_EXE = "oci.exe" if WINDOWS else "oci"
 PYTHON_EXE = "python.exe" if WINDOWS else "python"
 VENV_DIR = os.path.join(os.path.expanduser("~"), ".aidp-venv")
 
@@ -192,6 +193,24 @@ def _tool(name, arguments, path=None, timeout=VERSION_TIMEOUT_SECONDS):
         "path": path,
         "detail": _first_line(stderr) or _first_line(stdout) or "exit status %s" % returncode,
     }
+
+
+def _oci_cli(path_result, aidp_path, interpreter):
+    """Reuse OCI from the selected environment before declaring it missing."""
+    if path_result["status"] != "missing":
+        return dict(path_result, path_adjustment_required=False)
+    directories = []
+    for executable in (aidp_path, os.path.realpath(aidp_path) if aidp_path else None, interpreter):
+        if executable:
+            directory = os.path.dirname(os.path.abspath(executable))
+            if directory not in directories:
+                directories.append(directory)
+    for directory in directories:
+        candidate = os.path.join(directory, OCI_EXE)
+        if _executable_file(candidate):
+            result = _tool("oci", ["--version"], path=candidate)
+            return dict(result, path_adjustment_required=result["status"] == "installed")
+    return path_result
 
 
 def _python():
@@ -507,7 +526,7 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
         prerequisites = {
             "python": _python(),
             "pip": checker_pip,
-            "oci_cli": oci_future.result(),
+            "oci_cli": _oci_cli(oci_future.result(), aidp_path, interpreter),
         }
 
     installed = facts.get("packages", {})
@@ -614,19 +633,30 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
     managed_existing = bool(externally_managed and owner and cli_version)
 
     actions = []
-    if off_path_dir and aidp_cli["status"] == "installed":
-        if path_aidp:
-            reason = "PATH runs %s instead of %s" % (path_aidp, aidp_path)
-        else:
-            reason = "the aidp command is installed in %s, which is not on PATH" % off_path_dir
+    oci_off_path = prerequisites["oci_cli"].get("path_adjustment_required", False)
+    if (off_path_dir or oci_off_path) and aidp_cli["status"] == "installed":
+        # Keep the selected AIDP first even when only OCI needs the prefix.
+        directories = [os.path.dirname(aidp_path)]
+        path_reasons = []
+        if off_path_dir:
+            path_reasons.append(
+                "PATH runs %s instead of %s" % (path_aidp, aidp_path) if path_aidp
+                else "the aidp command is installed in %s, which is not on PATH" % off_path_dir)
+        if oci_off_path:
+            oci_path = prerequisites["oci_cli"]["path"]
+            oci_directory = os.path.dirname(oci_path)
+            if oci_directory not in directories:
+                directories.append(oci_directory)
+            path_reasons.append("the oci command is installed in %s, which is not on PATH" % oci_directory)
+        path_hint = os.pathsep.join(directories)
         actions.append(
             {
                 "kind": "add_to_path",
-                "reasons": [reason],
-                "path_hint": off_path_dir,
+                "reasons": path_reasons,
+                "path_hint": path_hint,
                 "aidp_path": aidp_path,
-                "command": ("$env:PATH = '" + off_path_dir.replace("'", "''") + "' + [IO.Path]::PathSeparator + $env:PATH")
-                if WINDOWS else 'export PATH=%s"${PATH:+:$PATH}"' % shlex.quote(off_path_dir),
+                "command": ("$env:PATH = '" + path_hint.replace("'", "''") + "' + [IO.Path]::PathSeparator + $env:PATH")
+                if WINDOWS else 'export PATH=%s"${PATH:+:$PATH}"' % shlex.quote(path_hint),
                 "scope": "session",
             }
         )
