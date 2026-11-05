@@ -1,133 +1,170 @@
 ORACLE AND ITS AFFILIATES DO NOT PROVIDE ANY WARRANTY WHATSOEVER, EXPRESS OR IMPLIED, FOR ANY SOFTWARE, MATERIAL OR CONTENT OF ANY KIND CONTAINED OR PRODUCED WITHIN THIS REPOSITORY, AND IN PARTICULAR SPECIFICALLY DISCLAIM ANY AND ALL IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.  FURTHERMORE, ORACLE AND ITS AFFILIATES DO NOT REPRESENT THAT ANY CUSTOMARY SECURITY REVIEW HAS BEEN PERFORMED WITH RESPECT TO ANY SOFTWARE, MATERIAL OR CONTENT CONTAINED OR PRODUCED WITHIN THIS REPOSITORY.  IN ADDITION, AND WITHOUT LIMITING THE FOREGOING, THIRD PARTIES MAY HAVE POSTED SOFTWARE, MATERIAL OR CONTENT TO THIS REPOSITORY WITHOUT ANY REVIEW. USE AT YOUR OWN RISK.
 
-# Oracle AI Data Platform SDK and CLI
+# Oracle AI Data Platform
 
-[![PyPI Python SDK](https://img.shields.io/badge/python%20sdk-1.0.1-blue.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-python-client/) [![PyPI CLI](https://img.shields.io/badge/python%20cli-1.0.1-blue.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-cli/) [![Node/TypeScript SDK](https://img.shields.io/badge/Node%2FTypeScript%20SDK-1.0.1-CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-typescript-client) [![Node/TypeScript CLI](https://img.shields.io/badge/Node%2FTypeScript%20CLI-1.0.1-CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-cli)
+Work with Oracle AI Data Platform (AIDP) through an AI assistant, terminal commands,
+or your own application. Use these tools to view and manage resources such as
+workspaces, clusters, notebooks, and workflows.
 
-Oracle AI Data Platform SDK and CLI provide generated clients and command line
-tools for working with Oracle AI Data Platform public APIs.
+**New here? [Start with an AI assistant](#get-started-with-an-ai-assistant).**
+The AIDP plugin guides you through setup, then lets you ask for tasks in everyday
+language.
 
-This repository contains:
+[![Python SDK](https://img.shields.io/badge/Python%20SDK-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-python-client/)
+[![Python CLI](https://img.shields.io/badge/Python%20CLI-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-cli/)
+[![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-typescript-client)
+[![TypeScript CLI](https://img.shields.io/badge/TypeScript%20CLI-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-cli)
+[![Java SDK](https://img.shields.io/badge/Java%20SDK-C2410C.svg?style=flat-square&logo=apachemaven&logoColor=white)](https://mvnrepository.com/artifact/com.oracle.aidataplatform/aidp-java-client)
 
-- AIDP CLI packages for command line access.
-- A Java SDK client.
-- A Python SDK client.
-- A TypeScript SDK client.
-- Runnable examples for common workspace, cluster, notebook, and workflow use cases.
-- [Documentation](./docs/README.md).
+Get the latest packages from PyPI, npm, or Maven Central.
 
-## Install
+[Use with Codex](./plugins/aidp/codex) · [Use with Claude Code](./plugins/aidp/claude)
 
-Download the required package files from the GitHub release `v1.0.0`. The
-commands below assume you are running them from the local directory where those
-files were downloaded.
+## Choose how you want to work
 
-### Verify release artifacts
+| What you want to do | What to use | Where to start |
+| --- | --- | --- |
+| Ask an AI assistant to help you work with AIDP | The AIDP plugin for Codex or Claude Code | [Guided setup](#get-started-with-an-ai-assistant) |
+| Type commands in a terminal | The command line interface (CLI) | [Manual CLI installation](#cli) |
+| Connect your own application to AIDP | A software development kit (SDK) for Python, TypeScript, or Java | [Manual SDK installation](#sdk) |
 
-Before installing, verify the artifact checksum, signature, or provenance
-against the verification material published with the matching official release.
+## Get started with an AI assistant
+
+The AIDP plugin adds AIDP support to Codex or Claude Code. You can describe what
+you want to do without writing code or learning terminal commands.
+
+### First-time setup
+
+1. **Install the plugin.** In Codex or Claude Code, add this repository's
+   `aidp-skills` marketplace and install `aidp`.
+   [Codex plugin](./plugins/aidp/codex) · [Claude Code plugin](./plugins/aidp/claude)
+2. **Start setup.** Send this message to your assistant:
+
+   > [@Oracle AIDP](plugin://aidp@aidp-skills) Set up the AIDP CLI on my machine.
+
+3. **Follow the prompts.** The assistant helps install the tools you need,
+   sign in to Oracle Cloud Infrastructure (OCI), and connect to your AIDP instance.
+
+You do not need to install the SDK or CLI, or configure your Oracle Cloud sign-in,
+yourself beforehand. The assistant asks for only the information and choices it
+needs. You will need access to an AIDP instance—your organization's AIDP
+environment—and an Oracle Cloud account with permission to use it.
+
+### Everyday use
+
+Once connected, ask for what you need. For example:
+
+> List workspaces in my aidp instance.
+
+> Show the clusters in my aidp workspace.
+
+The plugin remembers your connection settings so you can get straight to work
+without repeating the initial setup. If your sign-in expires or your environment
+changes, the assistant helps you reconnect.
+
+You can continue working through your AI assistant. The manual instructions below
+are for people who want to use terminal commands or build applications.
+
+## Install CLI or SDK manually
+
+Install directly from PyPI, npm, or Maven Central using the instructions below.
+Choose the CLI for terminal commands or an SDK for application development. You
+only need the language you plan to use.
+
+If you use an AI plugin, it guides you through installation instead.
 
 ### CLI
 
-For the Python CLI, install Python 3.9 or later and make sure `python3` and
-`pip` are available:
+Choose either the Python CLI or the Node.js CLI. Both provide the `aidp` command;
+you only need one.
+
+#### Python CLI
+
+Use Python 3.9 or later. Install or update the CLI and Python SDK from
+[PyPI](https://pypi.org/project/aidp-cli/):
 
 ```bash
-python3 --version
-python3 -m ensurepip --upgrade
-python3 -m pip install --user --upgrade pip setuptools wheel
-export PATH="$(python3 -m site --user-base)/bin:$PATH"
-```
-
-OCI CLI is required. You can skip this step if its already installed in your environment.
-Use it to create an OCI config file or authenticate with a session token.
-
-For setup help, see [Install OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
-
-```bash
-python3 -m pip install --user oci-cli
-```
-
-Install the Python CLI by unpacking the Python SDK and CLI release zips, then
-installing both wheels in one command. The CLI depends on the SDK.
-
-```bash
-unzip aidp-python-client-1.0.0.zip -d aidp-python-client
-unzip aidp-py-cli-1.0.0.zip -d aidp-py-cli
-
-python3 -m pip install --user \
-  ./aidp-python-client/aidp_python_client-1.0.0-py3-none-any.whl \
-  ./aidp-py-cli/aidp_cli-1.0.0-py3-none-any.whl
+python3 -m pip install --upgrade aidp-cli aidp-python-client
 
 aidp --help
 ```
 
-For Node.js CLI usage, unpack the TypeScript/Node.js SDK and npm CLI release
-zips, then install both tarballs in one command. The CLI depends on the SDK.
+If Python requires an isolated environment, create and activate a virtual
+environment before installing. See the
+[Python CLI installation guide](./aidp-cli/aidp-py-cli/README.md).
+
+#### Node.js CLI
+
+With Node.js and npm installed, install or update the CLI and TypeScript SDK from
+[npm](https://www.npmjs.com/package/aidp-cli):
 
 ```bash
-unzip aidp-typescript-client-1.0.0.zip -d aidp-typescript-client
-unzip aidp-npm-cli-1.0.0.zip -d aidp-npm-cli
-
-npm install -g \
-  ./aidp-typescript-client/aidp-typescript-client-1.0.0.tgz \
-  ./aidp-npm-cli/aidp-cli-1.0.0.tgz
+npm install -g aidp-cli@latest aidp-typescript-client@latest
 
 aidp --help
+```
+
+#### Oracle Cloud sign-in tool
+
+Install the Oracle Cloud command line tool (OCI CLI) for the sign-in steps below.
+Skip this step if you already have it. For installation options, see
+[Install OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm).
+
+```bash
+python3 -m pip install --upgrade oci-cli
 ```
 
 ### SDK
 
+Use an SDK when you want to call AIDP from your own application.
+
 #### Python
 
-Install the Python SDK wheel for SDK-only Python integrations. This is not
-required separately if you already installed the SDK in the Python CLI command
-above.
+Install or update the Python SDK from
+[PyPI](https://pypi.org/project/aidp-python-client/):
 
 ```bash
-python3 -m pip install aidp_python_client-1.0.0-py3-none-any.whl
+python3 -m pip install --upgrade aidp-python-client
 ```
+
+You can skip this step if you already installed it with the Python CLI above.
 
 #### TypeScript/Node.js
 
-Install the TypeScript/Node.js SDK tarball for SDK-only Node.js integrations.
-This is not required separately if you already installed the SDK in the Node.js
-CLI command above.
+From your application's directory, install the TypeScript SDK from
+[npm](https://www.npmjs.com/package/aidp-typescript-client):
 
 ```bash
-npm install aidp-typescript-client-1.0.0.tgz
+npm install aidp-typescript-client@latest
 ```
+
+This adds the SDK to your application's dependencies. Install it here even if
+you previously installed the CLI globally.
 
 #### Java
 
-Unpack the Java SDK release zip, install the jar into your Maven repository,
-then add the dependency to your application.
+Add this dependency inside the `<dependencies>` section of your application's
+`pom.xml`. Maven downloads the SDK and its dependencies from Maven Central when
+you build your application.
 
-```bash
-unzip aidp-java-client-1.0.0.zip -d aidp-java-client
-
-mvn install:install-file \
-  -Dfile=./aidp-java-client/aidp-java-client-1.0.0.jar \
-  -DgroupId=com.oracle.aidataplatform \
-  -DartifactId=aidp-java-client \
-  -Dversion=1.0.0 \
-  -Dpackaging=jar
-```
+Replace `latest_version` with the latest published version shown on the
+[Java SDK package page](https://mvnrepository.com/artifact/com.oracle.aidataplatform/aidp-java-client).
 
 ```xml
 <dependency>
   <groupId>com.oracle.aidataplatform</groupId>
   <artifactId>aidp-java-client</artifactId>
-  <version>1.0.0</version>
+  <version>latest_version</version>
 </dependency>
 ```
 
-## Using CLI and SDK
+## Use the CLI or SDK manually
 
-### Configure Auth
+### Set up Oracle Cloud sign-in
 
-AIDP clients use OCI authentication. Configure an OCI profile before invoking
-the CLI or SDK.
+The CLI and SDKs use your Oracle Cloud credentials to access AIDP. Before using
+them, set up an OCI profile: a named set of connection and sign-in settings.
+If you are working through an AI plugin, it guides you through this step.
 
 Prefer short-lived, workload-scoped credentials for CI and runtime workloads.
 Do not commit OCI configuration, private keys, session-token files, or
@@ -141,18 +178,19 @@ Existing OCI config profiles can be reused.
 oci setup config
 ```
 
-For session-token authentication, authenticate with OCI CLI:
+To sign in with a temporary session token, replace `<tenancy_name>` with your
+Oracle Cloud tenancy name and use the region for your AIDP instance:
 
 ```bash
 oci session authenticate \
   --profile-name DEFAULT \
-  --region us-ashburn-1 \
+  --region <oci_region> \
   --tenancy-name <tenancy_name>
 ```
 
 ### Use the CLI
 
-Start with help and discovery:
+To see available commands and how to use them:
 
 ```bash
 aidp --help
@@ -161,7 +199,10 @@ aidp workspace
 aidp workspace list --help
 ```
 
-Invoke a workspace API:
+To list workspaces, replace `<oci_region>` with your instance's Oracle Cloud
+region and `<ai_data_platform_ocid>` with its unique identifier (OCID). Your AIDP
+administrator can help you find these values. This example uses the `DEFAULT`
+profile and session-token sign-in from the previous step:
 
 ```bash
 aidp \
@@ -180,8 +221,12 @@ For APIs that accept a JSON body, write the body to a file and pass
 
 ### Use the SDK
 
-The SDKs handle OCI request signing, endpoints, typed request and response
-models, pagination patterns, retries, and structured service errors.
+Use an SDK to call AIDP from your application. It handles request authentication,
+connections, and common error responses.
+
+These short snippets show how to list workspaces after you have configured the
+client and request. For complete, runnable code, see the
+[examples](./examples/README.md).
 
 Java:
 
@@ -208,10 +253,15 @@ For runnable notebook workflow samples, see [examples](./examples/README.md).
 
 ## Documentation and Help
 
-See the examples in this repository and the
-[Oracle AI Data Platform CLI SDK documentation](./docs/README.md)
-for complete workflows. For questions or support, use the standard project
-support channels for this repository.
+For complete workflows, see the [examples](./examples/README.md) and
+[CLI and SDK documentation](./docs/README.md).
+
+For AI plugin changes and compatibility information, see the
+[AIDP plugin release notes](./plugins/aidp/CHANGELOG.md).
+
+For help finding your AIDP instance or getting access, contact your organization's
+AIDP administrator. To report a bug or request an improvement to these tools, see
+[how to open an issue](./CONTRIBUTING.md#opening-issues).
 
 ## Contributing
 
