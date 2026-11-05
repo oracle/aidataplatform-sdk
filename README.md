@@ -3,22 +3,12 @@ ORACLE AND ITS AFFILIATES DO NOT PROVIDE ANY WARRANTY WHATSOEVER, EXPRESS OR IMP
 # Oracle AI Data Platform
 
 Work with Oracle AI Data Platform (AIDP) through an AI assistant, terminal commands,
-or your own application. Use these tools to view and manage resources such as
-workspaces, clusters, notebooks, and workflows.
+or your own application. Explore and manage AIDP resources, including workspaces,
+clusters, notebooks, workflows, catalogs, and more.
 
 **New here? [Start with an AI assistant](#get-started-with-an-ai-assistant).**
 The AIDP plugin guides you through setup, then lets you ask for tasks in everyday
 language.
-
-[![Python SDK](https://img.shields.io/badge/Python%20SDK-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-python-client/)
-[![Python CLI](https://img.shields.io/badge/Python%20CLI-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-cli/)
-[![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-typescript-client)
-[![TypeScript CLI](https://img.shields.io/badge/TypeScript%20CLI-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-cli)
-[![Java SDK](https://img.shields.io/badge/Java%20SDK-C2410C.svg?style=flat-square&logo=apachemaven&logoColor=white)](https://mvnrepository.com/artifact/com.oracle.aidataplatform/aidp-java-client)
-
-Get the latest packages from PyPI, npm, or Maven Central.
-
-[Use with Codex](./plugins/aidp/codex) · [Use with Claude Code](./plugins/aidp/claude)
 
 ## Choose how you want to work
 
@@ -33,11 +23,14 @@ Get the latest packages from PyPI, npm, or Maven Central.
 The AIDP plugin adds AIDP support to Codex or Claude Code. You can describe what
 you want to do without writing code or learning terminal commands.
 
+Before you begin, you need access to an AIDP instance—your organization's AIDP
+environment—and an Oracle Cloud account with permission to use it. If you need
+access, contact your organization's AIDP administrator.
+
 ### First-time setup
 
 1. **Install the plugin.** In Codex or Claude Code, add this repository's
    `aidp-skills` marketplace and install `aidp`.
-   [Codex plugin](./plugins/aidp/codex) · [Claude Code plugin](./plugins/aidp/claude)
 2. **Start setup.** Send this message to your assistant:
 
    > [@Oracle AIDP](plugin://aidp@aidp-skills) Set up the AIDP CLI on my machine.
@@ -47,8 +40,7 @@ you want to do without writing code or learning terminal commands.
 
 You do not need to install the SDK or CLI, or configure your Oracle Cloud sign-in,
 yourself beforehand. The assistant asks for only the information and choices it
-needs. You will need access to an AIDP instance—your organization's AIDP
-environment—and an Oracle Cloud account with permission to use it.
+needs.
 
 ### Everyday use
 
@@ -67,11 +59,17 @@ are for people who want to use terminal commands or build applications.
 
 ## Install CLI or SDK manually
 
-Install directly from PyPI, npm, or Maven Central using the instructions below.
 Choose the CLI for terminal commands or an SDK for application development. You
-only need the language you plan to use.
+only need the language you plan to use. If you use an AI plugin, it guides you
+through installation instead.
 
-If you use an AI plugin, it guides you through installation instead.
+The package links below are for manual installation from PyPI, npm, or Maven Central.
+
+[![Python SDK](https://img.shields.io/badge/Python%20SDK-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-python-client/)
+[![Python CLI](https://img.shields.io/badge/Python%20CLI-2563EB.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.org/project/aidp-cli/)
+[![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-typescript-client)
+[![TypeScript CLI](https://img.shields.io/badge/TypeScript%20CLI-6D28D9.svg?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/aidp-cli)
+[![Java SDK](https://img.shields.io/badge/Java%20SDK-C2410C.svg?style=flat-square&logo=apachemaven&logoColor=white)](https://mvnrepository.com/artifact/com.oracle.aidataplatform/aidp-java-client)
 
 ### CLI
 
