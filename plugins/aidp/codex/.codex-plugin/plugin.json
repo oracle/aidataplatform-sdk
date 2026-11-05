@@ -1,0 +1,24 @@
+{
+  "name": "aidp",
+  "version": "1.0.0",
+  "description": "Install, configure, and operate Oracle AI Data Platform from Codex.",
+  "author": {
+    "name": "Oracle AIDP"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Oracle AIDP",
+    "shortDescription": "Set up and operate Oracle AIDP from Codex.",
+    "longDescription": "Installs and validates the AIDP CLI and helps manage AIDP resources with documented, resource-specific workflows.",
+    "developerName": "Oracle AIDP",
+    "category": "Development",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Set up the AIDP CLI on my machine.",
+      "Create an AIDP workspace named analytics-dev."
+    ]
+  }
+}

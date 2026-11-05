@@ -1,0 +1,8 @@
+{
+  "name": "aidp",
+  "description": "Install, configure, and operate Oracle AI Data Platform with Claude Code.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Oracle AIDP"
+  }
+}

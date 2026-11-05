@@ -1,0 +1,20 @@
+{
+  "name": "aidp-skills",
+  "interface": {
+    "displayName": "AIDP Skills"
+  },
+  "plugins": [
+    {
+      "name": "aidp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/aidp/codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}
