@@ -29,8 +29,32 @@ access, contact your organization's AIDP administrator.
 
 ### First-time setup
 
-1. **Install the plugin.** In Codex or Claude Code, add this repository's
-   `aidp-skills` marketplace and install `aidp`.
+1. **Install the plugin.** Choose either the terminal or your assistant's interface.
+
+   **From a terminal** (with Codex or Claude Code installed), run the commands
+   for your assistant:
+
+   **Codex**
+
+   ```bash
+   codex plugin marketplace add oracle-samples/aidataplatform-sdk
+   codex plugin add aidp@aidp-skills
+   ```
+
+   **Claude Code**
+
+   ```bash
+   claude plugin marketplace add oracle-samples/aidataplatform-sdk
+   claude plugin install aidp@aidp-skills
+   ```
+
+   **From the interface:** Open the plugin browser in Codex or Claude Code,
+   choose the option to add a marketplace, and enter
+   `https://github.com/oracle-samples/aidataplatform-sdk`. In the `aidp-skills`
+   marketplace, search for `aidp` (Oracle AIDP) and select **Install**.
+
+   After installation, start a new chat so the assistant can use the plugin.
+
 2. **Start setup.** Send this message to your assistant:
 
    > [@Oracle AIDP](plugin://aidp@aidp-skills) Set up the AIDP CLI on my machine.
