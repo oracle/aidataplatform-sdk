@@ -48,10 +48,9 @@ access, contact your organization's AIDP administrator.
    claude plugin install aidp@aidp-skills
    ```
 
-   **From the interface:** Open the plugin browser in Codex or Claude Code,
-   choose the option to add a marketplace, and enter
-   `https://github.com/oracle-samples/aidataplatform-sdk`. In the `aidp-skills`
-   marketplace, search for `aidp` (Oracle AIDP) and select **Install**.
+   **From the app:** You can also use your assistant's plugin management options
+   to find and install Oracle AIDP Plugin from the `aidp-skills` marketplace.
+   Available options vary by app and version.
 
    After installation, start a new chat so the assistant can use the plugin.
 
