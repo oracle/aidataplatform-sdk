@@ -124,6 +124,14 @@ def _parser():
         help="Python interpreter to check when the aidp command is not on PATH "
         "(default: the interpreter running this script).",
     )
+    parser.add_argument(
+        "--oci", help="Explicit OCI executable; overrides remembered OCI selection.",
+    )
+    parser.add_argument(
+        "--venv-dir",
+        help="Prepared absolute directory for a new dedicated AIDP installation; "
+        "does not relocate an existing working CLI or create directories during checks.",
+    )
     return parser
 
 
@@ -195,21 +203,57 @@ def _tool(name, arguments, path=None, timeout=VERSION_TIMEOUT_SECONDS):
     }
 
 
-def _oci_cli(path_result, aidp_path, interpreter):
-    """Reuse OCI from the selected environment before declaring it missing."""
+def _same_executable(left, right):
+    return bool(left and right and
+                os.path.normcase(os.path.realpath(left)) == os.path.normcase(os.path.realpath(right)))
+
+
+def _initial_oci(remembered_path=None, explicit_path=None):
+    """Do not discover or execute PATH OCI while a direct selection works."""
+    if explicit_path:
+        result = _tool("oci", ["--version"], path=os.path.abspath(explicit_path))
+        return dict(result, path_adjustment_required=result["status"] == "installed")
+    if remembered_path and _executable_file(remembered_path):
+        result = _tool("oci", ["--version"], path=remembered_path)
+        if result["status"] == "installed":
+            # Prefix this directory for child commands, without searching PATH.
+            return dict(result, path_adjustment_required=True)
+    return _tool("oci", ["--version"])
+
+
+def _oci_cli(path_result, aidp_path, interpreter, venv_dir=None):
+    """Retain the initial selection or discover bounded environment candidates."""
+    if "path_adjustment_required" in path_result:
+        return path_result
+    path_oci = shutil.which("oci")
+
+    def selected(result):
+        return dict(result, path_adjustment_required=(
+            result["status"] == "installed" and not _same_executable(result.get("path"), path_oci)))
+
     if path_result["status"] != "missing":
-        return dict(path_result, path_adjustment_required=False)
+        return selected(path_result)
     directories = []
     for executable in (aidp_path, os.path.realpath(aidp_path) if aidp_path else None, interpreter):
         if executable:
             directory = os.path.dirname(os.path.abspath(executable))
             if directory not in directories:
                 directories.append(directory)
+    if venv_dir:
+        directory = os.path.join(venv_dir, VENV_BIN)
+        if directory not in directories:
+            directories.append(directory)
+    if WINDOWS:
+        # OCI has a separate short destination; --venv-dir remains AIDP-only.
+        system_drive = os.environ.get("SystemDrive")
+        if system_drive and os.path.isabs(system_drive + os.sep):
+            directory = os.path.join(system_drive + os.sep, "oci-cli", VENV_BIN)
+            if directory not in directories:
+                directories.append(directory)
     for directory in directories:
         candidate = os.path.join(directory, OCI_EXE)
         if _executable_file(candidate):
-            result = _tool("oci", ["--version"], path=candidate)
-            return dict(result, path_adjustment_required=result["status"] == "installed")
+            return selected(_tool("oci", ["--version"], path=candidate))
     return path_result
 
 
@@ -222,9 +266,9 @@ def _python():
     return result
 
 
-def _pip():
+def _pip(interpreter=None):
     returncode, stdout, stderr = _run(
-        [sys.executable, "-m", "pip", "--version"], VERSION_TIMEOUT_SECONDS
+        [interpreter or sys.executable, "-m", "pip", "--version"], VERSION_TIMEOUT_SECONDS
     )
     version = _parse_version(stdout)
     if returncode == 0 and version:
@@ -345,14 +389,20 @@ def _upgrade_command(interpreter, target, user_install, break_system_packages=Fa
     return command
 
 
-def _venv_command(interpreter, target):
+def _venv_command(interpreter, target, venv_dir=None):
     # Externally managed interpreters (PEP 668) reject pip installs, including
     # --user, so install into a dedicated virtual environment instead.
-    venv_python = os.path.join(VENV_DIR, VENV_BIN, PYTHON_EXE)
-    return _chain(
-        _shell([interpreter, "-m", "venv", VENV_DIR]),
-        _pip_install(venv_python, target),
-    )
+    directory = venv_dir or VENV_DIR
+    venv_python = os.path.join(directory, VENV_BIN, PYTHON_EXE)
+    create = _shell([interpreter, "-m", "venv", directory])
+    install = _pip_install(venv_python, target)
+    if WINDOWS:
+        # Reuse a prepared AIDP environment, including after a partial attempt.
+        # Test at execution time because actions may precede preparation.
+        literal_python = "'" + venv_python.replace("'", "''") + "'"
+        return ("if (-not (Test-Path -LiteralPath " + literal_python + ")) { "
+                + create + "; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }; " + install)
+    return _chain(create, install)
 
 
 def _pipx_command(target):
@@ -401,7 +451,7 @@ def _latest_due(context):
         return True
 
 
-def _select_cli(context, python=None, aidp=None):
+def _select_cli(context, python=None, aidp=None, venv_dir=None):
     """Bounded, nonrecursive discovery, with one version check per executable.
 
     Remembered selections are trusted as Python installations. Inspect ownership
@@ -456,6 +506,8 @@ def _select_cli(context, python=None, aidp=None):
     # A timed-out remembered executable must not consume fallback discovery's budget.
     deadline = time.monotonic() + VERSION_TIMEOUT_SECONDS
     paths = [os.path.join(directory, AIDP_EXE) for directory in os.get_exec_path()]
+    if venv_dir:
+        paths.append(os.path.join(venv_dir, VENV_BIN, AIDP_EXE))
     paths.append(os.path.join(VENV_DIR, VENV_BIN, AIDP_EXE))
     for path in paths:
         selected = candidate(path)
@@ -481,7 +533,8 @@ def _select_cli(context, python=None, aidp=None):
     return {"status": "missing", "detail": detail}, fallback, "option" if python else "python3", probes
 
 
-def check(skip_latest, index_timeout, python=None, aidp=None):
+def check(skip_latest, index_timeout, python=None, aidp=None, venv_dir=None, oci=None):
+    install_directory = venv_dir or VENV_DIR
     context, context_error = _read_context()
     if skip_latest is None:
         skip_latest = not _latest_due(context)
@@ -489,8 +542,10 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
     off_path_dir = None
     with ThreadPoolExecutor(max_workers=6) as pool:
         pip_future = pool.submit(_pip)
-        oci_future = pool.submit(_tool, "oci", ["--version"])
-        selection_future = pool.submit(_select_cli, context, python, aidp)
+        oci_future = pool.submit(
+            _initial_oci, ((context or {}).get("ociCli") or {}).get("path"), oci
+        )
+        selection_future = pool.submit(_select_cli, context, python, aidp, venv_dir)
         aidp_cli, interpreter, source, probes = selection_future.result()
         owner = interpreter if source in ("aidp", "context") else None
         aidp_path = aidp_cli.get("path")
@@ -506,6 +561,11 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
         owner_has_pip = facts.get("pip") is not False
         owner_has_ensurepip = facts.get("ensurepip") is not False
         checker_pip = pip_future.result()
+        # Bootstrap Python needs no pip: the saved/discovered environment may
+        # provide it. Keep bootstrap pip available as an index fallback.
+        available_pip = checker_pip
+        if checker_pip["status"] != "installed" and facts.get("pip") is True:
+            available_pip = _pip(interpreter)
         index_python = interpreter
         if not owner_has_pip:
             # The environment that owns aidp has no pip; any Python with pip
@@ -525,8 +585,11 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
             }
         prerequisites = {
             "python": _python(),
-            "pip": checker_pip,
-            "oci_cli": _oci_cli(oci_future.result(), aidp_path, interpreter),
+            "pip": available_pip,
+            "oci_cli": _oci_cli(
+                oci_future.result(), aidp_path, interpreter,
+                venv_dir=install_directory,
+            ),
         }
 
     installed = facts.get("packages", {})
@@ -710,9 +773,9 @@ def check(skip_latest, index_timeout, python=None, aidp=None):
             # environment built from the checker's own Python is the reliable path.
             venv_base = interpreter if owner_has_ensurepip else sys.executable
             action["install_method"] = "virtualenv"
-            action["command"] = _venv_command(venv_base, target)
-            action["path_hint"] = os.path.join(VENV_DIR, VENV_BIN)
-            action["verify_aidp"] = os.path.join(VENV_DIR, VENV_BIN, AIDP_EXE)
+            action["command"] = _venv_command(venv_base, target, install_directory)
+            action["path_hint"] = os.path.join(install_directory, VENV_BIN)
+            action["verify_aidp"] = os.path.join(install_directory, VENV_BIN, AIDP_EXE)
             alternative = _pipx_command(target) if shutil.which("pipx") else None
             if alternative:
                 action["alternative_command"] = alternative
@@ -778,7 +841,14 @@ def main():
     if args.aidp and not _executable_file(args.aidp):
         print("--aidp must name an executable aidp command", file=sys.stderr)
         return 2
-    summary = check(False if args.check_latest else args.skip_latest, args.index_timeout, args.python, args.aidp)
+    if args.oci and not _executable_file(args.oci):
+        print("--oci must name an executable OCI command", file=sys.stderr)
+        return 2
+    if args.venv_dir and not os.path.isabs(args.venv_dir):
+        print("--venv-dir must name an absolute directory", file=sys.stderr)
+        return 2
+    summary = check(False if args.check_latest else args.skip_latest, args.index_timeout,
+                    args.python, args.aidp, args.venv_dir, args.oci)
     print(json.dumps(summary, indent=2))
     return 0 if summary["ok"] else 1
 

@@ -37,26 +37,26 @@ access, contact your organization's AIDP administrator.
    **Codex**
 
    ```bash
-   codex plugin marketplace add oracle-samples/aidataplatform-sdk
-   codex plugin add aidp@aidp-skills
+   codex plugin marketplace add oracle/aidataplatform-sdk
+   codex plugin add oracle-aidp@oracle-aidp-plugins
    ```
 
    **Claude Code**
 
    ```bash
-   claude plugin marketplace add oracle-samples/aidataplatform-sdk
-   claude plugin install aidp@aidp-skills
+   claude plugin marketplace add oracle/aidataplatform-sdk
+   claude plugin install oracle-aidp@oracle-aidp-plugins
    ```
 
    **From the app:** You can also use your assistant's plugin management options
-   to find and install Oracle AIDP Plugin from the `aidp-skills` marketplace.
+   to find and install Oracle AI Data Platform from the `oracle-aidp-plugins` marketplace.
    Available options vary by app and version.
 
    After installation, start a new chat so the assistant can use the plugin.
 
 2. **Start setup.** Send this message to your assistant:
 
-   > [@Oracle AIDP](plugin://aidp@aidp-skills) Set up the AIDP CLI on my machine.
+   > [@Oracle AI Data Platform](plugin://oracle-aidp@oracle-aidp-plugins) Set up the AIDP CLI on my machine.
 
 3. **Follow the prompts.** The assistant helps install the tools you need,
    sign in to Oracle Cloud Infrastructure (OCI), and connect to your AIDP instance.

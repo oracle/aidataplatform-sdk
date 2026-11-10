@@ -12,6 +12,6 @@ Check the operating system and architecture, then run the setup skill's `scripts
 
 For package timeouts, interrupted installations, or Windows path/script errors, use [setup troubleshooting](../skills/aidp-setup-local/references/troubleshooting.md) for targeted diagnosis and recovery proposals. Keep this diagnostic read-only; apply repairs only after the user chooses the setup remediation flow.
 
-Report a compact status table: **check | status | detail**. Continue with independent checks after a failure and mark unavailable checks as unknown. End with the single smallest corrective next step. If a change is required, such as a version mismatch or available update, offer to make it and show the command, and offer `/aidp:setup` as the guided remediation path.
+Report a compact status table: **check | status | detail**. Continue with independent checks after a failure and mark unavailable checks as unknown. End with the single smallest corrective next step. If a change is required, such as a version mismatch or available update, offer to make it and show the command, and offer `/oracle-aidp:setup` as the guided remediation path.
 
 $ARGUMENTS
