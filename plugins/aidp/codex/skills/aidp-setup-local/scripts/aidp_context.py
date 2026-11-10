@@ -39,6 +39,7 @@ ALLOWED_FIELDS = {
     "recentlyUsedAIDP",
     "latestVersionCheck",
     "pythonCli",
+    "ociCli",
 }
 LEGACY_FIELDS = {"consent", "userOcids"}
 
@@ -281,6 +282,15 @@ def _validate_document(document: Any) -> dict[str, Any]:
             if not isinstance(value, str) or "\x00" in value or not Path(value).is_absolute():
                 raise ContextError("invalid_context", f"pythonCli.{key} must be an absolute path.")
 
+    oci_cli = data.get("ociCli")
+    if oci_cli is not None:
+        cli_obj = _require_dict(oci_cli, "ociCli")
+        if set(cli_obj) != {"path"}:
+            raise ContextError("invalid_context", "ociCli must contain only path.")
+        value = cli_obj["path"]
+        if not isinstance(value, str) or "\x00" in value or not Path(value).is_absolute():
+            raise ContextError("invalid_context", "ociCli.path must be an absolute path.")
+
     version_check = data.get("latestVersionCheck")
     if version_check is not None:
         check_obj = _require_dict(version_check, "latestVersionCheck")
@@ -515,7 +525,7 @@ def _get_value(data: dict[str, Any], args: argparse.Namespace) -> Any:
                 _with_display_ocid(entry) for entry in data["recentlyUsedAIDP"]
             ]
         return result
-    if args.field in ("lastUsedAuth", "latestVersionCheck", "pythonCli"):
+    if args.field in ("lastUsedAuth", "latestVersionCheck", "pythonCli", "ociCli"):
         return data.get(args.field)
     if args.field == "endpoints":
         endpoints = data.get("endpoints")
@@ -552,6 +562,10 @@ def _get_value(data: dict[str, Any], args: argparse.Namespace) -> Any:
 def _set_value(path: Path, args: argparse.Namespace) -> Any:
     def operation(data: dict[str, Any]) -> tuple[dict[str, Any], Any]:
         timestamp = _now()
+        if args.field == "ociCli":
+            value = {"path": args.path}
+            data["ociCli"] = value
+            return data, value
         if args.field == "pythonCli":
             value = {"path": args.path, "pythonPath": args.python_path}
             data["pythonCli"] = value
@@ -664,7 +678,7 @@ def _set_value(path: Path, args: argparse.Namespace) -> Any:
 def _remove_value(path: Path, args: argparse.Namespace) -> Any:
     def operation(data: dict[str, Any]) -> tuple[dict[str, Any], Any]:
         removed = False
-        if args.field in ("lastUsedAuth", "latestVersionCheck", "pythonCli"):
+        if args.field in ("lastUsedAuth", "latestVersionCheck", "pythonCli", "ociCli"):
             removed = data.pop(args.field, None) is not None
         elif args.field == "endpoints":
             realm = _validate_realm(args.realm)
@@ -756,12 +770,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "recentlyUsedAIDP",
             "latestVersionCheck",
             "pythonCli",
+            "ociCli",
         ],
     )
     _add_common_selectors(get_parser)
 
     set_parser = actions.add_parser("set", help="Record validated context.")
     set_fields = set_parser.add_subparsers(dest="field", required=True)
+
+    oci_parser = set_fields.add_parser("ociCli")
+    oci_parser.add_argument("--path", required=True)
 
     cli_parser = set_fields.add_parser("pythonCli")
     cli_parser.add_argument("--path", required=True)
@@ -799,6 +817,7 @@ def _build_parser() -> argparse.ArgumentParser:
     remove_fields.add_parser("lastUsedAuth")
     remove_fields.add_parser("latestVersionCheck")
     remove_fields.add_parser("pythonCli")
+    remove_fields.add_parser("ociCli")
 
     remove_endpoint = remove_fields.add_parser("endpoints")
     remove_endpoint.add_argument("--realm", "--relm", required=True)

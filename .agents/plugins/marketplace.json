@@ -1,11 +1,11 @@
 {
-  "name": "aidp-skills",
+  "name": "oracle-aidp-plugins",
   "interface": {
-    "displayName": "AIDP Skills"
+    "displayName": "Oracle AI Data Platform"
   },
   "plugins": [
     {
-      "name": "aidp",
+      "name": "oracle-aidp",
       "source": {
         "source": "local",
         "path": "./plugins/aidp/codex"

@@ -1,16 +1,16 @@
 {
-  "name": "aidp",
+  "name": "oracle-aidp",
   "version": "1.0.0",
   "description": "Install, configure, and operate Oracle AI Data Platform from Codex.",
   "author": {
-    "name": "Oracle AIDP"
+    "name": "Oracle AI Data Platform"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Oracle AIDP",
-    "shortDescription": "Set up and operate Oracle AIDP from Codex.",
+    "displayName": "Oracle AI Data Platform",
+    "shortDescription": "Set up and operate Oracle AI Data Platform from Codex.",
     "longDescription": "Installs and validates the AIDP CLI and helps manage AIDP resources with documented, resource-specific workflows.",
-    "developerName": "Oracle AIDP",
+    "developerName": "Oracle AI Data Platform",
     "category": "Development",
     "capabilities": [
       "Read",

@@ -2,7 +2,7 @@
 
 Use `../scripts/aidp_context.py` relative to this file. The helper is the only supported interface to `~/.config/aidp/context.json`; never read or write that file directly.
 
-The context stores validated connection defaults and the verified local Python CLI selection. Persist them automatically without asking for consent. Never pass or store a user OCID, IAM name, email address, token, private key, fingerprint, password, or authorization header.
+The context stores validated connection defaults and verified local AIDP/Python and OCI executable selections. Persist them automatically without asking for consent. Never pass or store a user OCID, IAM name, email address, token, private key, fingerprint, password, or authorization header.
 
 Treat every remembered value as a default guess that still needs the live validation this skill defines. Return stored values unchanged; never infer, name, or describe an environment category from a stored resource type, realm, endpoint hostname, or other remembered identifier. The helper validates inputs, applies MRU limits, locks concurrent writes, and replaces the file atomically. If a read or write fails, continue the requested AIDP operation with the regular uncached flow.
 
@@ -31,6 +31,24 @@ python3 <setup_skill_dir>/scripts/aidp_context.py remove pythonCli
 ```
 
 Write only when either path differs. Store the interpreter path as selected, without resolving its virtual-environment symlink to a base Python. A remembered executable receives only `--version`, once per session, without ownership detection; package/version checks use `pythonPath`. A new candidate receives ownership detection before its version check. A failed remembered selection triggers script-owned discovery. Skill-managed upgrades verify and save the resulting selection. An external installation into another environment does not replace a still-working saved selection; remove `pythonCli` or explicitly select a new CLI to rediscover. Existing schema-2 files without `pythonCli` remain valid. Older plugin releases that reject unknown fields cannot read the added field: remove `pythonCli` with the updated helper before downgrading.
+
+Verified OCI executable, after the prerequisite checker returns an installed OCI result:
+
+```bash
+python3 <setup_skill_dir>/scripts/aidp_context.py set ociCli --path <absolute_oci_path>
+python3 <setup_skill_dir>/scripts/aidp_context.py get ociCli
+python3 <setup_skill_dir>/scripts/aidp_context.py remove ociCli
+```
+
+Compare the validated path with `context.ociCli.path` and write only when new or
+changed, independently of AIDP target/authentication validation. Save no version,
+credentials or token contents. Each new session revalidates the saved executable
+with `--version`; a working saved path skips OCI PATH discovery and other OCI
+version probes. Use the returned session PATH adjustment for child commands,
+preserving the validated OCI executable if another directory would shadow it. Stale or failing paths fall back to normal discovery. An
+explicit prerequisite-checker `--oci <path>` overrides the saved selection.
+Existing schema-2 contexts without `ociCli` remain valid. Codex and Claude share
+this per-user context when configured with the same context path.
 
 Authentication, after either live OCI validation or a successful AIDP workspace-list request establishes that the selection works:
 
@@ -113,6 +131,7 @@ python3 <setup_skill_dir>/scripts/aidp_context.py clear
     "path": "/home/example/.aidp-venv/bin/aidp",
     "pythonPath": "/home/example/.aidp-venv/bin/python"
   },
+  "ociCli": {"path": "/home/example/.aidp-venv/bin/oci"},
   "lastUsedAuth": {
     "authType": "security_token",
     "profile": "DEFAULT",

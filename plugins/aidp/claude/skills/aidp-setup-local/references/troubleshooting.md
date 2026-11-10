@@ -1,6 +1,6 @@
 # Local setup troubleshooting
 
-Use this reference when normal setup encounters a package lookup or installation problem, or when `/aidp:doctor` finds one. Reuse the selected interpreter, environment, captured error and existing session state; do not rerun successful checks or require a separate doctor invocation to recover during setup.
+Use this reference when normal setup encounters a package lookup or installation problem, or when `/oracle-aidp:doctor` finds one. Reuse the selected interpreter, environment, captured error and existing session state; do not rerun successful checks or require a separate doctor invocation to recover during setup.
 
 Doctor remains read-only: diagnose and offer the smallest corrective step. Run installations, repairs, or process termination only through the authorized setup flow. Authentication and AIDP access errors keep their existing procedures in [profile validation](oci-profile-validation.md) and [target selection](aidp-target-selection.md#handle-the-first-access-failure).
 
@@ -24,6 +24,11 @@ On a nonzero exit, inspect the captured error and apply the relevant recovery gu
 
 ## Windows path and script errors
 
-On failure, capture the exact error and failing path after the installer exits. For an actual path-length error such as `WinError 206`, offer a shorter writable virtual-environment path and obtain the user’s choice before changing environments. Recreate the environment there rather than moving it, install the verified matching AIDP pair and OCI CLI with its own interpreter, then verify using `--aidp <new-path>\Scripts\aidp.exe` and save the newly verified CLI selection. Keep the original environment until the replacement passes. Do not change registry settings, guess that every file error is a path-length error, or retry alternate prefixes automatically. If recovering an earlier extended-prefix attempt, inspect the partial installation and retry without that prefix only after identifying the error; do not declare success from package metadata alone.
+Retain the exact error and failing path; do not infer that every file error is
+a path-length error. For Windows OCI preparation or installation failures, use
+the [MSI recovery procedure](installation.md#windows-oci-msi-fallback) instead of
+generic pip retry guidance. For AIDP folder-access failures, use
+[Windows directory preparation](windows.md#installation-directory-selection).
+ACL changes do not solve path-length or network/dependency errors.
 
-After an authorized repair, return to [final installation verification](installation.md#installation-process). Keep dependencies enabled and preserve package-index, proxy and certificate settings.
+After an authorized repair, return to [final installation verification](installation.md#final-verification). Keep dependencies enabled and preserve package-index, proxy and certificate settings.
