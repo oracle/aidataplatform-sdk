@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 """Expose only project ID and service-account email from a local JSON key."""
 import argparse
 import json
