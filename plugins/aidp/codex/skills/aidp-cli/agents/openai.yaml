@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIDP CLI"
+  short_description: "Operate AIDP resources after local setup"
+  default_prompt: "Use $aidp-cli to inspect or run this AIDP CLI operation: <describe the resource and action>."

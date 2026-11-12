@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "name": "oracle-aidp-plugins",
+  "owner": {
+    "name": "Oracle AI Data Platform"
+  },
+  "description": "Reusable skills for working with Oracle AI Data Platform.",
+  "plugins": [
+    {
+      "name": "oracle-aidp",
+      "source": "./plugins/aidp/claude",
+      "description": "Install, configure, and operate Oracle AI Data Platform with Claude Code."
+    }
+  ]
+}

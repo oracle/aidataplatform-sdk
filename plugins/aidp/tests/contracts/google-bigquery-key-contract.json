@@ -1,0 +1,14 @@
+{
+  "sourceType": "GOOGLE_BIGQUERY",
+  "authenticationType": "service_account",
+  "requiredConnectionPropertyKeys": [
+    "GOOGLE_BIGQUERY_HOST",
+    "GOOGLE_BIGQUERY_PORT",
+    "GOOGLE_BIGQUERY_PROJECT_ID",
+    "GOOGLE_BIGQUERY_OAUTH_TYPE",
+    "GOOGLE_BIGQUERY_OAUTH_SERVICE_ACCT_EMAIL",
+    "GOOGLE_BIGQUERY_OAUTH_PVT_KEY"
+  ],
+  "sensitiveConnectionPropertyKeys": ["GOOGLE_BIGQUERY_OAUTH_PVT_KEY"],
+  "optionalSharedConnectionPropertyKeys": ["WORKSPACE_KEY"]
+}

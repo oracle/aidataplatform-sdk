@@ -1,0 +1,37 @@
+{
+  "name": "oracle-aidp",
+  "version": "1.0.0",
+  "description": "Install, configure, and operate Oracle AI Data Platform from Codex.",
+  "author": {
+    "name": "Oracle AI Data Platform"
+  },
+  "homepage": "https://github.com/oracle/aidataplatform-sdk/tree/main/plugins/aidp/codex",
+  "repository": "https://github.com/oracle/aidataplatform-sdk",
+  "license": "UPL-1.0",
+  "keywords": [
+    "oracle",
+    "oci",
+    "aidp",
+    "ai-data-platform",
+    "data-platform",
+    "cli"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Oracle AI Data Platform",
+    "shortDescription": "Oracle AI Data Platform tools",
+    "longDescription": "Installs and validates the AIDP CLI and helps manage AIDP resources with documented, resource-specific workflows.",
+    "developerName": "Oracle AI Data Platform",
+    "category": "Development",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Set up the AIDP CLI on my machine.",
+      "Create an AIDP workspace named analytics-dev."
+    ],
+    "websiteURL": "https://github.com/oracle/aidataplatform-sdk/blob/main/plugins/aidp/codex/README.md",
+    "privacyPolicyURL": "https://www.oracle.com/legal/privacy/"
+  }
+}
