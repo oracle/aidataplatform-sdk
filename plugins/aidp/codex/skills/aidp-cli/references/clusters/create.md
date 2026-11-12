@@ -182,10 +182,4 @@ If the request fails or its outcome is uncertain, do not claim creation was
 triggered. Follow the main skill's mutation-error handling and inspect resulting
 state when needed to resolve uncertainty without submitting a duplicate request.
 
-## Reference
-
-[AIDP cluster creation guidance](https://chatgpt.com/space/page_a24fbcee4978819184daf4b496fde9d9)
-contains the UI defaults and implementation references. This bundled reference
-is self-contained; reading the Page is not required to perform the workflow.
-
 ## Additional properties

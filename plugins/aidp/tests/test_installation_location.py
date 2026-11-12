@@ -1,3 +1,5 @@
+# Copyright (c) 2026, Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 """Installation destination selection stays read-only and preserves existing tools."""
 import contextlib
 import importlib.util
@@ -156,10 +158,10 @@ class InstallationLocationTests(unittest.TestCase):
                 module = load(host)
                 with mock.patch.object(module, 'WINDOWS', True):
                     summary = self.fresh_check(module)
-                [action] = [a for a in summary['actions'] if a['kind'] == 'install_aidp_packages']
-                self.assertEqual(action['verify_aidp'],
-                    os.path.join(os.path.expanduser('~'), '.aidp-venv', module.VENV_BIN, module.AIDP_EXE))
-                self.assertIn(module._shell([os.path.join(module.VENV_DIR, module.VENV_BIN, module.PYTHON_EXE), '-m', 'pip', 'install']), action['command'])
+                    [action] = [a for a in summary['actions'] if a['kind'] == 'install_aidp_packages']
+                    self.assertEqual(action['verify_aidp'],
+                        os.path.join(os.path.expanduser('~'), '.aidp-venv', module.VENV_BIN, module.AIDP_EXE))
+                    self.assertIn(module._shell([os.path.join(module.VENV_DIR, module.VENV_BIN, module.PYTHON_EXE), '-m', 'pip', 'install']), action['command'])
 
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ python3 <setup_skill_dir>/scripts/aidp_context.py get all
 python3 <setup_skill_dir>/scripts/aidp_context.py get pythonCli
 python3 <setup_skill_dir>/scripts/aidp_context.py get lastUsedAuth
 python3 <setup_skill_dir>/scripts/aidp_context.py get endpoints
-python3 <setup_skill_dir>/scripts/aidp_context.py get endpoints --realm oc1 --resource-type aidataplatformdev
+python3 <setup_skill_dir>/scripts/aidp_context.py get endpoints --realm oc1 --resource-type aidataplatformenv
 python3 <setup_skill_dir>/scripts/aidp_context.py get recentlyUsedAIDP
 python3 <setup_skill_dir>/scripts/aidp_context.py get recentlyUsedAIDP --instance-ocid <aidp_ocid>
 ```
@@ -65,8 +65,8 @@ Endpoint template, after a successful AIDP workspace-list validation:
 ```bash
 python3 <setup_skill_dir>/scripts/aidp_context.py set endpoints \
   --realm oc1 \
-  --resource-type aidataplatformdev \
-  --template 'https://aidpdev1.{region}.oci.oc-test.com'
+  --resource-type aidataplatformenv \
+  --template 'https://aidpenv.{region}.example.com'
 ```
 
 The camel-case alias `--resourceType` is also accepted. Entries are deduplicated and moved to the front. Nonstandard resource types retain at most five templates. The standard `aidataplatform` resource type accepts only `https://aidp.{region}.oci.oraclecloud.com` and retains at most one template.
@@ -77,7 +77,7 @@ Recent instance, after the first successful HTTP 2xx response for a new session 
 python3 <setup_skill_dir>/scripts/aidp_context.py set recentlyUsedAIDP \
   --instance-ocid <aidp_ocid> \
   --region us-phoenix-1 \
-  --endpoint https://aidpdev1.us-phoenix-1.oci.oc-test.com \
+  --endpoint https://aidpenv.us-phoenix-1.example.com \
   --name <optional_name>
 ```
 
@@ -92,7 +92,7 @@ Every successful `set` prints a write receipt only after the atomic replacement 
   "value": {
     "instanceOcid": "<aidp_ocid>",
     "region": "us-phoenix-1",
-    "endpoint": "https://aidpdev1.us-phoenix-1.oci.oc-test.com"
+    "endpoint": "https://aidpenv.us-phoenix-1.example.com"
   }
 }
 ```
@@ -114,7 +114,7 @@ python3 <setup_skill_dir>/scripts/aidp_context.py remove latestVersionCheck
 ```bash
 python3 <setup_skill_dir>/scripts/aidp_context.py migrate
 python3 <setup_skill_dir>/scripts/aidp_context.py remove lastUsedAuth
-python3 <setup_skill_dir>/scripts/aidp_context.py remove endpoints --realm oc1 --resource-type aidataplatformdev --template '<template>'
+python3 <setup_skill_dir>/scripts/aidp_context.py remove endpoints --realm oc1 --resource-type aidataplatformenv --template '<template>'
 python3 <setup_skill_dir>/scripts/aidp_context.py remove recentlyUsedAIDP --instance-ocid <aidp_ocid>
 python3 <setup_skill_dir>/scripts/aidp_context.py remove latestVersionCheck
 python3 <setup_skill_dir>/scripts/aidp_context.py clear
@@ -139,9 +139,9 @@ python3 <setup_skill_dir>/scripts/aidp_context.py clear
     "lastValidatedAt": "2026-09-28T10:00:00Z"
   },
   "endpoints": {
-    "oc1:aidataplatformdev": [
+    "oc1:aidataplatformenv": [
       {
-        "template": "https://aidpdev1.{region}.oci.oc-test.com",
+        "template": "https://aidpenv.{region}.example.com",
         "lastValidatedAt": "2026-09-28T10:00:00Z"
       }
     ]

@@ -1,3 +1,5 @@
+# Copyright (c) 2026, Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 from __future__ import annotations
 
 import json
@@ -16,7 +18,7 @@ CLAUDE_SKILL = REPO_ROOT / "plugins/aidp/claude/skills/aidp-setup-local"
 SCRIPT = CODEX_SKILL / "scripts/aidp_context.py"
 
 INSTANCE_OCID = (
-    "ocid1.aidataplatformdev.oc1.phx."
+    "ocid1.aidataplatformenv.oc1.phx."
     "amaaaaaaeq37tyqa4mj7w46hnv4dj722ql7wgvtrnvjmfn2bao55iaf5kpmq"
 )
 class AidpContextTest(unittest.TestCase):
@@ -77,9 +79,9 @@ class AidpContextTest(unittest.TestCase):
             "--relm",
             "oc1",
             "--resourceType",
-            "aidataplatformdev",
+            "aidataplatformenv",
             "--template",
-            "https://aidpdev1.{region}.oci.oc-test.com",
+            "https://aidpenv.{region}.example.com",
         )
         recent = self.run_context(
             "set",
@@ -89,18 +91,18 @@ class AidpContextTest(unittest.TestCase):
             "--region",
             "us-phoenix-1",
             "--endpoint",
-            "https://aidpdev1.us-phoenix-1.oci.oc-test.com",
+            "https://aidpenv.us-phoenix-1.example.com",
             "--name",
             "example",
         )
         self.assertTrue(recent["saved"])
         self.assertEqual(recent["field"], "recentlyUsedAIDP")
-        self.assertEqual(recent["value"]["resourceType"], "aidataplatformdev")
+        self.assertEqual(recent["value"]["resourceType"], "aidataplatformenv")
 
         recent_read = self.run_context("get", "recentlyUsedAIDP")
         self.assertEqual(
             recent_read[0]["displayOcid"],
-            "ocid1.aidataplatformdev.oc1.phx.…iaf5kpmq",
+            "ocid1.aidataplatformenv.oc1.phx.…iaf5kpmq",
         )
 
         stored = self.run_context("get", "all")
@@ -121,9 +123,9 @@ class AidpContextTest(unittest.TestCase):
                 "--realm",
                 "oc1",
                 "--resource-type",
-                "aidataplatformdev",
+                "aidataplatformenv",
                 "--template",
-                f"https://aidpdev{index}.{{region}}.example.com",
+                f"https://aidpenv{index}.{{region}}.example.com",
             )
         endpoints = self.run_context(
             "get",
@@ -131,11 +133,11 @@ class AidpContextTest(unittest.TestCase):
             "--realm",
             "oc1",
             "--resource-type",
-            "aidataplatformdev",
+            "aidataplatformenv",
         )
         self.assertEqual(len(endpoints), 5)
         self.assertEqual(
-            endpoints[0]["template"], "https://aidpdev6.{region}.example.com"
+            endpoints[0]["template"], "https://aidpenv6.{region}.example.com"
         )
 
         error = self.run_context(
@@ -157,11 +159,11 @@ class AidpContextTest(unittest.TestCase):
                 "set",
                 "recentlyUsedAIDP",
                 "--instance-ocid",
-                f"ocid1.aidataplatformdev.oc1.phx.unique{index}",
+                f"ocid1.aidataplatformenv.oc1.phx.unique{index}",
                 "--region",
                 "us-phoenix-1",
                 "--endpoint",
-                "https://aidpdev1.us-phoenix-1.example.com",
+                "https://aidpenv.us-phoenix-1.example.com",
                 "--name",
                 f"instance-{index}",
             )
@@ -200,7 +202,7 @@ class AidpContextTest(unittest.TestCase):
             "set", "recentlyUsedAIDP",
             "--instance-ocid", INSTANCE_OCID,
             "--region", "us-phoenix-1",
-            "--endpoint", "https://aidpdev1.us-phoenix-1.oci.oc-test.com",
+            "--endpoint", "https://aidpenv.us-phoenix-1.example.com",
         )
         stored_before = self.context_file.read_bytes()
         everything = self.run_context("get", "all")
@@ -234,7 +236,7 @@ class AidpContextTest(unittest.TestCase):
             "endpoint template": {
                 "schemaVersion": 2,
                 "endpoints": {
-                    "oc1:aidataplatformdev": [
+                    "oc1:aidataplatformenv": [
                         {
                             "template": "http://unsafe.{region}.example.com",
                             "lastValidatedAt": timestamp,
@@ -247,10 +249,10 @@ class AidpContextTest(unittest.TestCase):
                 "recentlyUsedAIDP": [
                     {
                         "instanceOcid": INSTANCE_OCID,
-                        "resourceType": "aidataplatformqa",
+                        "resourceType": "aidataplatformenv2",
                         "realm": "oc1",
                         "region": "us-phoenix-1",
-                        "endpoint": "https://aidpdev1.us-phoenix-1.example.com",
+                        "endpoint": "https://aidpenv.us-phoenix-1.example.com",
                         "lastUsedAt": timestamp,
                     }
                 ],
