@@ -4,21 +4,25 @@ Use the selected source reference and [protected request bodies](../protected-bo
 The generic `scripts/protected_aidp.py` wrapper replaces the earlier credential
 draft/collector/build/request-runner sequence for new operations.
 
-References cover all twelve sources in the reviewed installed SDK: [ADW](adw.md), [ALH](alh.md),
+References cover all fifteen sources in the reviewed installed SDK: [ADW](adw.md), [ALH](alh.md),
 [ATP](atp.md), [Oracle](oracle.md), [Exadata](exadata.md), [Kafka](kafka.md),
 [MySQL](mysql.md), [DB2](db2.md), [Azure SQL Server](azure-sqlserver.md),
-[Snowflake](snowflake.md), [Google BigQuery](google-bigquery.md), [Oracle Analytics](oracle-analytics.md).
-MySQL/DB2/Azure SQL Server/Snowflake/Google BigQuery each have a documented
+[Snowflake](snowflake.md), [Google BigQuery](google-bigquery.md), [Oracle Analytics](oracle-analytics.md),
+[Microsoft SQL Server](sqlserver.md), [PostgreSQL](postgresql.md), and
+[Databricks Unity Catalog](databricks.md).
+MySQL/DB2/Azure SQL Server/Snowflake/Google BigQuery/SQL Server/PostgreSQL/Databricks each have a documented
 `scripts/ext-catalogs/<source-folder>/prepare-body.py` helper for unresolved
 create/test bodies. No sensitive draft is needed.
 
 ## Ask for an unspecified source
 
 When the user asks to test a connection without naming a source, present all
-12 installed-SDK-supported sources. Do not shorten the choices to examples or “another
-source”. If access to the selected instance has already been verified, use:
+15 sources when supported by the installed CLI. On an older CLI, offer only its
+supported sources; do not confuse installation support with instance availability.
+Do not shorten the choices to examples or “another source”. If access to the
+selected instance has already been verified, use:
 
-> Access to `<instance-name>` is working. Which source should I test—ADW, ALH, ATP, Oracle Database, Exadata, Kafka, MySQL, DB2, Azure SQL Server, Snowflake, Google BigQuery, or Oracle Analytics?
+> Access to `<instance-name>` is working. Which source should I test—ADW, ALH, ATP, Oracle Database, Exadata, Kafka, MySQL, DB2, Azure SQL Server, Snowflake, Google BigQuery, Oracle Analytics, Microsoft SQL Server, PostgreSQL, or Databricks Unity Catalog?
 
 Substitute the verified instance name; do not claim access is working unless it
 was verified for the selected target. Otherwise ask just the source question
@@ -26,8 +30,55 @@ without the access claim. If the source is already known, continue with that
 source reference rather than asking again. Display names map to `ORACLE`,
 `AZURE_SQLSERVER`, `GOOGLE_BIGQUERY`, and `ORACLE_ANALYTICS` for Oracle Database,
 Azure SQL Server, Google BigQuery, and Oracle Analytics respectively. Other names
-map directly to their uppercase source type. Installed help is authoritative;
+map directly to their uppercase source type, except Microsoft SQL Server maps
+to `SQLSERVER`, PostgreSQL/Postgres to `POSTGRESQL`, and Databricks/Databricks Unity
+Catalog to `DATABRICKS_UNITY_CATALOG`. Keep Microsoft SQL Server distinct from
+Azure SQL Server. Installed help is authoritative;
 a stale repository SDK enum must not be used to reject an installed connector.
+
+## Connector availability
+
+For SQL Server, PostgreSQL and Databricks, first check that installed
+`catalog create --help` / `catalog test-connection --help` supports the selected
+source. Then check only that source's instance feature, reusing a verified
+result for the same target in this session:
+
+| Source | Instance feature |
+|---|---|
+| `SQLSERVER` | `AIDP_CONNECTORS_SQLSERVER_ENABLED` |
+| `POSTGRESQL` | `AIDP_CONNECTORS_POSTGRESQL_ENABLED` |
+| `DATABRICKS_UNITY_CATALOG` | `AIDP_CONNECTORS_DATABRICKS_ENABLED` |
+
+Use the signed bulk wrapper request
+`GET /20240831/dataLakes/{instanceOcid}/featureStatuses?featureNames=<selected-feature>`
+with setup's exact endpoint, authentication, profile and custom config, following
+[feature-status request conventions](../clusters/create.md#check-autoscaling-before-suggesting-limits).
+Require a matching `data.items` entry with no error and string `value` equal to
+`true` (case-insensitive). An explicit `false` means unavailable on this instance;
+a missing item, invalid value or failed request means unverified. Resolve that
+state before asking for credentials or submitting a request. Do not enable a
+flag, switch connector/target, or submit a trial creation to discover support.
+The helper only prepares templates; it does not establish live availability.
+
+## Keep setup simple
+
+Use ordinary source names, reuse supplied connection details and group only
+missing public fields in one short question. The assistant writes configs and
+prepares one complete protected command; the user never has to author JSON or
+name API properties. Optional description, properties and network routing do
+not add questions unless the task needs them. Preserve explicit choices.
+SQL Server uses UI port `1433` when unspecified and can omit database name;
+PostgreSQL needs its listener port and database; Databricks fixes auth to
+`oauth-m2m` and needs no account username/password or auth-method choice.
+Credentials are requested locally only when running the prepared command.
+
+For the three new helpers, `isTestConnectionEnabled` is an optional create-only
+boolean. Omit it unless requested; omitted/false preserves service behavior.
+When true, verify installed support and explain that creation includes a
+connection test and requires active default compute. Use that one async create
+operation; do not add a separate test or provision/start compute implicitly.
+A failed connection test prevents creation. Poll its returned operation when
+waiting for completion, rather than treating a 202 as success.
 
 ## Discovery and execution
 
@@ -48,21 +99,25 @@ a stale repository SDK enum must not be used to reject an installed connector.
    `python3 <skill_dir>/scripts/validate-protected-paths.py @/tmp/body-<unique>.json`.
    This separate helper checks referenced-file access and placeholder syntax
    without prompts or an AIDP call. Wallet-specific checks above still apply.
-5. After the concrete operation has any required approval, give the user a
-   command with `--output-file <fresh-result-path> --` before `aidp`, as shown
-   below. This handoff is required for every agent-guided external catalog
-   create/test operation, including Oracle Database basic and wallet connections,
-   full new-connection tests, and stored-catalog replacement-password tests.
-   Preserve the installed CLI arguments and established authentication/target.
+5. Apply the shared [execution-mode rules](../protected-bodies.md#choose-execution-mode).
+   If any interactive prompt remains, give the user the complete terminal command
+   after any required confirmation. If there are no prompts, summarize the public
+   inputs, target, file paths/references and intended action, ask "Shall I proceed?",
+   and wait for approval before executing the wrapper yourself. BigQuery with a
+   supplied key-file path normally uses this direct mode. In both modes include
+   `--output-file <fresh-result-path> --` before `aidp` for every catalog create/test
+   operation. Preserve installed CLI arguments and established authentication/target.
 6. Wait for and consume that exact result via `read-protected-result.py`; it
    deletes the result before returning its contents. Use the same result path
-   across the terminal command and reader. A 202 means pending. Do not retry a
+   across the wrapper command and reader. After direct execution, read it in the
+   same turn without a user continuation step. A 202 means pending. Do not retry a
    mutation blindly. Do not ask the user to paste terminal output. The template
    remains unchanged with placeholders and no credential draft remains.
 
 ## Additional source template helpers
 
-MySQL, DB2, Azure SQL Server, Snowflake and Google BigQuery share the following helper contract;
+MySQL, DB2, Azure SQL Server, Snowflake, Google BigQuery, SQL Server, PostgreSQL
+and Databricks share the following helper contract;
 source-specific connection fields and authentication branches remain in their
 individual references.
 
@@ -73,6 +128,9 @@ individual references.
 | `AZURE_SQLSERVER` | `azure-sqlserver` |
 | `SNOWFLAKE` | `snowflake` |
 | `GOOGLE_BIGQUERY` | `google-bigquery` |
+| `SQLSERVER` | `sqlserver` |
+| `POSTGRESQL` | `postgresql` |
+| `DATABRICKS_UNITY_CATALOG` | `databricks` |
 
 Each `scripts/ext-catalogs/<source-folder>/prepare-body.py` takes
 `--operation create|test-connection`, `--config @<non-sensitive-config.json>`, and
@@ -98,8 +156,8 @@ to work around a failed test. The common workflow governs waiting and cleanup.
 
 ## Required output handoff for every source
 
-Handoff is source-independent: the wrapper does not branch on ADW versus Oracle
-or any other source. Do not omit `--output-file` when constructing the command;
+The private result-file handoff is source-independent; a user terminal handoff
+is needed only when the template has prompts. Do not omit `--output-file` when constructing the command;
 the wrapper refuses invocations without it.
 
 Connection test (the body determines the selected source type):
@@ -118,8 +176,10 @@ internally, captures CLI stdout/stderr in an owner-only file, deletes the actual
 request body, then prints only:
 `Operation output handed off to AI agent. Ask it to continue.`
 Prompts remain visible as appropriate; command output does not appear on console.
-
-While waiting, or when the user says “continue”, consume the agreed result:
+After direct execution, consume the result yourself without asking the user to
+send "continue" or repeating the handoff message. For user-run commands, wait
+while the turn is active, or resume when the user says “continue”. Consume only
+the agreed result:
 
 ```bash
 python3 <skill_dir>/scripts/read-protected-result.py \
@@ -176,7 +236,7 @@ or cross-tenancy selection rather than assuming access.
 
 ## Existing-catalog replacement-password tests
 
-For ADW/ALH/ATP/Kafka/Oracle/Exadata/MySQL/DB2/Azure SQL Server and verified
+For ADW/ALH/ATP/Kafka/Oracle/Exadata/MySQL/DB2/Azure SQL Server/SQL Server/PostgreSQL and verified
 Snowflake Basic authentication, when installed help supports this operation,
 reuse the catalog's stable key and source type, and prompt only for a replacement
 password. Example ADW body:
@@ -193,6 +253,10 @@ password. Example ADW body:
 
 The server reuses stored endpoint/account/wallet details. Testing does not save
 the password. DB2 uses `password` instead of a source-prefixed property.
+Databricks uses the same keyed flow with only
+`DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_SECRET` in connection properties; prompt
+for its replacement client secret, not a password. It reuses the stored workspace,
+client ID and remote catalog without saving the replacement secret.
 Snowflake KeyPair must use a full test without `key`: the stored shortcut only
 replaces passwords, not private keys/passphrases. OAC does not use this shortcut: discover a separate stored-OAC test
 if offered, or prepare its full protected connection-test body.

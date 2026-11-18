@@ -163,6 +163,29 @@ class FolderTransferContractTests(unittest.TestCase):
                           'allowed_values = ["CREATE", "UPDATE", "FUTURE"]',
                           "contract.models.UploadAndExtractZipDetails.fields.action.enum")
 
+    def test_unrelated_async_classification_enum_and_constant_additions_do_not_fail(self):
+        path = MODELS + "async_operation.py"
+        for prefix, first in (("RESOURCE_TYPE", "CATALOG"), ("ACTION_TYPE", "CREATE_CATALOG")):
+            with self.subTest(prefix=prefix), \
+                    self.changed(path, f'{prefix}_UNKNOWN = "UNKNOWN"',
+                                 f'{prefix}_UNKNOWN = "UNKNOWN"\n    {prefix}_FUTURE = "FUTURE"'), \
+                    self.changed(path, f'allowed_values = ["UNKNOWN", "{first}",',
+                                 f'allowed_values = ["UNKNOWN", "FUTURE", "{first}",'):
+                check_folder_transfer_contract(self.repo)
+
+    def test_async_classification_field_shapes_still_fail_on_drift(self):
+        for field in ("action_type", "resource_type"):
+            with self.subTest(field=field):
+                self.assert_drift(MODELS + "async_operation.py", f"'{field}': 'str'", f"'{field}': 'int'",
+                                  "AsyncOperation.fields." + ("actionType" if field == "action_type" else "resourceType") + ".type")
+
+    def test_scoped_async_schema_accepts_new_classifications_but_validates_types_and_status(self):
+        body = {"actionType": "FUTURE", "resourceType": "FUTURE", "status": "SUCCEEDED"}
+        validate_body(self.contract["models"], "AsyncOperation", body, require_fields=False)
+        for field, value in (("actionType", 42), ("resourceType", 42), ("status", "PAUSED")):
+            with self.subTest(field=field), self.assertRaises(AssertionError):
+                validate_body(self.contract["models"], "AsyncOperation", {**body, field: value}, require_fields=False)
+
     def test_transfer_response_and_async_status_drift_fail(self):
         for filename, old, new, diagnostic in (
             ("upload_and_extract_zip_result.py", "'upload_url': 'uploadUrl'", "'upload_url': 'newUploadUrl'", "fields.uploadUrl"),

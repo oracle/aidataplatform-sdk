@@ -79,8 +79,15 @@ Never retrieve a stored private key or masked key into model context. Replacing
 the account/project identity instead requires a full test with its intended public
 metadata, rather than a stored-key shortcut.
 
-Validate the unresolved body with `scripts/validate-protected-paths.py`, then
-follow the common [required output handoff](common.md#required-output-handoff-for-every-source)
+Validate the unresolved body with `scripts/validate-protected-paths.py`. Create,
+full-test and stored-catalog key-replacement requests use the supplied key file
+and normally add no terminal prompts. Follow the shared
+[execution-mode rules](../protected-bodies.md#choose-execution-mode): summarize
+the target, operation, public connection details and key-file path, ask
+"Shall I proceed?", and wait for approval. Then run the protected wrapper yourself
+and report the result without a user terminal or continuation step. If any
+interactive prompt has been added to the actual template, use the user-run mode.
+Keep the common [required output handoff](common.md#required-output-handoff-for-every-source)
 using `protected_aidp.py --output-file <fresh-result> -- aidp ... --body @<template>`.
 Consume/delete only that result with `read-protected-result.py`. The actual body
 is deleted on success, failure or Ctrl+C, and the original key file is retained.

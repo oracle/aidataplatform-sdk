@@ -40,9 +40,11 @@ the contract change and ensure the sensitive-data AI skills in the
   enum members/constants, inheritance and discriminator/subtype mappings. All
   reachable request and response models are followed, including models inside
   lists and maps (agent nodes, tools and nested authentication).
-- All 12 TypeScript SDK external-catalog connection-property enums. These cover
+- All 12 repository TypeScript SDK external-catalog connection-property enums. These cover
   the key names that Python represents as free-form connection-property maps.
-  Added enum files, members and removed members all trigger review.
+  Added enum files, members and removed members all trigger review. The three
+  newer installed connectors have a separate reviewed property-key contract
+  described below because repository code generation predates them.
 - Google BigQuery's six reviewed service-account property keys, fixed
   `service_account` auth value, sensitive key classification and optional shared
   networking context are pinned separately in `google-bigquery-key-contract.json`.
@@ -56,10 +58,10 @@ the contract change and ensure the sensitive-data AI skills in the
   or parsing changes; comments, formatting and function docstrings are ignored.
   A refactor here may conservatively trigger review even without a wire change.
 - Protected template fixtures for the seven original catalog sources and helper
-  requests for the five additional sources, all 3 credential types,
+  requests for the eight additional sources, all 3 supported credential types,
   both user-setting types and agent authentication. Requests are checked against
   current SDK schemas. Existing protected-input tests also verify prompts,
-  file access, payload-specific inline-secret rejection, permissions, default preservation,
+  file access, explicit-placeholder validation, permissions, default preservation,
   command output handoff and body deletion on success/failure/Ctrl+C.
 - Installed CLI manifest metadata must agree with installed SDK command fields,
   required fields and body enums. Tests simulate an older CLI manifest omitting
@@ -70,8 +72,8 @@ the contract change and ensure the sensitive-data AI skills in the
   CLI output changes and removed operations actually fail the contract checks.
 
 `SettingData` is a shared SDK union. Its `OAUTH`/`OAuthAdminSetting` variant is
-intentionally excluded from the user-setting helper; `GIT_ACCOUNT` and
-`IAM_USER_CREDENTIAL` are its reviewed supported types. Agent OAuth is separate.
+intentionally excluded from the user-setting workflow; `GIT_ACCOUNT` and
+`IAM_USER_CREDENTIAL` are its reviewed branches. Agent OAuth is separate.
 Likewise, existing catalog property enums contain optional/staging keys that
 need not all be prompted for. Pinning the full enum still forces review of any
 change, even to an optional field the helper does not currently use.
@@ -82,11 +84,52 @@ property-key checks allow that one shared key as well as the source's enum.
 
 ## Reviewed SDK/CLI contract
 
-The repository and installed `5.1.1` SDK/CLI contracts now agree: 116 reachable
+The original repository and installed `5.1.1` snapshots agreed on 116 reachable
 models, 12 catalog sources and 12 TypeScript connection-property enums. The
 repository and installed baselines remain separate so installed manifest and
-package drift cannot be hidden by repository sources. Tests no longer exempt
-BigQuery from repository request validation.
+package drift cannot be hidden by repository sources. BigQuery remains subject
+to repository request validation.
+
+### SQL Server, PostgreSQL and Databricks catalog review (13 November 2026)
+
+The installed catalog contract now includes `SQLSERVER`, `POSTGRESQL` and
+`DATABRICKS_UNITY_CATALOG` from matched SDK/CLI `5.2.0.2`. Only their catalog
+source enums/constants and the reviewed optional create-time
+`isTestConnectionEnabled` boolean were accepted into the installed baseline.
+The later installed SDK review below covers OAuth credential and registry-agent
+metadata; this catalog update itself did not implement those features. Folder-transfer
+baselines are unchanged.
+
+`catalog-connectors-contract.json` pins the three connectors' required/optional
+property keys, sensitive fields, stored-test replacement key, feature flags and
+reviewed defaults. Evidence is the current backend public catalog definitions,
+`SqlServerExternalCatalogHelper`, `PostgresqlExternalCatalogHelper`,
+`DatabricksUnityCatalogExternalCatalogHelper`, and UI payload builders; SQL Server
+and Databricks also have E2E payload assertions. The backend handlers were read
+from the sibling API-handler source because the reference SDK's generated models
+are older. No live backend validation is claimed.
+
+Both plugin variants prepare create, full-test and saved-catalog replacement
+credentials through the existing protected wrapper. SQL Server defaults to UI
+port `1433` and omits an unspecified database; PostgreSQL requires port/database;
+Databricks uses fixed `oauth-m2m` and exactly five connection properties.
+The optional create-time test flag is omitted unless requested, retains explicit
+false, and never adds an implicit separate test or compute provisioning step.
+
+The repository models still reject these three new source discriminators. This
+version gap is explicit in `repositoryUnsupportedSources`; tests assert that
+rejection and validate all new bodies against the reviewed installed schemas.
+Existing source bodies continue to validate against both. Installed tests also
+exercise actual model constructors and CLI help for the new sources. A future
+repository code-generation update must deliberately reconcile the pinned gap;
+no runtime fallback coerces these sources into older connector types.
+
+`test_catalog_connectors.py` covers exact payloads in both variants, source-specific
+required fields/defaults, unsupported options and inline-secret rejection, URL and
+port validation, existing-catalog tests, explicit create flags, private request
+permissions, output handoff, and cleanup on successful and failed execution.
+These tests join the release runner's required suites. The ordinary gate still
+requires every pinned contract to pass; this scoped update does not bypass it.
 
 The reviewed changes from the previous repository baseline are classified as:
 
@@ -238,16 +281,26 @@ snapshots each contain five models. The separate baselines are
 
 The checks pin operation paths and API versions, HTTP methods, CLI argument and
 body metadata, exact request/response model fields and types, requiredness,
-action/status enums, response headers, and the CLI output-envelope implementation.
+upload-request `action` enums (`CREATE`/`UPDATE`), polling `status` enums,
+response headers, and the CLI output-envelope implementation.
+The poller does not consume `AsyncOperation.actionType` or `resourceType`, so
+only those two response fields' enum values and associated `ACTION_TYPE_*` /
+`RESOURCE_TYPE_*` constants are excluded. Their field shapes remain checked.
+Unrelated job classifications may change without blocking folder transfers;
+transfer request actions and polling statuses remain strict. Both collection and
+comparison apply this scope, including to the existing reviewed snapshots;
+the baseline files are not refreshed to accept the unrelated additions.
 Installed checks additionally verify the CLI manifest against the SDK and invoke
 help for all five commands. No AIDP service or Object Storage request is made.
 
 Behavior tests run both plugin helpers with synthetic transfer results, check
 actual CREATE/UPDATE/download bodies against SDK models, verify their CLI command
 shapes and exercise all four SDK polling states. Source mutation tests prove
-that added/removed fields, type/requiredness changes, action/status enums, transfer
-URL/operation-key responses, route/API-version changes, command naming and removed
-operations fail the contract gate. A stale installed action enum must also fail.
+that added/removed fields, type/requiredness changes, upload-action/polling-status
+enums, transfer URL/operation-key responses, route/API-version changes, command
+naming and removed operations fail the contract gate. A stale installed upload
+request action enum must also fail. Additional mutation tests verify that shared
+async classification additions pass while field-type and status changes fail.
 Catalog property enums and unrelated operation inventories are not part of these
 folder-transfer baselines.
 
@@ -308,3 +361,21 @@ recognition, PowerShell quoting and consent-scoped identity lookup have local
 unit coverage as well. These checks use synthetic inputs and no OCI requests.
 The existing full test suite includes POSIX shell fixtures; this portable suite
 can run natively on Windows without those fixtures.
+
+## Generic resource-template migration
+
+Credential, user-setting and agent JSON is now composed explicitly from schemas
+and references. The field-specific builder and its three callers are retired.
+The existing protected wrapper remains unchanged; it resolves placeholders and
+cleans up its private request copy. Tests use explicit unresolved fixtures to
+check field preservation, prompting and cleanup. The installed SDK baseline was subsequently reviewed and updated as recorded below.
+
+## Installed SDK/CLI snapshot review (18 November 2026)
+
+Accepted the reviewed `5.2.0` contract: OAuth credential models/unions and response
+redaction metadata, optional MCP `aiRegistryId`, and the public agent-list
+`deployment-type` filter. Generic template tests cover OAuth and public references.
+Only authorization-code OAuth is documented as supported; the SDK's client-credentials
+and device-code variants remain reserved by the backend. This snapshot does not
+enable those flows or the internal token API. Repository and folder-transfer
+baselines and all drift assertions are unchanged.

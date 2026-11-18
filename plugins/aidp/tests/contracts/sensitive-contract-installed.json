@@ -162,10 +162,13 @@
             "EXADATA",
             "MYSQL",
             "AZURE_SQLSERVER",
+            "SQLSERVER",
+            "POSTGRESQL",
             "SNOWFLAKE",
             "GOOGLE_BIGQUERY",
             "DB2",
-            "ORACLE_ANALYTICS"
+            "ORACLE_ANALYTICS",
+            "DATABRICKS_UNITY_CATALOG"
           ]
         },
         "bodyField": "catalog_test_connection_details",
@@ -189,10 +192,13 @@
               "EXADATA",
               "MYSQL",
               "AZURE_SQLSERVER",
+              "SQLSERVER",
+              "POSTGRESQL",
               "SNOWFLAKE",
               "GOOGLE_BIGQUERY",
               "DB2",
-              "ORACLE_ANALYTICS"
+              "ORACLE_ANALYTICS",
+              "DATABRICKS_UNITY_CATALOG"
             ],
             "required": false,
             "type": "string"
@@ -230,10 +236,13 @@
                 "EXADATA",
                 "MYSQL",
                 "AZURE_SQLSERVER",
+                "SQLSERVER",
+                "POSTGRESQL",
                 "SNOWFLAKE",
                 "GOOGLE_BIGQUERY",
                 "DB2",
-                "ORACLE_ANALYTICS"
+                "ORACLE_ANALYTICS",
+                "DATABRICKS_UNITY_CATALOG"
               ]
             },
             "fields": [
@@ -258,10 +267,13 @@
                   "EXADATA",
                   "MYSQL",
                   "AZURE_SQLSERVER",
+                  "SQLSERVER",
+                  "POSTGRESQL",
                   "SNOWFLAKE",
                   "GOOGLE_BIGQUERY",
                   "DB2",
-                  "ORACLE_ANALYTICS"
+                  "ORACLE_ANALYTICS",
+                  "DATABRICKS_UNITY_CATALOG"
                 ],
                 "name": "sourceType",
                 "required": false,
@@ -1693,10 +1705,13 @@
             "EXADATA",
             "MYSQL",
             "AZURE_SQLSERVER",
+            "SQLSERVER",
+            "POSTGRESQL",
             "SNOWFLAKE",
             "GOOGLE_BIGQUERY",
             "DB2",
-            "ORACLE_ANALYTICS"
+            "ORACLE_ANALYTICS",
+            "DATABRICKS_UNITY_CATALOG"
           ]
         },
         "bodyField": "create_catalog_details",
@@ -1722,6 +1737,10 @@
             "required": true,
             "type": "string"
           },
+          "isTestConnectionEnabled": {
+            "required": false,
+            "type": "boolean"
+          },
           "properties": {
             "required": false,
             "type": "object"
@@ -1736,10 +1755,13 @@
               "EXADATA",
               "MYSQL",
               "AZURE_SQLSERVER",
+              "SQLSERVER",
+              "POSTGRESQL",
               "SNOWFLAKE",
               "GOOGLE_BIGQUERY",
               "DB2",
-              "ORACLE_ANALYTICS"
+              "ORACLE_ANALYTICS",
+              "DATABRICKS_UNITY_CATALOG"
             ],
             "required": false,
             "type": "string"
@@ -1762,10 +1784,13 @@
                 "EXADATA",
                 "MYSQL",
                 "AZURE_SQLSERVER",
+                "SQLSERVER",
+                "POSTGRESQL",
                 "SNOWFLAKE",
                 "GOOGLE_BIGQUERY",
                 "DB2",
-                "ORACLE_ANALYTICS"
+                "ORACLE_ANALYTICS",
+                "DATABRICKS_UNITY_CATALOG"
               ]
             },
             "fields": [
@@ -1795,6 +1820,11 @@
                 "type": "string"
               },
               {
+                "name": "isTestConnectionEnabled",
+                "required": false,
+                "type": "boolean"
+              },
+              {
                 "name": "properties",
                 "required": false,
                 "type": "object"
@@ -1809,10 +1839,13 @@
                   "EXADATA",
                   "MYSQL",
                   "AZURE_SQLSERVER",
+                  "SQLSERVER",
+                  "POSTGRESQL",
                   "SNOWFLAKE",
                   "GOOGLE_BIGQUERY",
                   "DB2",
-                  "ORACLE_ANALYTICS"
+                  "ORACLE_ANALYTICS",
+                  "DATABRICKS_UNITY_CATALOG"
                 ],
                 "name": "sourceType",
                 "required": false,
@@ -1895,7 +1928,8 @@
           "type": [
             "SECRET_TOKEN",
             "VAULT_REFERENCE",
-            "SERVICE_ACCOUNT"
+            "SERVICE_ACCOUNT",
+            "OAUTH"
           ]
         },
         "bodyField": "create_data_lake_credential_details",
@@ -1917,7 +1951,8 @@
             "enumValues": [
               "SECRET_TOKEN",
               "VAULT_REFERENCE",
-              "SERVICE_ACCOUNT"
+              "SERVICE_ACCOUNT",
+              "OAUTH"
             ],
             "required": true,
             "type": "string"
@@ -1930,7 +1965,8 @@
               "type": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ]
             },
             "fields": [
@@ -1954,7 +1990,8 @@
                 "enumValues": [
                   "SECRET_TOKEN",
                   "VAULT_REFERENCE",
-                  "SERVICE_ACCOUNT"
+                  "SERVICE_ACCOUNT",
+                  "OAUTH"
                 ],
                 "name": "type",
                 "required": true,
@@ -1973,7 +2010,8 @@
               "credentialType": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ]
             },
             "fields": [
@@ -1981,7 +2019,8 @@
                 "enumValues": [
                   "SECRET_TOKEN",
                   "VAULT_REFERENCE",
-                  "SERVICE_ACCOUNT"
+                  "SERVICE_ACCOUNT",
+                  "OAUTH"
                 ],
                 "name": "credentialType",
                 "required": true,
@@ -1999,6 +2038,11 @@
               },
               {
                 "discriminatorField": "credentialType",
+                "discriminatorValue": "OAUTH",
+                "modelName": "OAuthCredentialDetails"
+              },
+              {
+                "discriminatorField": "credentialType",
                 "discriminatorValue": "SECRET_TOKEN",
                 "modelName": "SecretTokenCredentialDetails"
               },
@@ -2006,6 +2050,241 @@
                 "discriminatorField": "credentialType",
                 "discriminatorValue": "VAULT_REFERENCE",
                 "modelName": "VaultReferenceCredentialDetails"
+              }
+            ]
+          },
+          "OAuthAuthorizationCodeFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "authorizationUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "isPkceRequired",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "itemType": "string",
+                "name": "redirectUrls",
+                "required": false,
+                "type": "array"
+              },
+              {
+                "name": "refreshUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthClientCredentialsFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthCredentialDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "credentialType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "modelName": "OAuthFlowConfigDetails",
+                "name": "flowConfigDetails",
+                "required": true,
+                "type": "object"
+              }
+            ],
+            "requiredFields": [
+              "credentialType",
+              "flowConfigDetails"
+            ],
+            "variants": []
+          },
+          "OAuthDeviceCodeFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "deviceAuthorizationUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "refreshUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthFlowConfigDetails": {
+            "enumFields": {
+              "grantType": [
+                "AUTHORIZATION_CODE",
+                "CLIENT_CREDENTIALS",
+                "DEVICE_CODE"
+              ]
+            },
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "enumValues": [
+                  "AUTHORIZATION_CODE",
+                  "CLIENT_CREDENTIALS",
+                  "DEVICE_CODE"
+                ],
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": [
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "CLIENT_CREDENTIALS",
+                "modelName": "OAuthClientCredentialsFlowConfigDetails"
+              },
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "AUTHORIZATION_CODE",
+                "modelName": "OAuthAuthorizationCodeFlowConfigDetails"
+              },
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "DEVICE_CODE",
+                "modelName": "OAuthDeviceCodeFlowConfigDetails"
               }
             ]
           },
@@ -2650,6 +2929,18 @@
             "required": false,
             "type": "string"
           },
+          "deployment_type": {
+            "cliName": "deployment-type",
+            "enumValues": [
+              "TEST",
+              "PROD",
+              "CODE"
+            ],
+            "in": "query",
+            "originalName": "deploymentType",
+            "required": false,
+            "type": "string"
+          },
           "display_name": {
             "cliName": "display-name",
             "in": "query",
@@ -2847,7 +3138,8 @@
             "enumValues": [
               "SECRET_TOKEN",
               "VAULT_REFERENCE",
-              "SERVICE_ACCOUNT"
+              "SERVICE_ACCOUNT",
+              "OAUTH"
             ],
             "in": "query",
             "originalName": "credentialType",
@@ -4510,7 +4802,8 @@
           "type": [
             "SECRET_TOKEN",
             "VAULT_REFERENCE",
-            "SERVICE_ACCOUNT"
+            "SERVICE_ACCOUNT",
+            "OAUTH"
           ]
         },
         "bodyField": "update_data_lake_credential_details",
@@ -4532,7 +4825,8 @@
             "enumValues": [
               "SECRET_TOKEN",
               "VAULT_REFERENCE",
-              "SERVICE_ACCOUNT"
+              "SERVICE_ACCOUNT",
+              "OAUTH"
             ],
             "required": false,
             "type": "string"
@@ -4545,7 +4839,8 @@
               "credentialType": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ]
             },
             "fields": [
@@ -4553,7 +4848,8 @@
                 "enumValues": [
                   "SECRET_TOKEN",
                   "VAULT_REFERENCE",
-                  "SERVICE_ACCOUNT"
+                  "SERVICE_ACCOUNT",
+                  "OAUTH"
                 ],
                 "name": "credentialType",
                 "required": true,
@@ -4571,6 +4867,11 @@
               },
               {
                 "discriminatorField": "credentialType",
+                "discriminatorValue": "OAUTH",
+                "modelName": "OAuthCredentialDetails"
+              },
+              {
+                "discriminatorField": "credentialType",
                 "discriminatorValue": "SECRET_TOKEN",
                 "modelName": "SecretTokenCredentialDetails"
               },
@@ -4578,6 +4879,241 @@
                 "discriminatorField": "credentialType",
                 "discriminatorValue": "VAULT_REFERENCE",
                 "modelName": "VaultReferenceCredentialDetails"
+              }
+            ]
+          },
+          "OAuthAuthorizationCodeFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "authorizationUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "isPkceRequired",
+                "required": false,
+                "type": "boolean"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "itemType": "string",
+                "name": "redirectUrls",
+                "required": false,
+                "type": "array"
+              },
+              {
+                "name": "refreshUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthClientCredentialsFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthCredentialDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "credentialType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "modelName": "OAuthFlowConfigDetails",
+                "name": "flowConfigDetails",
+                "required": true,
+                "type": "object"
+              }
+            ],
+            "requiredFields": [
+              "credentialType",
+              "flowConfigDetails"
+            ],
+            "variants": []
+          },
+          "OAuthDeviceCodeFlowConfigDetails": {
+            "enumFields": {},
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "deviceAuthorizationUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "refreshUrl",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": []
+          },
+          "OAuthFlowConfigDetails": {
+            "enumFields": {
+              "grantType": [
+                "AUTHORIZATION_CODE",
+                "CLIENT_CREDENTIALS",
+                "DEVICE_CODE"
+              ]
+            },
+            "fields": [
+              {
+                "name": "clientId",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "clientSecret",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "enumValues": [
+                  "AUTHORIZATION_CODE",
+                  "CLIENT_CREDENTIALS",
+                  "DEVICE_CODE"
+                ],
+                "name": "grantType",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "issuer",
+                "required": false,
+                "type": "string"
+              },
+              {
+                "name": "scopes",
+                "required": false,
+                "type": "object"
+              },
+              {
+                "name": "tokenUrl",
+                "required": false,
+                "type": "string"
+              }
+            ],
+            "requiredFields": [
+              "grantType"
+            ],
+            "variants": [
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "CLIENT_CREDENTIALS",
+                "modelName": "OAuthClientCredentialsFlowConfigDetails"
+              },
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "AUTHORIZATION_CODE",
+                "modelName": "OAuthAuthorizationCodeFlowConfigDetails"
+              },
+              {
+                "discriminatorField": "grantType",
+                "discriminatorValue": "DEVICE_CODE",
+                "modelName": "OAuthDeviceCodeFlowConfigDetails"
               }
             ]
           },
@@ -4678,7 +5214,8 @@
               "type": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ]
             },
             "fields": [
@@ -4702,7 +5239,8 @@
                 "enumValues": [
                   "SECRET_TOKEN",
                   "VAULT_REFERENCE",
-                  "SERVICE_ACCOUNT"
+                  "SERVICE_ACCOUNT",
+                  "OAUTH"
                 ],
                 "name": "type",
                 "required": false,
@@ -7551,6 +8089,7 @@
         "SOURCE_TYPE_ALH": "ALH",
         "SOURCE_TYPE_ATP": "ATP",
         "SOURCE_TYPE_AZURE_SQLSERVER": "AZURE_SQLSERVER",
+        "SOURCE_TYPE_DATABRICKS_UNITY_CATALOG": "DATABRICKS_UNITY_CATALOG",
         "SOURCE_TYPE_DB2": "DB2",
         "SOURCE_TYPE_EXADATA": "EXADATA",
         "SOURCE_TYPE_GOOGLE_BIGQUERY": "GOOGLE_BIGQUERY",
@@ -7558,7 +8097,9 @@
         "SOURCE_TYPE_MYSQL": "MYSQL",
         "SOURCE_TYPE_ORACLE": "ORACLE",
         "SOURCE_TYPE_ORACLE_ANALYTICS": "ORACLE_ANALYTICS",
-        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE"
+        "SOURCE_TYPE_POSTGRESQL": "POSTGRESQL",
+        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE",
+        "SOURCE_TYPE_SQLSERVER": "SQLSERVER"
       },
       "defaults": {
         "catalogGuid": "None",
@@ -7651,6 +8192,7 @@
             "ALH",
             "ATP",
             "AZURE_SQLSERVER",
+            "DATABRICKS_UNITY_CATALOG",
             "DB2",
             "EXADATA",
             "GOOGLE_BIGQUERY",
@@ -7658,7 +8200,9 @@
             "MYSQL",
             "ORACLE",
             "ORACLE_ANALYTICS",
-            "SNOWFLAKE"
+            "POSTGRESQL",
+            "SNOWFLAKE",
+            "SQLSERVER"
           ],
           "pythonName": "source_type",
           "required": false,
@@ -7740,6 +8284,7 @@
         "SOURCE_TYPE_ALH": "ALH",
         "SOURCE_TYPE_ATP": "ATP",
         "SOURCE_TYPE_AZURE_SQLSERVER": "AZURE_SQLSERVER",
+        "SOURCE_TYPE_DATABRICKS_UNITY_CATALOG": "DATABRICKS_UNITY_CATALOG",
         "SOURCE_TYPE_DB2": "DB2",
         "SOURCE_TYPE_EXADATA": "EXADATA",
         "SOURCE_TYPE_GOOGLE_BIGQUERY": "GOOGLE_BIGQUERY",
@@ -7747,7 +8292,9 @@
         "SOURCE_TYPE_MYSQL": "MYSQL",
         "SOURCE_TYPE_ORACLE": "ORACLE",
         "SOURCE_TYPE_ORACLE_ANALYTICS": "ORACLE_ANALYTICS",
-        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE"
+        "SOURCE_TYPE_POSTGRESQL": "POSTGRESQL",
+        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE",
+        "SOURCE_TYPE_SQLSERVER": "SQLSERVER"
       },
       "defaults": {
         "catalogGuid": "None",
@@ -7838,6 +8385,7 @@
             "ALH",
             "ATP",
             "AZURE_SQLSERVER",
+            "DATABRICKS_UNITY_CATALOG",
             "DB2",
             "EXADATA",
             "GOOGLE_BIGQUERY",
@@ -7845,7 +8393,9 @@
             "MYSQL",
             "ORACLE",
             "ORACLE_ANALYTICS",
-            "SNOWFLAKE"
+            "POSTGRESQL",
+            "SNOWFLAKE",
+            "SQLSERVER"
           ],
           "pythonName": "source_type",
           "required": false,
@@ -7885,6 +8435,7 @@
         "SOURCE_TYPE_ALH": "ALH",
         "SOURCE_TYPE_ATP": "ATP",
         "SOURCE_TYPE_AZURE_SQLSERVER": "AZURE_SQLSERVER",
+        "SOURCE_TYPE_DATABRICKS_UNITY_CATALOG": "DATABRICKS_UNITY_CATALOG",
         "SOURCE_TYPE_DB2": "DB2",
         "SOURCE_TYPE_EXADATA": "EXADATA",
         "SOURCE_TYPE_GOOGLE_BIGQUERY": "GOOGLE_BIGQUERY",
@@ -7892,7 +8443,9 @@
         "SOURCE_TYPE_MYSQL": "MYSQL",
         "SOURCE_TYPE_ORACLE": "ORACLE",
         "SOURCE_TYPE_ORACLE_ANALYTICS": "ORACLE_ANALYTICS",
-        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE"
+        "SOURCE_TYPE_POSTGRESQL": "POSTGRESQL",
+        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE",
+        "SOURCE_TYPE_SQLSERVER": "SQLSERVER"
       },
       "defaults": {
         "connectionDetails": "None",
@@ -7918,6 +8471,7 @@
             "ALH",
             "ATP",
             "AZURE_SQLSERVER",
+            "DATABRICKS_UNITY_CATALOG",
             "DB2",
             "EXADATA",
             "GOOGLE_BIGQUERY",
@@ -7925,7 +8479,9 @@
             "MYSQL",
             "ORACLE",
             "ORACLE_ANALYTICS",
-            "SNOWFLAKE"
+            "POSTGRESQL",
+            "SNOWFLAKE",
+            "SQLSERVER"
           ],
           "pythonName": "source_type",
           "required": false,
@@ -8250,6 +8806,7 @@
         "SOURCE_TYPE_ALH": "ALH",
         "SOURCE_TYPE_ATP": "ATP",
         "SOURCE_TYPE_AZURE_SQLSERVER": "AZURE_SQLSERVER",
+        "SOURCE_TYPE_DATABRICKS_UNITY_CATALOG": "DATABRICKS_UNITY_CATALOG",
         "SOURCE_TYPE_DB2": "DB2",
         "SOURCE_TYPE_EXADATA": "EXADATA",
         "SOURCE_TYPE_GOOGLE_BIGQUERY": "GOOGLE_BIGQUERY",
@@ -8257,13 +8814,16 @@
         "SOURCE_TYPE_MYSQL": "MYSQL",
         "SOURCE_TYPE_ORACLE": "ORACLE",
         "SOURCE_TYPE_ORACLE_ANALYTICS": "ORACLE_ANALYTICS",
-        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE"
+        "SOURCE_TYPE_POSTGRESQL": "POSTGRESQL",
+        "SOURCE_TYPE_SNOWFLAKE": "SNOWFLAKE",
+        "SOURCE_TYPE_SQLSERVER": "SQLSERVER"
       },
       "defaults": {
         "catalogType": "None",
         "connectionDetails": "None",
         "description": "None",
         "displayName": "None",
+        "isTestConnectionEnabled": "None",
         "properties": "None",
         "sourceType": "None"
       },
@@ -8295,6 +8855,12 @@
           "required": true,
           "type": "str"
         },
+        "isTestConnectionEnabled": {
+          "enum": [],
+          "pythonName": "is_test_connection_enabled",
+          "required": false,
+          "type": "bool"
+        },
         "properties": {
           "enum": [],
           "pythonName": "properties",
@@ -8307,6 +8873,7 @@
             "ALH",
             "ATP",
             "AZURE_SQLSERVER",
+            "DATABRICKS_UNITY_CATALOG",
             "DB2",
             "EXADATA",
             "GOOGLE_BIGQUERY",
@@ -8314,7 +8881,9 @@
             "MYSQL",
             "ORACLE",
             "ORACLE_ANALYTICS",
-            "SNOWFLAKE"
+            "POSTGRESQL",
+            "SNOWFLAKE",
+            "SQLSERVER"
           ],
           "pythonName": "source_type",
           "required": false,
@@ -8342,6 +8911,7 @@
     "CreateDataLakeCredentialDetails": {
       "bases": [],
       "constants": {
+        "TYPE_OAUTH": "OAUTH",
         "TYPE_SECRET_TOKEN": "SECRET_TOKEN",
         "TYPE_SERVICE_ACCOUNT": "SERVICE_ACCOUNT",
         "TYPE_VAULT_REFERENCE": "VAULT_REFERENCE"
@@ -8373,6 +8943,7 @@
         },
         "type": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -8421,6 +8992,7 @@
         "LIFECYCLE_STATE_CREATING": "CREATING",
         "LIFECYCLE_STATE_DELETING": "DELETING",
         "LIFECYCLE_STATE_UPDATING": "UPDATING",
+        "TYPE_OAUTH": "OAUTH",
         "TYPE_SECRET_TOKEN": "SECRET_TOKEN",
         "TYPE_SERVICE_ACCOUNT": "SERVICE_ACCOUNT",
         "TYPE_VAULT_REFERENCE": "VAULT_REFERENCE"
@@ -8500,6 +9072,7 @@
         },
         "type": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -8521,6 +9094,7 @@
       "bases": [],
       "constants": {},
       "defaults": {
+        "_redacted_field_paths": "[['items', '*', 'oauth_flow_config_details', 'client_id'], ['items', '*', 'oauth_flow_config_details', 'client_secret']]",
         "items": "None"
       },
       "fields": {
@@ -8536,6 +9110,7 @@
     "CredentialDetails": {
       "bases": [],
       "constants": {
+        "CREDENTIAL_TYPE_OAUTH": "OAUTH",
         "CREDENTIAL_TYPE_SECRET_TOKEN": "SECRET_TOKEN",
         "CREDENTIAL_TYPE_SERVICE_ACCOUNT": "SERVICE_ACCOUNT",
         "CREDENTIAL_TYPE_VAULT_REFERENCE": "VAULT_REFERENCE"
@@ -8546,6 +9121,7 @@
       "fields": {
         "credentialType": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -8556,6 +9132,7 @@
         }
       },
       "variants": {
+        "credentialType=OAUTH": "OAuthCredentialDetails",
         "credentialType=SECRET_TOKEN": "SecretTokenCredentialDetails",
         "credentialType=SERVICE_ACCOUNT": "ServiceAccountCredentialDetails",
         "credentialType=VAULT_REFERENCE": "VaultReferenceCredentialDetails"
@@ -8564,6 +9141,7 @@
     "CredentialSummary": {
       "bases": [],
       "constants": {
+        "CREDENTIAL_TYPE_OAUTH": "OAUTH",
         "CREDENTIAL_TYPE_SECRET_TOKEN": "SECRET_TOKEN",
         "CREDENTIAL_TYPE_SERVICE_ACCOUNT": "SERVICE_ACCOUNT",
         "CREDENTIAL_TYPE_VAULT_REFERENCE": "VAULT_REFERENCE",
@@ -8573,12 +9151,14 @@
         "LIFE_CYCLE_STATE_UPDATING": "UPDATING"
       },
       "defaults": {
+        "_redacted_field_paths": "[['oauth_flow_config_details', 'client_id'], ['oauth_flow_config_details', 'client_secret']]",
         "createdBy": "None",
         "credentialType": "None",
         "description": "None",
         "displayName": "None",
         "key": "None",
         "lifeCycleState": "None",
+        "oauthFlowConfigDetails": "None",
         "timeCreated": "None",
         "timeUpdated": "None",
         "updatedBy": "None"
@@ -8592,6 +9172,7 @@
         },
         "credentialType": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -8628,6 +9209,12 @@
           "pythonName": "life_cycle_state",
           "required": false,
           "type": "str"
+        },
+        "oauthFlowConfigDetails": {
+          "enum": [],
+          "pythonName": "oauth_flow_config_details",
+          "required": false,
+          "type": "OAuthFlowConfigDetails"
         },
         "timeCreated": {
           "enum": [],
@@ -10040,12 +10627,19 @@
       "bases": [],
       "constants": {},
       "defaults": {
+        "aiRegistryId": "None",
         "allowedTools": "None",
         "auth": "None",
         "customHeaders": "None",
         "endpoint": "None"
       },
       "fields": {
+        "aiRegistryId": {
+          "enum": [],
+          "pythonName": "ai_registry_id",
+          "required": false,
+          "type": "str"
+        },
         "allowedTools": {
           "enum": [],
           "pythonName": "allowed_tools",
@@ -10699,6 +11293,317 @@
         }
       },
       "variants": {}
+    },
+    "OAuthAuthorizationCodeFlowConfigDetails": {
+      "bases": [
+        "OAuthFlowConfigDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['client_id'], ['client_secret']]",
+        "authorizationUrl": "None",
+        "clientId": "None",
+        "clientSecret": "None",
+        "grantType": "'AUTHORIZATION_CODE'",
+        "isPkceRequired": "None",
+        "issuer": "None",
+        "redirectUrls": "None",
+        "refreshUrl": "None",
+        "scopes": "None",
+        "tokenUrl": "None"
+      },
+      "fields": {
+        "authorizationUrl": {
+          "enum": [],
+          "pythonName": "authorization_url",
+          "required": false,
+          "type": "str"
+        },
+        "clientId": {
+          "enum": [],
+          "pythonName": "client_id",
+          "required": false,
+          "type": "str"
+        },
+        "clientSecret": {
+          "enum": [],
+          "pythonName": "client_secret",
+          "required": false,
+          "type": "str"
+        },
+        "grantType": {
+          "enum": [
+            "AUTHORIZATION_CODE",
+            "CLIENT_CREDENTIALS",
+            "DEVICE_CODE"
+          ],
+          "pythonName": "grant_type",
+          "required": true,
+          "type": "str"
+        },
+        "isPkceRequired": {
+          "enum": [],
+          "pythonName": "is_pkce_required",
+          "required": false,
+          "type": "bool"
+        },
+        "issuer": {
+          "enum": [],
+          "pythonName": "issuer",
+          "required": false,
+          "type": "str"
+        },
+        "redirectUrls": {
+          "enum": [],
+          "pythonName": "redirect_urls",
+          "required": false,
+          "type": "list[str]"
+        },
+        "refreshUrl": {
+          "enum": [],
+          "pythonName": "refresh_url",
+          "required": false,
+          "type": "str"
+        },
+        "scopes": {
+          "enum": [],
+          "pythonName": "scopes",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "tokenUrl": {
+          "enum": [],
+          "pythonName": "token_url",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "OAuthClientCredentialsFlowConfigDetails": {
+      "bases": [
+        "OAuthFlowConfigDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['client_id'], ['client_secret']]",
+        "clientId": "None",
+        "clientSecret": "None",
+        "grantType": "'CLIENT_CREDENTIALS'",
+        "issuer": "None",
+        "scopes": "None",
+        "tokenUrl": "None"
+      },
+      "fields": {
+        "clientId": {
+          "enum": [],
+          "pythonName": "client_id",
+          "required": false,
+          "type": "str"
+        },
+        "clientSecret": {
+          "enum": [],
+          "pythonName": "client_secret",
+          "required": false,
+          "type": "str"
+        },
+        "grantType": {
+          "enum": [
+            "AUTHORIZATION_CODE",
+            "CLIENT_CREDENTIALS",
+            "DEVICE_CODE"
+          ],
+          "pythonName": "grant_type",
+          "required": true,
+          "type": "str"
+        },
+        "issuer": {
+          "enum": [],
+          "pythonName": "issuer",
+          "required": false,
+          "type": "str"
+        },
+        "scopes": {
+          "enum": [],
+          "pythonName": "scopes",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "tokenUrl": {
+          "enum": [],
+          "pythonName": "token_url",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "OAuthCredentialDetails": {
+      "bases": [
+        "CredentialDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['flow_config_details', 'client_id'], ['flow_config_details', 'client_secret']]",
+        "credentialType": "'OAUTH'",
+        "flowConfigDetails": "None"
+      },
+      "fields": {
+        "credentialType": {
+          "enum": [
+            "OAUTH",
+            "SECRET_TOKEN",
+            "SERVICE_ACCOUNT",
+            "VAULT_REFERENCE"
+          ],
+          "pythonName": "credential_type",
+          "required": true,
+          "type": "str"
+        },
+        "flowConfigDetails": {
+          "enum": [],
+          "pythonName": "flow_config_details",
+          "required": true,
+          "type": "OAuthFlowConfigDetails"
+        }
+      },
+      "variants": {}
+    },
+    "OAuthDeviceCodeFlowConfigDetails": {
+      "bases": [
+        "OAuthFlowConfigDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['client_id'], ['client_secret']]",
+        "clientId": "None",
+        "clientSecret": "None",
+        "deviceAuthorizationUrl": "None",
+        "grantType": "'DEVICE_CODE'",
+        "issuer": "None",
+        "refreshUrl": "None",
+        "scopes": "None",
+        "tokenUrl": "None"
+      },
+      "fields": {
+        "clientId": {
+          "enum": [],
+          "pythonName": "client_id",
+          "required": false,
+          "type": "str"
+        },
+        "clientSecret": {
+          "enum": [],
+          "pythonName": "client_secret",
+          "required": false,
+          "type": "str"
+        },
+        "deviceAuthorizationUrl": {
+          "enum": [],
+          "pythonName": "device_authorization_url",
+          "required": false,
+          "type": "str"
+        },
+        "grantType": {
+          "enum": [
+            "AUTHORIZATION_CODE",
+            "CLIENT_CREDENTIALS",
+            "DEVICE_CODE"
+          ],
+          "pythonName": "grant_type",
+          "required": true,
+          "type": "str"
+        },
+        "issuer": {
+          "enum": [],
+          "pythonName": "issuer",
+          "required": false,
+          "type": "str"
+        },
+        "refreshUrl": {
+          "enum": [],
+          "pythonName": "refresh_url",
+          "required": false,
+          "type": "str"
+        },
+        "scopes": {
+          "enum": [],
+          "pythonName": "scopes",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "tokenUrl": {
+          "enum": [],
+          "pythonName": "token_url",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "OAuthFlowConfigDetails": {
+      "bases": [],
+      "constants": {
+        "GRANT_TYPE_AUTHORIZATION_CODE": "AUTHORIZATION_CODE",
+        "GRANT_TYPE_CLIENT_CREDENTIALS": "CLIENT_CREDENTIALS",
+        "GRANT_TYPE_DEVICE_CODE": "DEVICE_CODE"
+      },
+      "defaults": {
+        "_redacted_field_paths": "[['client_id'], ['client_secret']]",
+        "clientId": "None",
+        "clientSecret": "None",
+        "grantType": "None",
+        "issuer": "None",
+        "scopes": "None",
+        "tokenUrl": "None"
+      },
+      "fields": {
+        "clientId": {
+          "enum": [],
+          "pythonName": "client_id",
+          "required": false,
+          "type": "str"
+        },
+        "clientSecret": {
+          "enum": [],
+          "pythonName": "client_secret",
+          "required": false,
+          "type": "str"
+        },
+        "grantType": {
+          "enum": [
+            "AUTHORIZATION_CODE",
+            "CLIENT_CREDENTIALS",
+            "DEVICE_CODE"
+          ],
+          "pythonName": "grant_type",
+          "required": true,
+          "type": "str"
+        },
+        "issuer": {
+          "enum": [],
+          "pythonName": "issuer",
+          "required": false,
+          "type": "str"
+        },
+        "scopes": {
+          "enum": [],
+          "pythonName": "scopes",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "tokenUrl": {
+          "enum": [],
+          "pythonName": "token_url",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {
+        "grantType=AUTHORIZATION_CODE": "OAuthAuthorizationCodeFlowConfigDetails",
+        "grantType=CLIENT_CREDENTIALS": "OAuthClientCredentialsFlowConfigDetails",
+        "grantType=DEVICE_CODE": "OAuthDeviceCodeFlowConfigDetails"
+      }
     },
     "OciResourcePrincipalAuth": {
       "bases": [
@@ -11407,6 +12312,7 @@
       "fields": {
         "credentialType": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -11442,6 +12348,7 @@
       "fields": {
         "credentialType": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -12178,6 +13085,7 @@
     "UpdateDataLakeCredentialDetails": {
       "bases": [],
       "constants": {
+        "TYPE_OAUTH": "OAUTH",
         "TYPE_SECRET_TOKEN": "SECRET_TOKEN",
         "TYPE_SERVICE_ACCOUNT": "SERVICE_ACCOUNT",
         "TYPE_VAULT_REFERENCE": "VAULT_REFERENCE"
@@ -12209,6 +13117,7 @@
         },
         "type": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -12419,6 +13328,7 @@
       "fields": {
         "credentialType": {
           "enum": [
+            "OAUTH",
             "SECRET_TOKEN",
             "SERVICE_ACCOUNT",
             "VAULT_REFERENCE"
@@ -12737,6 +13647,18 @@
               "required": false,
               "type": "string"
             },
+            "deployment_type": {
+              "cliName": "deployment-type",
+              "enumValues": [
+                "TEST",
+                "PROD",
+                "CODE"
+              ],
+              "in": "query",
+              "originalName": "deploymentType",
+              "required": false,
+              "type": "string"
+            },
             "display_name": {
               "cliName": "display-name",
               "in": "query",
@@ -12959,10 +13881,13 @@
               "EXADATA",
               "MYSQL",
               "AZURE_SQLSERVER",
+              "SQLSERVER",
+              "POSTGRESQL",
               "SNOWFLAKE",
               "GOOGLE_BIGQUERY",
               "DB2",
-              "ORACLE_ANALYTICS"
+              "ORACLE_ANALYTICS",
+              "DATABRICKS_UNITY_CATALOG"
             ]
           },
           "bodyField": "catalog_test_connection_details",
@@ -12986,10 +13911,13 @@
                 "EXADATA",
                 "MYSQL",
                 "AZURE_SQLSERVER",
+                "SQLSERVER",
+                "POSTGRESQL",
                 "SNOWFLAKE",
                 "GOOGLE_BIGQUERY",
                 "DB2",
-                "ORACLE_ANALYTICS"
+                "ORACLE_ANALYTICS",
+                "DATABRICKS_UNITY_CATALOG"
               ],
               "required": false,
               "type": "string"
@@ -13059,10 +13987,13 @@
               "EXADATA",
               "MYSQL",
               "AZURE_SQLSERVER",
+              "SQLSERVER",
+              "POSTGRESQL",
               "SNOWFLAKE",
               "GOOGLE_BIGQUERY",
               "DB2",
-              "ORACLE_ANALYTICS"
+              "ORACLE_ANALYTICS",
+              "DATABRICKS_UNITY_CATALOG"
             ]
           },
           "bodyField": "create_catalog_details",
@@ -13088,6 +14019,10 @@
               "required": true,
               "type": "string"
             },
+            "isTestConnectionEnabled": {
+              "required": false,
+              "type": "boolean"
+            },
             "properties": {
               "required": false,
               "type": "object"
@@ -13102,10 +14037,13 @@
                 "EXADATA",
                 "MYSQL",
                 "AZURE_SQLSERVER",
+                "SQLSERVER",
+                "POSTGRESQL",
                 "SNOWFLAKE",
                 "GOOGLE_BIGQUERY",
                 "DB2",
-                "ORACLE_ANALYTICS"
+                "ORACLE_ANALYTICS",
+                "DATABRICKS_UNITY_CATALOG"
               ],
               "required": false,
               "type": "string"
@@ -13415,7 +14353,8 @@
             "type": [
               "SECRET_TOKEN",
               "VAULT_REFERENCE",
-              "SERVICE_ACCOUNT"
+              "SERVICE_ACCOUNT",
+              "OAUTH"
             ]
           },
           "bodyField": "create_data_lake_credential_details",
@@ -13437,7 +14376,8 @@
               "enumValues": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ],
               "required": true,
               "type": "string"
@@ -13557,7 +14497,8 @@
               "enumValues": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ],
               "in": "query",
               "originalName": "credentialType",
@@ -13649,7 +14590,8 @@
             "type": [
               "SECRET_TOKEN",
               "VAULT_REFERENCE",
-              "SERVICE_ACCOUNT"
+              "SERVICE_ACCOUNT",
+              "OAUTH"
             ]
           },
           "bodyField": "update_data_lake_credential_details",
@@ -13671,7 +14613,8 @@
               "enumValues": [
                 "SECRET_TOKEN",
                 "VAULT_REFERENCE",
-                "SERVICE_ACCOUNT"
+                "SERVICE_ACCOUNT",
+                "OAUTH"
               ],
               "required": false,
               "type": "string"

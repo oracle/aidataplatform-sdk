@@ -10,13 +10,10 @@ masked authentication or unfiltered response data into the request.
 
 For metadata-only changes, prepare only changed fields and run:
 
-```bash
-python3 <skill_dir>/scripts/agents/prepare-body.py --operation update \
-  --metadata @/tmp/agent-metadata-<unique>.json --output /tmp/body-agent-<unique>.json
-```
+Prepare the complete unresolved JSON template using the [common template guidance](common.md#template-preparation).
 
-No token prompt is introduced. For intended tool authentication rotation, add
-`--replace-secrets` and include only relevant tool/auth configurations. Preserve
+No token prompt is introduced. For intended tool authentication rotation, include explicit prompt/file
+placeholders in only the selected replacement tool/auth configurations. Preserve
 all required graph content and version-specific change bookkeeping such as
 `addedNodes`, `updatedNodes`, `deletedNodes`; verify installed graph replacement
 versus patch semantics. If a full graph is required, protect all required secret
@@ -25,12 +22,17 @@ omission or an empty string preserves authentication.
 
 Supported existing credential-store reference updates are non-sensitive and
 remain references. A raw bearer or OAuth auth object without explicit replacement
-is rejected by the helper. A changed public client ID or issuer can require a
+must be omitted unless an intended replacement is expressed with placeholders. A changed public client ID or issuer can require a
 new local client secret under the selected full-auth update contract.
 
 Use `agent update <workspace-key> <agent-key>` from installed help and include
 `--if-match <etag>` when appropriate. Wrap it with `protected_aidp.py
 --output-file /tmp/aidp-result-agent-<unique>.json -- ... --body @<template>`.
-Resolve any required credential-impact confirmation first, validate paths, then
-consume/delete the result. Do not redeploy automatically or retry an uncertain
+Validate paths and follow the common execution-mode rules. With no interactive
+prompts, including metadata-only or supported reference-only updates, summarize
+the target, agent/workspace, public changes and references/file paths, ask
+"Shall I proceed?", and wait for approval before running the wrapper yourself.
+Raw-secret rotations with prompts keep the user-run command after any required
+confirmation. Consume/delete the result in both modes; direct execution needs no
+user continuation step. Do not redeploy automatically or retry an uncertain
 update without inspecting current state.

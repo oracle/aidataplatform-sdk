@@ -17,7 +17,7 @@ import unittest
 from unittest.mock import patch
 
 import sensitive_contract as contract
-from test_sensitive_contracts import load_helper
+from test_sensitive_contracts import load_helper, prepare_unresolved
 
 
 class InstalledSensitiveContractTests(unittest.TestCase):
@@ -37,7 +37,28 @@ class InstalledSensitiveContractTests(unittest.TestCase):
         for operation in ("create", "test-connection"):
             result = subprocess.run([sys.executable, "-m", "aidp_cli.main", "catalog", operation, "--help"], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn("GOOGLE_BIGQUERY", result.stdout)
+            for source in ("GOOGLE_BIGQUERY", "SQLSERVER", "POSTGRESQL", "DATABRICKS_UNITY_CATALOG"):
+                self.assertIn(source, result.stdout)
+
+    def test_actual_installed_sdk_models_accept_new_source_bodies(self):
+        from aidp_python_client.aidataplatform_dp.models import (CatalogTestConnectionDetails, CreateCatalogDetails,
+                                                               CatalogConnectionDetails, CreateConnectionDetails)
+        from oci.util import to_dict
+        helper = load_helper("installed_new_connector_helper", "ext-catalogs/common/protected_catalog_templates.py")
+        for source in ("SQLSERVER", "POSTGRESQL", "DATABRICKS_UNITY_CATALOG"):
+            for operation, model in (("create", CreateCatalogDetails), ("test-connection", CatalogTestConnectionDetails)):
+                config = ({"workspaceUrl": "https://workspace.example.com", "clientId": "public-client", "remoteCatalog": "main"}
+                          if source == "DATABRICKS_UNITY_CATALOG" else {"host": "db.example.com", "port": "5432", "databaseName": "sales"})
+                if operation == "create":
+                    config["displayName"] = "chosen"
+                body = helper.template(source, operation, config)
+                connection_model = CreateConnectionDetails if operation == "create" else CatalogConnectionDetails
+                connection = connection_model(connection_properties=body["connectionDetails"]["connectionProperties"])
+                instance = model(source_type=body["sourceType"], connection_details=connection, **({"display_name": body["displayName"],
+                                 "catalog_type": body["catalogType"]} if operation == "create" else {}))
+                actual = to_dict(instance)
+                self.assertEqual(actual["source_type"], source)
+                self.assertEqual(actual["connection_details"]["connection_properties"], body["connectionDetails"]["connectionProperties"])
 
     def test_installed_python_models_accept_bigquery_requests(self):
         from aidp_python_client.aidataplatform_dp.models import (CatalogConnectionDetails, CatalogTestConnectionDetails,
@@ -99,8 +120,17 @@ class InstalledSensitiveContractTests(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "contract.models.Auth.fields.authType.enum"):
             contract.check_contract(baseline=contract.INSTALLED_BASELINE, actual=changed)
 
+    def test_installed_oauth_and_registry_templates_use_generic_preparation(self):
+        fixtures = json.loads((contract.REPO / "plugins/aidp/tests/fixtures/protected_resource_bodies.json").read_text())
+        for name, model in (("credential_oauth", "CreateDataLakeCredentialDetails"),
+                            ("agent_registry_reference", "CreateAgentDetails")):
+            body = prepare_unresolved(fixtures[name])
+            self.assertEqual(body, fixtures[name])
+            contract.validate_body(self.actual["models"], model, body)
+        # Constructors, help and contract extraction stay installed-only.
+        # Future new fields/enums still fail the separately reviewed baseline gate.
+
     def test_installed_agent_llm_credential_reference_and_public_session_fields_are_preserved(self):
-        helper = load_helper("installed_agent_helper", "common/protected_resource_templates.py")
         reference = {"displayName": "llm_keys", "secretKey": "api_token"}
         metadata_body = {"displayName": "synthetic", "pathInfo": "/Shared", "diagram": {"nodes": {"agent": {
             "key": "agent", "type": "AGENT", "llm": {"type": "THIRD_PARTY", "provider": "openai", "modelId": "chosen",
@@ -116,8 +146,7 @@ class InstalledSensitiveContractTests(unittest.TestCase):
             body = copy.deepcopy(metadata_body)
             if operation == "update":
                 body.pop("pathInfo")
-            args = SimpleNamespace(operation=operation, type=None, private_key_path=None, secret_key=[], replace_secrets=False)
-            transformed = helper.agents(copy.deepcopy(body), args)
+            transformed = prepare_unresolved(copy.deepcopy(body))
             self.assertEqual(transformed, body)
             self.assertNotIn("prompt_input", json.dumps(transformed))
             contract.validate_body(self.actual["models"], "CreateAgentDetails" if operation == "create" else "UpdateAgentDetails", transformed)

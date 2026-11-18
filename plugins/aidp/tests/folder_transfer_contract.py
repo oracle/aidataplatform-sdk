@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+import copy
 from importlib import metadata
 import json
 from pathlib import Path
@@ -20,6 +21,20 @@ CLIENTS = {
         "upload_and_extract_volume_zip", "zip_and_download_volume_folder")),
     "async-operations": ("async_operations_client.py", ("get_async_operation",)),
 }
+
+
+def transfer_contract_view(contract):
+    """Keep response field shapes, but omit unused shared job classifications."""
+    scoped = copy.deepcopy(contract)
+    model = scoped["models"]["AsyncOperation"]
+    for field in ("actionType", "resourceType"):
+        if field in model["fields"]:
+            model["fields"][field]["enum"] = []
+    constants = model.get("constants", {})
+    for name in list(constants):
+        if name.startswith(("ACTION_TYPE_", "RESOURCE_TYPE_")):
+            del constants[name]
+    return scoped
 
 
 def collect_folder_transfer_contract(repo=REPO, *, installed=False):
@@ -45,14 +60,17 @@ def collect_folder_transfer_contract(repo=REPO, *, installed=False):
             raise ValueError(f"Cannot extract unambiguous folder-transfer API version: {filename}")
         versions[group] = paths.pop()
     contract["sdkBasePaths"] = versions
-    return contract
+    return transfer_contract_view(contract)
 
 
 def check_folder_transfer_contract(repo=REPO, *, installed=False, actual=None):
     baseline = INSTALLED_BASELINE if installed else BASELINE
     if actual is None:
         actual = collect_folder_transfer_contract(repo, installed=installed)
-    changes = differences(json.loads(baseline.read_text(encoding="utf-8")), actual)
+    # Apply the same scope to existing reviewed snapshots and supplied contracts.
+    # This does not accept any new transfer fields, upload actions or statuses.
+    changes = differences(transfer_contract_view(json.loads(baseline.read_text(encoding="utf-8"))),
+                          transfer_contract_view(actual))
     if changes:
         raise AssertionError(
             "Folder-transfer SDK/CLI contract drift. Review request/response fields, "

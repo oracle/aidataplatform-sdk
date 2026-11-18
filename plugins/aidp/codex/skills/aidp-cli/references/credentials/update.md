@@ -8,16 +8,17 @@ Read [common](common.md). Resolve a stable credential key and retrieve only
 non-sensitive identity/type metadata. Never copy masked `secretValue` or private
 key fields back into an update. Resolve any name ambiguity in chat.
 
+For an OAuth provider configuration or client-value change, follow
+[OAuth updates](oauth.md#update-without-accidental-rotation). Use explicit placeholders for intended client replacements. An OAuth name/description-only edit can use
+the ordinary metadata-only path below without retrieving client values.
+
 For a description/name change, metadata contains only changed top-level fields:
 
-```bash
-python3 <skill_dir>/scripts/credentials/prepare-body.py --operation update \
-  --metadata @/tmp/credential-metadata-<unique>.json --output /tmp/body-credential-<unique>.json
-```
+Prepare the complete unresolved JSON template using the [common template guidance](common.md#template-preparation).
 
-No secret prompt is added. For intended rotation, add `--replace-secrets`, the
-existing `--type`, and the relevant `--secret-key` or `--private-key-path` options
-from common.md. Discover whether the endpoint merges or replaces details before
+No secret prompt is needed. For intended rotation, include the existing type,
+matching detail discriminator and explicit prompt/file placeholders for the
+selected replacement values, as described in common.md. Discover whether the endpoint merges or replaces details before
 building a multi-key replacement; include the intended complete key set when
 required. Do not silently change the credential type or remove other keys. If
 preserving required existing secret values is impossible through the contract,
@@ -27,6 +28,10 @@ Use the existing key in `credentials update <credential-key>` after checking
 installed help. Use `--if-match` only if that installed operation supports it;
 never invent an option. Wrap the exact command with `protected_aidp.py
 --output-file /tmp/aidp-result-credential-<unique>.json -- ... --body @<template>`.
-Confirm the concrete credential impact where required, validate referenced
-paths before prompting, consume/delete the result, and verify state without
-retrieving secret contents if the outcome is uncertain.
+Validate referenced paths and use the common execution-mode rules. Metadata-only
+updates, service-account key-file replacements and Vault-reference replacements
+normally have no prompts: summarize the exact edit/rotation, target and public
+inputs or file/reference, ask "Shall I proceed?", then wait for approval and run
+the wrapper yourself. Secret-token replacement still uses user-run hidden input.
+Consume/delete the result yourself after direct execution, and verify state
+without retrieving secret contents if the outcome is uncertain.

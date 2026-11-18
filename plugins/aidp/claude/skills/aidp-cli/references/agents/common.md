@@ -26,7 +26,7 @@ if required: embedded `Bearer {placeholder}` substitution is unsupported.
 A bearer credential-store reference is encoded in `auth.token` as a JSON string
 containing non-empty `displayName` and `secretKey`. Those values identify a
 stored credential; do not turn them into password prompts or retrieve the secret.
-The helper preserves this reference shape unchanged.
+Preserve this reference shape unchanged.
 
 Always check the CLI reference documentation for the exact installed CLI
 version. Properties may have been introduced or removed after this plugin release. If the
@@ -94,27 +94,23 @@ into create/update requests or treat their presence as authorization to deploy
 or invoke an agent. SDK redaction metadata does not replace protected-input
 handling or make an unfiltered response safe to display.
 
-## Helper contract
+## Template preparation
 
-`scripts/agents/prepare-body.py --operation create|update --metadata @<metadata>
---output <fresh-template>` takes the intended non-sensitive request/graph only.
-It does not discover a complete graph, create tools, deploy, or invoke AIDP.
-Preserve the installed graph discriminator, keys, edges, tool/node associations
-and requested configuration. Do not paste a full unfiltered agent GET response
-into metadata; build the intended request from non-sensitive fields.
+Compose the complete unresolved JSON using installed help, the field guidance
+below, and [generic preparation](../protected-bodies.md#prepare-an-unresolved-template).
 
-For create, the helper inserts required hidden bearer-token / OAuth-client-secret
-prompts only at reviewed HTTP/MCP authentication locations: `diagram.toolsMap`
-tool `toolConfig.auth`, HTTP/MCP node `configuration.auth` or
-`configuration.toolConfig.auth`, and agent/supervisor inline `tools[].toolConfig.auth`.
-Distinct tool paths produce distinct prompts. OAuth requires public `clientId` and `issuerIdpEndpoint` first;
-scopes are copied from the user's integration requirements, never guessed.
-Reference-only, NO_AUTH and resource-principal configs are preserved unchanged.
-For secret rotation on update, add `--replace-secrets`; only include the intended
-changed authentication/tool configurations. The helper treats every raw bearer/
-OAuth auth object included with that flag as a replacement, so do not include
-unrelated tools. Without the flag, omit raw-auth objects entirely to avoid silent
-clearing; metadata-only and supported reference-only updates need no prompts.
+Preserve the complete graph, tool/node associations and requested settings.
+Explicitly place required hidden prompts in raw bearer `auth.token` or inline
+OAuth `auth.clientSecret` at the selected tool locations, including nested and
+inline tools. Include public client ID/issuer and intended scopes for inline OAuth.
+Use distinct labels for independent tool secrets. Public credential/resource
+references, NO_AUTH and resource-principal configurations add no prompts.
+
+For updates, determine rotation intent and patch/replacement semantics first.
+Omit unchanged raw auth when permitted; never copy masked auth or use an empty
+prompt to retain it. A full graph replacement must preserve necessary public
+state and protect any required new private values locally. The generic resolver
+does not select or validate these API-specific choices.
 
 Checks are specific to the selected payload and authentication type:
 
@@ -125,7 +121,7 @@ Checks are specific to the selected payload and authentication type:
 There is no global secret-name blacklist or `--public-field` option. Tool names,
 JSON schemas, public field definitions and arbitrary metadata are copied without
 classifying their contents from names such as `api_key`, `password` or `auth`.
-The helper does not traverse an HTTP request body or schema looking for auth objects.
+The generic resolver does not infer authentication from field names or schemas.
 
 For each custom tool payload, inspect that endpoint's actual input contract and
 mark only its credential values with whole-value protected placeholders. For example:
@@ -142,15 +138,23 @@ These are examples, not a list of names that always contain secrets. Use the
 actual endpoint's field path and requirement; preserve any public values or
 supported references. Replace the example prompt labels with the actual tool
 name and field path so distinct credentials have distinct placeholders; identical
-placeholders intentionally reuse one value. A custom secret is not automatically detected or rejected
-by the helper. Never paste raw secrets into metadata, and never read local key
+placeholders intentionally reuse one value. An unmarked secret is not automatically identified by the generic resolver. Never paste raw secrets into metadata, and never read local key
 or wallet contents. Use `textof`/`base64of` only when that tool API expects it.
 
-Validate paths separately. Execute using `protected_aidp.py --output-file
-<unique-result> -- <exact-cli-command>`, then consume/delete the agreed result.
-The terminal shows prompts and `Operation output handed off to AI agent. Ask it
-to continue.` The wrapper deletes the actual request body on completion/error/
-Ctrl+C; do not separately persist credentials or print request bodies.
+Validate paths separately and inspect the complete prepared graph/body for
+interactive prompts, including custom tool payloads. Supported reference-only,
+`NO_AUTH`, `OCI_RESOURCE_PRINCIPAL` and metadata-only flows need no terminal
+input when no other prompt remains. Summarize the target, agent/workspace,
+public changes and supported references or file paths, ask "Shall I proceed?",
+and wait for approval before executing the protected wrapper yourself. Do not
+retrieve referenced secrets or replace references with token prompts.
+Raw-token/OAuth or other prompt-bearing flows keep the user-run terminal command.
+Follow the shared [execution-mode rules](../protected-bodies.md#choose-execution-mode).
+Both modes use `protected_aidp.py --output-file <unique-result> -- <exact-cli-command>`;
+consume/delete the agreed result yourself and report the outcome after direct
+execution, without asking the user to continue. The wrapper deletes the actual
+request body on completion/error/Ctrl+C; do not separately persist credentials
+or print request bodies.
 
 ## Local evidence
 
@@ -158,8 +162,7 @@ SDK models: `CreateAgentDetails`, `UpdateAgentDetails`, `AgentDiagram`,
 `HttpTool`, `McpTool`, HTTP/MCP tool-node detail models, `HttpToolConfiguration`,
 `McpToolConfiguration`, `Auth`, `BearerTokenAuth`, `OAuth`.
 Reference detection also checked in the supplied backend's
-`AgentFlowPersistenceService.isCredentialStoreReference`. The helper prepares
-protected inputs; validate the complete graph with the CLI reference before
-execution.
+`AgentFlowPersistenceService.isCredentialStoreReference`. Validate the complete graph with installed help before execution; generic
+placeholder resolution does not replace API validation.
 
 ## Additional properties
