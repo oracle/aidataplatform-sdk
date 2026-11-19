@@ -7,11 +7,13 @@ import argparse
 import json
 from pathlib import Path
 import sys
+from urllib.parse import urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from protected_aidp import MAX_TEMPLATE, ProtectedError, read_file, write_body_template
 
-TYPES = ("MYSQL", "DB2", "AZURE_SQLSERVER", "SNOWFLAKE", "GOOGLE_BIGQUERY")
+TYPES = ("MYSQL", "DB2", "AZURE_SQLSERVER", "SNOWFLAKE", "GOOGLE_BIGQUERY",
+         "SQLSERVER", "POSTGRESQL", "DATABRICKS_UNITY_CATALOG")
 
 
 def text(config, name, required=True):
@@ -34,6 +36,8 @@ def prompt(label, hidden=True, required=True):
 
 
 def template(source, operation, config):
+    if source in ("SQLSERVER", "POSTGRESQL", "DATABRICKS_UNITY_CATALOG"):
+        return connector_template(source, operation, config)
     if source == "GOOGLE_BIGQUERY":
         return google_bigquery_template(operation, config)
     common = {"host", "port", "databaseName", "sslEnabled", "workspaceKey"}
@@ -104,6 +108,72 @@ def template(source, operation, config):
             if not isinstance(properties, dict) or any(not isinstance(value, str) for value in properties.values()):
                 raise ProtectedError("INVALID_CONFIG", "Catalog properties must be a non-sensitive string-to-string object.")
             body["properties"] = properties
+    return body
+
+
+def connector_template(source, operation, config):
+    """SQL Server/PostgreSQL password and Databricks OAuth M2M UI contracts."""
+    if operation not in ("create", "test-connection"):
+        raise ProtectedError("INVALID_OPERATION", "Select create or test-connection.")
+    databricks = source == "DATABRICKS_UNITY_CATALOG"
+    label = {"SQLSERVER": "SQL Server", "POSTGRESQL": "PostgreSQL",
+             "DATABRICKS_UNITY_CATALOG": "Databricks"}[source]
+    secret_key = source + ("_OAUTH_CLIENT_SECRET" if databricks else "_PASSWORD")
+    secret_prompt = prompt("Enter " + label + (" OAuth client secret" if databricks else " account password"))
+    if "catalogKey" in config:
+        if operation != "test-connection" or set(config) != {"catalogKey"}:
+            raise ProtectedError("INVALID_STORED_TEST", "An existing-catalog test takes only catalogKey and prompts locally for the replacement credential; it does not save it.")
+        return {"key": text(config, "catalogKey"), "sourceType": source,
+                "connectionDetails": {"connectionProperties": {secret_key: secret_prompt}}}
+
+    public_fields = ({"workspaceUrl", "clientId", "remoteCatalog"} if databricks else
+                     {"host", "port", "databaseName", "workspaceKey"})
+    create_fields = {"displayName", "description", "properties", "isTestConnectionEnabled"} if operation == "create" else set()
+    if set(config) - (public_fields | create_fields):
+        raise ProtectedError("UNSUPPORTED_CONFIG", "Use only the selected source's public connection settings; credentials are entered privately at execution.")
+    props = {secret_key: secret_prompt}
+    if databricks:
+        workspace_url = text(config, "workspaceUrl")
+        try:
+            parsed = urlsplit(workspace_url)
+            valid = (parsed.scheme.lower() == "https" and parsed.hostname and not parsed.username
+                     and not parsed.password and parsed.path in ("", "/")
+                     and not parsed.query and not parsed.fragment and not any(c.isspace() for c in workspace_url))
+            parsed.port  # Validate a supplied port without contacting the workspace.
+        except ValueError:
+            valid = False
+        if not valid:
+            raise ProtectedError("INVALID_WORKSPACE_URL", "Supply the HTTPS Databricks workspace base URL, without credentials, a query, or a path.")
+        props.update(DATABRICKS_UNITY_CATALOG_WORKSPACE_URL=workspace_url,
+                     DATABRICKS_UNITY_CATALOG_AUTH_TYPE="oauth-m2m",
+                     DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_ID=text(config, "clientId"),
+                     DATABRICKS_UNITY_CATALOG_REMOTE_CATALOG=text(config, "remoteCatalog"))
+    else:
+        # Only SQL Server has a reviewed UI default. PostgreSQL's port is required.
+        port = text(config, "port") if "port" in config or source == "POSTGRESQL" else "1433"
+        if not port.isascii() or not port.isdecimal() or not 1 <= int(port) <= 65535:
+            raise ProtectedError("INVALID_PORT", "Supply a listener port between 1 and 65535 as a JSON string.")
+        props.update({source + "_HOST": text(config, "host"), source + "_PORT": port,
+                      source + "_USERNAME": prompt("Enter " + label + " account username", hidden=False)})
+        database = text(config, "databaseName", required=source == "POSTGRESQL")
+        if database is not None:
+            props[source + "_DATABASE_NAME"] = database
+        if "workspaceKey" in config:
+            props["WORKSPACE_KEY"] = text(config, "workspaceKey")
+    body = {"sourceType": source, "connectionDetails": {"connectionProperties": props}}
+    if operation == "create":
+        body.update(displayName=text(config, "displayName"), catalogType="EXTERNAL")
+        if "description" in config:
+            if not isinstance(config["description"], str):
+                raise ProtectedError("INVALID_CONFIG", "Description must be text.")
+            body["description"] = config["description"]
+        if "properties" in config:
+            properties = config["properties"]
+            if not isinstance(properties, dict) or any(not isinstance(value, str) for value in properties.values()):
+                raise ProtectedError("INVALID_CONFIG", "Catalog properties must be a public string-to-string object.")
+            body["properties"] = properties
+        if "isTestConnectionEnabled" in config:
+            body["isTestConnectionEnabled"] = boolean(config, "isTestConnectionEnabled")
     return body
 
 

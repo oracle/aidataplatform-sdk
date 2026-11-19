@@ -85,13 +85,13 @@ check. Do not wait for ACTIVE or start status polling unless the user asks.
 
 ## Protected request bodies (all sensitive operations)
 
-For protected commands, present the complete command directly. Do not create or search for generated launcher scripts unless the user explicitly requests one; invoke the bundled protected wrapper directly with the selected interpreter and current session settings.
+For protected commands, choose execution from the prepared template: hand the command to the user only when it contains interactive prompts. With no prompts, summarize the public inputs and intended impact, ask "Shall I proceed?", wait for approval, then run the bundled protected wrapper yourself. Follow the [execution-mode rules](references/protected-bodies.md#choose-execution-mode). Do not create or search for generated launcher scripts unless explicitly requested; use the selected interpreter and current session settings.
 
 For any AIDP operation whose JSON body needs credentials, tokens, passwords,
 private keys or file contents, follow [protected request bodies](references/protected-bodies.md).
 Prepare a JSON template from chat with whole-value prompt/file placeholders and
-ask the user to run `scripts/protected_aidp.py` with the exact existing CLI command
-and `--body @<template>`. Do not collect secret values in chat, read source key or
+use `scripts/protected_aidp.py` with the exact existing CLI command and
+`--body @<template>`, using the execution mode above. Do not collect secret values in chat, read source key or
 wallet contents, or construct resolved secret bodies yourself. The generic
 wrapper prompts locally, substitutes in a private copy, executes once and deletes
 that copy on completion/error. Wallet ZIP paths are non-secret chat inputs.
@@ -105,15 +105,26 @@ read and delete only the agreed result; continue within the authorized task.
 
 For create/update with protected input, read only the relevant family reference:
 
-- [Credentials](references/credentials/common.md): secret-token pairs, service-account PEM, or Vault references; helpers in `scripts/credentials/`.
-- [User settings](references/user-settings/common.md): Git PAT or IAM private key; helpers in `scripts/user-settings/`.
-- [Agents](references/agents/common.md): HTTP/MCP bearer/OAuth secrets, custom sensitive fields, or supported credential references; helpers in `scripts/agents/`.
+- [Credentials](references/credentials/common.md): secret-token pairs, service-account PEM, Vault references, or [OAuth authorization-code providers](references/credentials/oauth.md). All types use the generic protected-template workflow.
+- [User settings](references/user-settings/common.md): Git PAT or IAM private key.
+- [Agents](references/agents/common.md): HTTP/MCP bearer/OAuth secrets, custom sensitive fields, or supported credential-store references.
 
 Each family has separate create/update references. Discover non-sensitive values
-first, ask only unresolved choices in chat, then prepare whole-value placeholders.
+first, ask only unresolved choices in chat, then compose the complete request
+with whole-value placeholders. Use the existing generic wrapper directly; field
+rules come from installed schemas/references, not family-specific builders.
 Metadata-only edits do not prompt for secrets. Do not turn a credential reference
 into a plaintext-secret request. Use the shared wrapper with `--output-file` and
 consume/delete the exact result file before continuing.
+
+For operations whose request requires no secret values or secret-file contents,
+use this skill's normal installed-CLI discovery and execution. Public metadata
+and stored-resource references do not by themselves require a secret-input
+reference or helper. Follow the current installed request schema, preserve public
+references, and never retrieve secrets merely to resolve those references.
+For requests that mix public and secret inputs, use the relevant protected-input
+reference for the secret-bearing fields while preserving the public inputs.
+Do not add API field/type allowlists to the generic resolver for new schemas.
 
 ## External catalogs and connection testing
 
@@ -124,11 +135,18 @@ Read the selected source reference plus [the catalog workflow](references/ext-ca
 [Exadata](references/ext-catalogs/exadata.md),
 [MySQL](references/ext-catalogs/mysql.md), [DB2](references/ext-catalogs/db2.md),
 [Azure SQL Server](references/ext-catalogs/azure-sqlserver.md),
+[Microsoft SQL Server](references/ext-catalogs/sqlserver.md),
+[PostgreSQL](references/ext-catalogs/postgresql.md),
+[Databricks Unity Catalog](references/ext-catalogs/databricks.md),
 [Snowflake](references/ext-catalogs/snowflake.md),
 [Google BigQuery](references/ext-catalogs/google-bigquery.md), or
 [Oracle Analytics](references/ext-catalogs/oracle-analytics.md).
-When a connection-test source is unspecified, use the complete 12-source prompt
-in the common workflow; do not offer a partial example list or “another source”.
+When a connection-test source is unspecified, use the complete source prompt
+in the common workflow, constrained to installed CLI support; do not offer a
+partial example list or “another source”. For SQL Server, PostgreSQL and
+Databricks, verify the selected connector's availability before collecting
+credentials. Reuse public values, group missing fields into one short question,
+and prepare the config yourself; users do not need to know API property names.
 Discover non-sensitive values and ask only unresolved choices in chat. Use the
 wallet helpers for readability/service discovery without printing contents, then
 prepare the protected body template. Keep direct OAC catalog creation distinct

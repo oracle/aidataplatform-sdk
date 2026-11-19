@@ -4,13 +4,21 @@
   "description": "Install, configure, and operate Oracle AI Data Platform with Claude Code.",
   "version": "1.0.0",
   "author": {
-    "name": "Oracle AI Data Platform"
+    "name": "Oracle"
   },
-  "homepage": "https://github.com/oracle/aidataplatform-sdk/tree/main/plugins/aidp/claude",
+  "homepage": "https://docs.oracle.com/en/cloud/paas/ai-data-platform/index.html",
   "repository": "https://github.com/oracle/aidataplatform-sdk",
   "license": "UPL-1.0",
-  "keywords": ["oracle", "oci", "aidp", "ai-data-platform", "data-platform", "cli"],
-  "documentationUrl": "https://github.com/oracle/aidataplatform-sdk/blob/main/plugins/aidp/claude/README.md",
+  "keywords": [
+    "oracle",
+    "oci",
+    "aidp",
+    "ai-data-platform",
+    "data-platform",
+    "cli"
+  ],
+  "documentationUrl": "https://docs.oracle.com/en/cloud/paas/ai-data-platform/index.html",
   "supportUrl": "https://github.com/oracle/aidataplatform-sdk/issues",
-  "privacyPolicyUrl": "https://www.oracle.com/legal/privacy/"
+  "privacyPolicyUrl": "https://www.oracle.com/legal/privacy/",
+  "termsOfServiceUrl": "https://www.oracle.com/legal/terms/"
 }

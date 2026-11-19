@@ -11,7 +11,7 @@ user; do not infer another user's setting from a matching display name.
 | `IAM_USER_CREDENTIAL` | Intended user OCID, tenancy, region, fingerprint, local PEM path, name/default intent | `privateApiKey` from `{textof:PATH}` |
 
 Git providers in this SDK are `GITHUB`, `BITBUCKET`, `GITLAB`, `OCI_DEVOPS`.
-The helper supports `entityType: PERSONAL_ACCESS_TOKEN`. The inspected backend
+The reviewed PAT branch uses `entityType: PERSONAL_ACCESS_TOKEN`. The inspected backend
 also has linked-account flows; those are not PAT prompts. Do not pretend linked
 sign-in can be completed with an empty token. Follow its installed flow instead.
 SDK help labels Git username/PAT optional, but the inspected backend explicitly
@@ -23,33 +23,27 @@ ask only missing metadata in chat. Private key paths are chat inputs when the
 user considers them non-sensitive. The key is raw PEM text, not Base64.
 
 `SettingData` is shared by user and admin endpoints. Its `OAUTH` variant maps
-to `OAuthAdminSetting` and belongs to admin settings; it is rejected by this
-user-setting helper. Do not confuse it with agent tool OAuth client credentials.
+to `OAuthAdminSetting` and belongs to admin settings; it is not part of this user-setting workflow. Do not confuse it with agent tool OAuth client credentials.
 
-## Helper contract
+## Template preparation
 
-`scripts/user-settings/prepare-body.py` accepts `--operation create|update`,
-`--metadata @/tmp/setting-metadata-<unique>.json`, and
-`--output /tmp/body-setting-<unique>.json`. Metadata is a non-sensitive request
-object with `name`, `isDefault`, and the chosen `data` metadata as appropriate.
-The helper adds prompts or a `textof` placeholder; it never reads private files
-or executes AIDP. Fresh output files only. For `GIT_ACCOUNT`, it rejects inline
-values in `data.personalAccessToken`; for `IAM_USER_CREDENTIAL`, it rejects inline
-values in `data.privateApiKey`. Public fields are not classified by name.
+Compose the complete unresolved JSON using installed help, the field guidance
+below, and [generic preparation](../protected-bodies.md#prepare-an-unresolved-template).
 
-Create/payload replacement uses `--type GIT_ACCOUNT|IAM_USER_CREDENTIAL`.
-IAM additionally uses `--private-key-path /local/key.pem`. For metadata-only
-updates, use `--existing-metadata @<public-current-setting.json>` and a minimal
-edit in `--metadata`; see [update](update.md). This snapshot must retain the
-verified type and current `isDefault`, plus Git `entityType` or IAM `tenancy`/`region`. Other known public fields are preserved.
-Alternatively supply the complete verified public state in `--metadata`.
-Type-only bodies and omitted default flags are rejected rather than clearing
-existing configuration. No credential prompt is added for metadata-only edits; stored secrets are reused.
-Credential rotation also accepts the public snapshot and retains its default state
-unless the user explicitly changes it. Without a snapshot, every update must
-include the verified boolean `isDefault`; never assume false or omit it.
-Public connection-data changes require an explicitly selected data-update flow.
-Changing credential data on update requires `--replace-secrets`.
+For PATs explicitly include the discriminator/entity type, required visible
+username and hidden token placeholders. IAM uses the verified public metadata
+and `data.privateApiKey: "{textof:/local/key.pem}"`. The resolver does not detect
+inline secrets or merge current settings; never put raw/masked secrets in JSON.
+
+For updates, compose the final request from verified current public state plus
+only the intended edit. Retain type, name, boolean `isDefault`, Git `entityType`
+or IAM `tenancy`/`region`, and other required/known public metadata. Do not send
+a type-only body or guess an omitted default: the backend can clear omitted
+public values and default `isDefault` to false. Metadata-only updates omit
+private fields and reuse stored credentials, even where a shared create-oriented
+SDK subtype marks those secrets required. Rotation must be explicit; retain
+current public/default state unless its change is requested. Resolve missing
+state before execution, without retrieving stored secrets.
 
 Create needs `name`, `isDefault`, `data`. Updates may change only the requested
 metadata or payload; preserve omitted fields by following installed update
@@ -57,10 +51,18 @@ semantics. Never resend masked credentials or use an optional empty prompt to
 mean “keep the old value.” Changing the default affects later user integrations;
 reuse the user's stated intent, otherwise resolve that choice in chat.
 
-Validate with `scripts/validate-protected-paths.py @<template>` before prompting;
-execute with `protected_aidp.py --output-file <unique-result> -- <exact-cli-command>`.
-Consume/delete only that agreed result via `read-protected-result.py`.
-Automatic body cleanup and the terminal handoff message follow the shared workflow.
+Validate with `scripts/validate-protected-paths.py @<template>` before execution.
+IAM key-file create/replacement and metadata-only updates normally contain no
+terminal prompts. Summarize the target, public settings, key-file path if used,
+and intended default/credential changes, ask "Shall I proceed?", and wait for
+approval before running the protected wrapper yourself. Git PAT create/rotation
+still requires a user-run command for username/token input. Inspect the entire
+template and follow the shared
+[execution-mode rules](../protected-bodies.md#choose-execution-mode).
+In both modes use `protected_aidp.py --output-file <unique-result> -- <exact-cli-command>`
+and consume/delete only that result via `read-protected-result.py`. After direct
+execution, report the outcome without a user continuation step. Automatic body
+cleanup follows the shared workflow.
 
 ## Local evidence
 

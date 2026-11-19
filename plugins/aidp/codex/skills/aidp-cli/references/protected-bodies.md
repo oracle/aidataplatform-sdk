@@ -8,7 +8,7 @@ For operation-specific input discovery and template preparation, read
 [credentials](credentials/common.md), [user settings](user-settings/common.md),
 or [agents](agents/common.md).
 
-## Template and user-run command
+## Template and execution
 
 Prepare an ordinary JSON template containing known non-sensitive values and the
 placeholders below. The file may be reviewed while unresolved; never place
@@ -46,11 +46,54 @@ count. Run it in the same host/access context as the eventual wrapper. For walle
 ZIP/TNS validation and service discovery, use the external-catalog helpers too.
 The wrapper repeats these checks before prompting because access can change.
 
-After settling non-sensitive choices and any required operation confirmation,
-present the complete command directly for the user to run in an interactive
-terminal. Do not generate a launcher script or search for an old generated
-script to reuse unless the user explicitly asks for one. Build the command
-from the current session settings and invoke the bundled wrapper directly:
+## Prepare an unresolved template
+
+Compose the complete request from installed help and the relevant field guidance.
+Use the existing `protected_aidp.write_body_template(path, body)` utility when
+writing the unresolved object/array; it creates a fresh owner-only file without
+reading attachments or prompting. The executor validates markers, recursively
+resolves prompts/`textof`/`base64of`, and deletes its temporary private resolved
+copy after execution. No resource-specific builder or preparation command is needed.
+
+API requiredness, secret classification, defaults and update intent belong in
+request composition, not the generic resolver. Never include raw/masked secrets
+in templates. Required prompts reject blank input; optional blank input becomes
+an empty string, not omission. Omit fields during composition when omission is
+needed to preserve an existing value. Public references stay unchanged.
+
+## Choose execution mode
+
+Choose from the complete prepared, unresolved template, including nested objects
+and arrays, rather than the source name or the presence of sensitive files:
+
+- If any `visible_prompt_input` or `invisible_prompt_input` placeholder is present,
+  including an optional prompt or a visible username prompt, settle any required
+  operation confirmation and present the complete command for the user to run in
+  an interactive terminal. Never supply their prompt inputs through an agent tool.
+- If there are no interactive prompt placeholders, validate the template and
+  referenced paths, then present a concise summary of the operation, selected
+  instance/workspace, resource name or key, public input values, file paths or
+  stored references, and intended changes. Never include secret contents. Ask
+  "Shall I proceed?" and wait for an affirmative reply such as "Okay". After
+  approval, execute the exact prepared command yourself through the protected
+  wrapper, then consume/delete its result and report the outcome in the same
+  turn. Do not ask the user to run a terminal command or send "continue".
+
+File-only `textof`/`base64of` placeholders, supported credential references, and
+metadata-only bodies do not require terminal input. Confirm that the entire body
+has no prompts; do not remove a required or optional prompt, replace it with an
+empty value, retrieve a stored secret, or read a private file into model context
+to avoid the terminal flow. A privately supplied path must be available to the
+wrapper in the same execution context.
+
+One affirmative reply to the concrete summary also satisfies confirmation for
+that exact operation; do not ask twice. If the reviewed target, inputs or impact
+change materially, summarize the revised operation and obtain approval again.
+Never interpret silence as approval or retry an uncertain mutation blindly.
+
+Both execution modes use the same bundled wrapper and private result file. Do
+not generate a launcher script or search for an old generated script to reuse
+unless explicitly requested. Build the command from current session settings:
 
 ```bash
 python3 <skill_dir>/scripts/protected_aidp.py \
@@ -60,7 +103,7 @@ python3 <skill_dir>/scripts/protected_aidp.py \
 ```
 
 The wrapper sets `AIDP_CLI_STRICT_URL_ENCODING=true` internally for the AIDP
-process. Do not prepend this environment assignment to the user-run command.
+process. Do not prepend this environment assignment to the wrapped command.
 
 `<skill_dir>` is the aidp-cli skill directory. Use the established exact executable,
 authentication/profile/custom-config environment and target. Use `--region`
@@ -117,9 +160,13 @@ result file; the terminal shows prompts and the handoff message only. The wrappe
 returns the CLI exit code and adds no CLI result summary. Invocations without
 `--output-file` are rejected before any request body is opened or command is run.
 
-Show input prompts and `Operation output handed off to AI agent. Ask it to continue.` Do not announce that inputs
-were collected/saved or narrate routine temporary-file creation/deletion. Report
-cleanup only when it fails and requires action. Internal disposal remains automatic.
+For the user-run mode, the terminal shows input prompts and
+`Operation output handed off to AI agent. Ask it to continue.` For direct
+execution with no prompts, consume the result yourself and report the outcome;
+do not relay the wrapper's handoff message as an instruction to the user.
+Do not announce that inputs were collected/saved or narrate routine temporary-file
+creation/deletion. Report cleanup only when it fails and requires action.
+Internal disposal remains automatic.
 
 The actual copy is deleted immediately when execution ends, on both success and failure. Temporary-directory cleanup also
 covers prompt cancellation, unsupported hidden input, validation failures and
@@ -166,7 +213,9 @@ python3 <skill_dir>/scripts/protected_aidp.py \
   aidp <existing arguments> --body @/tmp/body-<unique>.json
 ```
 
-The required output handoff keeps input prompts in the user's terminal. CLI stdout and stderr
+The result-file handoff is required in both execution modes; it does not require
+a user-run command when the template has no prompts. When prompts are present,
+they remain in the user's terminal. CLI stdout and stderr
 are captured privately in the result file and are not printed to the console. After the
 resolved body has been deleted, an owner-only result file is published atomically
 with `complete`, `exitCode`, `stdout` and `stderr`; it contains no prompt input or
@@ -175,6 +224,8 @@ failures, wrapper validation errors and Ctrl+C during command execution. Raw CLI
 responses may themselves include sensitive fields, so consume the result promptly.
 The terminal then says: `Operation output handed off to AI agent. Ask it to continue.`
 This message indicates file readiness; it does not send a message or wake a chat.
+After direct execution, read the result immediately and continue without asking
+the user to send another message.
 
 While the turn is active, wait for the exact agreed path with:
 

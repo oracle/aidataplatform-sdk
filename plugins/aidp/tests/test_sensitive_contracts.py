@@ -31,6 +31,15 @@ def load_helper(name, relative):
     return module
 
 
+def prepare_unresolved(body):
+    """Use the existing private JSON writer without API-specific transformation."""
+    wrapper = load_helper("generic_resource_wrapper", "protected_aidp.py")
+    with tempfile.TemporaryDirectory() as directory:
+        target = Path(directory) / "body.json"
+        wrapper.write_body_template(target, body)
+        return json.loads(target.read_text())
+
+
 class SensitiveContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -103,41 +112,52 @@ class SensitiveContractTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaisesRegex(AssertionError, message):
                 validate_body(self.models, "CreateAgentDetails", value)
 
-    def test_credential_and_user_setting_helpers_emit_current_sdk_wire_shapes(self):
-        helper = load_helper("contract_resource_helper", "common/protected_resource_templates.py")
-        def options(kind=None, operation="create", **kwargs):
-            return SimpleNamespace(type=kind, operation=operation, replace_secrets=operation == "update",
-                                   secret_key=["synthetic"], private_key_path="/synthetic/key.pem", current_setting=None, **kwargs)
-        values = {
-            "SECRET_TOKEN": {},
-            "SERVICE_ACCOUNT": {"userId": "u", "tenancy": "t", "region": "r", "fingerprint": "f", "isReadOnly": False},
-            "VAULT_REFERENCE": {"secretId": "ocid1.synthetic"},
+    def test_credential_and_user_setting_templates_match_current_sdk_wire_shapes(self):
+        fixtures = json.loads((REPO / "plugins/aidp/tests/fixtures/protected_resource_bodies.json").read_text())
+        families = {
+            "credential_secret_token": ("CreateDataLakeCredentialDetails", "UpdateDataLakeCredentialDetails"),
+            "credential_service_account": ("CreateDataLakeCredentialDetails", "UpdateDataLakeCredentialDetails"),
+            "credential_vault_reference": ("CreateDataLakeCredentialDetails", "UpdateDataLakeCredentialDetails"),
+            "setting_git_pat": ("CreateUserSettingDetails", "UpdateUserSettingDetails"),
+            "setting_iam": ("CreateUserSettingDetails", "UpdateUserSettingDetails"),
+            "credential_metadata_only": ("UpdateDataLakeCredentialDetails",),
         }
-        enum = set(self.models["CreateDataLakeCredentialDetails"]["fields"]["type"]["enum"])
-        self.assertEqual(set(values), enum, "Credential enum changed: classify every variant before release")
-        for kind, details in values.items():
-            for operation in ("create", "update"):
-                body = helper.credentials({"displayName": "synthetic", "credentialDetails": dict(details)}, options(kind, operation))
-                validate_body(self.models, ("Create" if operation == "create" else "Update") + "DataLakeCredentialDetails", body)
-        self.assertEqual(set(helper.SETTING_PUBLIC_FIELDS), {"GIT_ACCOUNT", "IAM_USER_CREDENTIAL"})
-        for kind, data in (("GIT_ACCOUNT", {"providerName": "GITHUB"}),
-                           ("IAM_USER_CREDENTIAL", {"userId": "u", "tenancy": "t", "region": "r", "fingerprint": "f"})):
-            for operation in ("create", "update"):
-                body = helper.user_settings({"name": "synthetic", "isDefault": True, "data": dict(data)}, options(kind, operation))
-                validate_body(self.models, ("Create" if operation == "create" else "Update") + "UserSettingDetails", body)
-        # SettingData is shared with admin APIs; its enum is not an endpoint
-        # allowlist. Keep this deliberate exclusion reviewed and explicit.
-        for operation in ("create", "update"):
-            args = options("OAUTH", operation)
-            with self.assertRaises(helper.ProtectedError):
-                helper.user_settings({"name": "synthetic", "isDefault": False, "data": {"type": "OAUTH"}}, args)
+        for name, models in families.items():
+            with self.subTest(template=name):
+                body = prepare_unresolved(fixtures[name])
+                self.assertEqual(body, fixtures[name])
+                for model in models:
+                    validate_body(self.models, model, body)
+                    validate_body(self.installed_models, model, body)
+        # The shared data subtypes mark private fields required for creation.
+        # The reviewed metadata-only update deliberately omits stored secrets.
+        for name, subtype, public_required in (
+                ("setting_metadata_only", "IamUserCredentialUserSetting", {"type", "tenancy", "region"}),
+                ("setting_git_metadata_only", "GitAccountUserSetting", {"type", "entityType"})):
+            body = prepare_unresolved(fixtures[name])
+            self.assertEqual(body, fixtures[name])
+            self.assertIsInstance(body["isDefault"], bool)
+            self.assertFalse(public_required - body["data"].keys())
+            self.assertNotIn("privateApiKey", body["data"])
+            self.assertNotIn("personalAccessToken", body["data"])
+            for models in (self.models, self.installed_models):
+                validate_body(models, "UpdateUserSettingDetails", {k: v for k, v in body.items() if k != "data"}, require_fields=False)
+                validate_body(models, subtype, body["data"], require_fields=False)
+        self.assertEqual(set(self.models["CreateDataLakeCredentialDetails"]["fields"]["type"]["enum"]),
+                         {"SECRET_TOKEN", "SERVICE_ACCOUNT", "VAULT_REFERENCE"})
+        # Shared admin variants are not added to the user-setting workflow by
+        # the generic preparer; endpoint support belongs in schema/reference review.
+        self.assertIn("OAUTH", self.models["SettingData"]["fields"]["type"]["enum"])
 
     def test_all_catalog_protected_bodies_emit_current_sdk_wire_shapes(self):
         original = json.loads((REPO / "plugins/aidp/tests/fixtures/protected_catalog_bodies.json").read_text())
         modern = load_helper("contract_modern_catalog", "ext-catalogs/common/protected_catalog_templates.py")
         supported = set(original) | set(modern.TYPES)
-        for name in ("CreateCatalogDetails", "CatalogTestConnectionDetails", "Catalog"):
-            self.assertEqual(supported, set(self.models[name]["fields"]["sourceType"]["enum"]),
+        connectors = json.loads(BASELINE.with_name("catalog-connectors-contract.json").read_text())
+        repository_unsupported = set(connectors["repositoryUnsupportedSources"])
+        self.assertEqual(repository_unsupported, set(connectors["sources"]))
+        for name in ("CreateCatalogDetails", "CatalogTestConnectionDetails", "Catalog", "CatalogSummary"):
+            self.assertEqual(supported - repository_unsupported, set(self.models[name]["fields"]["sourceType"]["enum"]),
                              f"{name}.sourceType changed: add/review source helpers and references")
             self.assertEqual(supported, set(self.installed_models[name]["fields"]["sourceType"]["enum"]),
                              f"Installed {name}.sourceType changed: review every supported source")
@@ -155,6 +175,8 @@ class SensitiveContractTests(unittest.TestCase):
                     if source == "GOOGLE_BIGQUERY":
                         config = {"host": "https://www.googleapis.com/bigquery/v2", "port": "443", "projectId": "example-project",
                                   "serviceAccountEmail": "reader@example-project.iam.gserviceaccount.com", "privateKeyFilePath": "/synthetic/key.json"}
+                    if source == "DATABRICKS_UNITY_CATALOG":
+                        config = {"workspaceUrl": "https://workspace.example.com", "clientId": "public-client", "remoteCatalog": "main"}
                     if operation == "create":
                         config["displayName"] = "synthetic"
                     if source == "SNOWFLAKE":
@@ -166,10 +188,20 @@ class SensitiveContractTests(unittest.TestCase):
                         body.pop("displayName")
                         body.pop("catalogType")
                 model_name = "CreateCatalogDetails" if operation == "create" else "CatalogTestConnectionDetails"
-                validate_body(self.models, model_name, body)
+                if source in repository_unsupported:
+                    # The installed release has these connectors; repository codegen
+                    # predates them. Pin both contracts rather than coercing types.
+                    with self.assertRaisesRegex(AssertionError, "unsupported enum"):
+                        validate_body(self.models, model_name, body)
+                else:
+                    validate_body(self.models, model_name, body)
                 validate_body(self.installed_models, model_name, body)
                 properties = body["connectionDetails"]["connectionProperties"]
-                if source == "GOOGLE_BIGQUERY":
+                if source in connectors["sources"]:
+                    keys = connectors["sources"][source]
+                    allowed = set(keys["requiredConnectionPropertyKeys"]) | set(keys["optionalConnectionPropertyKeys"])
+                    self.assertFalse(set(keys["requiredConnectionPropertyKeys"]) - set(properties))
+                elif source == "GOOGLE_BIGQUERY":
                     keys = json.loads(BASELINE.with_name("google-bigquery-key-contract.json").read_text())
                     allowed = set(keys["requiredConnectionPropertyKeys"]) | set(keys["optionalSharedConnectionPropertyKeys"])
                     sdk_keys = set(self.contract["catalogPropertyEnums"]["GoogleBigqueryExternalCatalogConnectionPropertyKey"].values())
@@ -208,12 +240,8 @@ class SensitiveContractTests(unittest.TestCase):
             with self.subTest(body=body), self.assertRaisesRegex(AssertionError, diagnostic):
                 validate_body(self.models, "BaseLlmConfig", body)
 
-    def test_agent_helpers_preserve_reviewed_model_references_and_session_policy(self):
+    def test_agent_templates_preserve_reviewed_model_references_and_session_policy(self):
         for variant in ("codex", "claude"):
-            path = REPO / "plugins/aidp" / variant / "skills/aidp-cli/scripts/common/protected_resource_templates.py"
-            spec = importlib.util.spec_from_file_location("reviewed_agent_" + variant, path)
-            helper = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(helper)
             metadata = {"displayName": "synthetic", "pathInfo": "/Shared", "diagram": {"nodes": {"agent": {
                 "key": "agent", "type": "AGENT", "llm": {"type": "THIRD_PARTY", "provider": "anthropic",
                 "modelId": "chosen", "apiKeyCredstoreRef": {"displayName": "existing", "secretKey": "label"},
@@ -226,8 +254,7 @@ class SensitiveContractTests(unittest.TestCase):
                 body = copy.deepcopy(metadata)
                 if operation == "update":
                     body.pop("pathInfo")
-                args = SimpleNamespace(operation=operation, type=None, private_key_path=None, secret_key=[], replace_secrets=False)
-                actual = helper.agents(copy.deepcopy(body), args)
+                actual = prepare_unresolved(copy.deepcopy(body))
                 self.assertEqual(actual, body)
                 self.assertNotIn("prompt_input", json.dumps(actual))
                 model_name = "CreateAgentDetails" if operation == "create" else "UpdateAgentDetails"
@@ -237,16 +264,14 @@ class SensitiveContractTests(unittest.TestCase):
                         with self.assertRaisesRegex(AssertionError, response_field):
                             validate_body(self.models, model_name, {**actual, response_field: value})
 
-    def test_agent_helper_emits_typed_sdk_container_and_preserves_protected_auth(self):
-        helper = load_helper("contract_agent_helper", "common/protected_resource_templates.py")
+    def test_generic_agent_template_preserves_typed_container_and_explicit_protected_auth(self):
+        fixtures = json.loads((REPO / "plugins/aidp/tests/fixtures/protected_resource_bodies.json").read_text())
         for operation in ("create", "update"):
-            args = SimpleNamespace(operation=operation, type=None, private_key_path=None,
-                                   secret_key=[], replace_secrets=operation == "update")
-            metadata = {"displayName": "synthetic", "diagram": {
-                "toolsMap": {"http": {"toolType": "HTTP", "toolConfig": {"auth": {"authType": "BEARER_TOKEN"}}}}}}
-            if operation == "create":
-                metadata["pathInfo"] = "/Shared"
-            body = helper.agents(metadata, args)
+            metadata = copy.deepcopy(fixtures["agent_auth"])
+            if operation == "update":
+                metadata.pop("pathInfo")
+            body = prepare_unresolved(metadata)
+            self.assertEqual(body, metadata)
             validate_body(self.models, "CreateAgentDetails" if operation == "create" else "UpdateAgentDetails", body)
             self.assertIn("invisible_prompt_input", json.dumps(body))
 

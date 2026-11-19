@@ -20,56 +20,28 @@ Example `/tmp/setting-current-<unique>.json` for an IAM setting:
 {"name":"production","isDefault":true,"data":{"type":"IAM_USER_CREDENTIAL","tenancy":"ocid1.tenancy.example","region":"us-phoenix-1"}}
 ```
 
-Put only the requested edit in `/tmp/setting-metadata-<unique>.json`, for example
-`{"name":"production-renamed"}` or `{"isDefault":false}`. Then run:
+Compose the complete final request from the verified public snapshot, applying
+only the requested edit. This merge is performed during request composition,
+not by a script. Retain type, name, `isDefault` and required public connection
+metadata; never silently default to false. Type-only or incomplete snapshots
+are insufficient because omitted public values can become null.
 
-```bash
-python3 <skill_dir>/scripts/user-settings/prepare-body.py --operation update \
-  --existing-metadata @/tmp/setting-current-<unique>.json \
-  --metadata @/tmp/setting-metadata-<unique>.json --output /tmp/body-setting-<unique>.json
-```
+For metadata-only updates, omit private fields and reuse stored credentials.
+For an explicitly requested rotation, retain the same public/default state and
+add placeholders only for the new private values: visible username/hidden PAT
+for Git, or `textof` for an IAM key. Verify public fingerprint/identity metadata
+for a different key file. Include complete replacement data when required by the
+installed endpoint; do not assume a merge or send empty secrets to retain them.
 
-The helper merges the edit with the snapshot, preserving public data and an
-unchanged default flag. It adds no secret prompts or private-key placeholders;
-the backend reuses the stored credentials. Snapshot and patch types must agree,
-and the patch cannot change connection data in metadata-only mode. A type-only
-snapshot is insufficient: the backend maps omitted public fields to null, and
-an omitted default flag becomes false.
-
-Without `--existing-metadata`, `--metadata` must already contain the complete
-verified public state with the requested edit applied, including a boolean
-`isDefault` and all type-specific public fields listed above. `--type` may supply
-the verified discriminator but never substitutes for those existing values.
-
-For intended PAT or IAM credential rotation, use the same public snapshot with
-`--existing-metadata` and add `--replace-secrets` (plus `--private-key-path` for IAM).
-The helper retains the snapshot's `isDefault` automatically; do not set it to
-false merely because the request changes a credential. An explicit `isDefault`
-in the edit overrides the snapshot only when that default change is requested.
-Without a snapshot, include the verified current boolean in `--metadata`; the
-helper rejects omitted/invalid default state instead of letting the backend
-silently demote the setting. The type can come from `--type` or the verified
-snapshot, and their values must agree.
-
-For example, rotate a Git PAT using the existing public snapshot and an edit
-containing `{"data":{}}` (or other explicitly requested replacement metadata):
-
-```bash
-python3 <skill_dir>/scripts/user-settings/prepare-body.py --operation update \
-  --replace-secrets --existing-metadata @/tmp/setting-current-<unique>.json \
-  --metadata @/tmp/setting-metadata-<unique>.json --output /tmp/body-setting-<unique>.json
-```
-
-No existing secret values belong in the snapshot. The helper merges public
-configuration, then adds only the new credential's protected inputs. Reuse only non-sensitive data fields
-required for the selected branch. Git rotation prompts for username visibly and
-PAT invisibly; IAM uses the key file privately. When the replacement key changes
-its public fingerprint or account identity, include those verified new values in
-the edit; do not assume the snapshot fingerprint matches a different key file. Include the complete replacement
-data object if required by the installed endpoint; do not assume a merge.
+Prepare the final unresolved JSON using [common template guidance](common.md#template-preparation).
 
 After checking installed help, wrap `user-setting update <setting-key>` with
 `protected_aidp.py --output-file /tmp/aidp-result-setting-<unique>.json -- ...
 --body @<template>`. Include `--if-match <etag>` when available and appropriate.
-Resolve any required credential/default-impact confirmation before the user runs
-it; then consume/delete the result. Metadata-only updates do not ask for tokens.
+Follow the common execution-mode rules. Metadata-only updates and IAM key-file
+rotation normally have no prompts: summarize the intended edit/rotation, target,
+public inputs, default impact and key-file path if used, ask "Shall I proceed?",
+and wait for approval before running the wrapper yourself. Git PAT rotation
+keeps the user-run username/token prompts after any required confirmation.
+Consume/delete the result in both modes; direct execution does not require a
+user continuation step. Metadata-only updates do not ask for tokens.

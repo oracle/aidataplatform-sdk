@@ -10,6 +10,7 @@ before constructing the final command; preserve established auth and target.
 | `SECRET_TOKEN` | Display name; secret-key names and number of pairs; optional description | One required hidden `secretValue` per pair |
 | `SERVICE_ACCOUNT` | Intended OCI user OCID, tenancy, region, fingerprint; read-only intent; local PEM path | `privateKey` via `{textof:PATH}` |
 | `VAULT_REFERENCE` | Selected Vault secret OCID as `secretId` | None; do not retrieve the secret value |
+| `OAUTH` (installed schema permitting) | Provider registration and authorization-code settings; read [OAuth credentials](oauth.md) | Hidden client ID and, for confidential clients, client secret |
 
 `credentialDetails.credentialType` must match top-level `type`. `secretKey` names
 are labels, not secret values; a `credentialKey` identifies an existing resource,
@@ -23,8 +24,11 @@ versions: follow installed help and the intended access scope.
 
 The inspected backend additionally supports Git credentials and uses different
 enum spellings from this SDK. Do not translate or enable those payloads by guess.
-The helper supports the three SDK types above; discover an installed Git
-credential contract separately if needed. Git PAT user settings have their own
+All supported types use generic unresolved templates; read [OAuth credentials](oauth.md)
+for the authorization-code branch.
+Only authorization-code OAuth is currently supported by the backend, despite
+additional generated grant enums. Discover an installed Git credential contract
+separately if needed. Git PAT user settings have their own
 [reference](../user-settings/common.md).
 
 For new names, the inspected backend accepts a letter followed by letters,
@@ -33,29 +37,30 @@ live validation when versions differ. Secret pairs must be non-empty with unique
 non-empty keys. The backend limits secret values to 1 MiB; do not ask the agent
 to inspect them for validation.
 
-## Helper contract
+## Template preparation
 
-`scripts/credentials/prepare-body.py` takes `--operation create|update`,
-`--metadata @/tmp/credential-metadata-<unique>.json`, and
-`--output /tmp/body-credential-<unique>.json`. Metadata contains only confirmed
-non-sensitive request fields and unresolved placeholders. It never contains raw
-or masked secrets, nor an unfiltered GET response. The helper checks `credentialDetails.secretTokenPair[].secretValue` for
-`SECRET_TOKEN` and `credentialDetails.privateKey` for `SERVICE_ACCOUNT`, rejecting
-raw or masked values at those exact fields. `VAULT_REFERENCE.secretId` remains a
-public reference. It adds protected placeholders and never reads private keys.
-It creates a fresh owner-only template and never overwrites an existing file.
+Compose the complete unresolved JSON using installed help, the field guidance
+below, and [generic preparation](../protected-bodies.md#prepare-an-unresolved-template).
 
-Create or payload replacement additionally takes `--type SECRET_TOKEN|SERVICE_ACCOUNT|VAULT_REFERENCE`.
-For secret tokens, repeat `--secret-key NAME` for each intended pair; for service
-accounts supply `--private-key-path /local/key.pem`. Metadata-only updates omit
-`--type`, `credentialDetails`, and secret options. Payload replacement on update
-requires `--replace-secrets` even for changing a Vault reference.
+Explicitly put hidden placeholders in `credentialDetails.secretTokenPair[].secretValue`
+for secret tokens and a `textof` placeholder in `credentialDetails.privateKey`
+for service accounts. Each pair needs a distinct prompt label. Vault `secretId`
+remains a public reference. Metadata-only updates omit `type` and
+`credentialDetails`; replacement needs explicit intent and the complete intended
+key set under the installed endpoint's merge/replacement semantics. Do not send
+raw/masked secrets or assume an empty value means unchanged.
 
 Run `scripts/validate-protected-paths.py @/tmp/body-credential-<unique>.json`
-before prompting. File paths may be discussed in chat; contents stay outside
-model context. Use the generic protected wrapper with `--output-file` and consume
-then delete the agreed result using `read-protected-result.py`. The terminal
-shows prompts and `Operation output handed off to AI agent. Ask it to continue.`
+before execution. File paths may be discussed in chat; contents stay outside
+model context. `SERVICE_ACCOUNT` with a supplied PEM path, `VAULT_REFERENCE`,
+and metadata-only updates normally add no terminal prompts. For these flows,
+summarize the target, public inputs, file path or secret reference and credential
+impact, ask "Shall I proceed?", and wait for approval before running the protected
+wrapper yourself. `SECRET_TOKEN` payload changes still require the user's hidden
+input. Check the entire template for prompts and follow the shared
+[execution-mode rules](../protected-bodies.md#choose-execution-mode).
+Use `--output-file` in both modes and consume/delete the exact result using
+`read-protected-result.py`; direct execution needs no user continuation step.
 Follow the shared reference for cancellation, cleanup and safe continuation.
 
 ## Local evidence

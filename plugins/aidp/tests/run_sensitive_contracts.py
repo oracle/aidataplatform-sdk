@@ -51,7 +51,7 @@ def main(argv=None):
     suite = unittest.TestSuite()
     folder = REPO / "plugins/aidp/tests"
     patterns = ["test_sensitive_contracts.py", "test_cluster_contract.py", "test_folder_transfer_contract.py", "test_platform_support.py", "test_protected_aidp.py", "test_protected_resource_templates.py",
-                "test_external_catalog_inputs.py", "test_additional_catalog_inputs.py", "test_google_bigquery_inputs.py"]
+                "test_external_catalog_inputs.py", "test_additional_catalog_inputs.py", "test_google_bigquery_inputs.py", "test_catalog_connectors.py"]
     if args.target == "installed":
         patterns.append("test_installed_sensitive_contracts.py")
         patterns.append("test_installed_folder_transfer_contract.py")

@@ -8,28 +8,35 @@ Read [common](common.md). Discover the intended type and target first. Ask in
 chat only for unresolved display name, key names, source identity, Vault secret
 choice and optional description. Do not prompt for secrets in chat.
 
-Example non-sensitive metadata for two secret-token entries:
+For type `OAUTH`, follow [OAuth credential creation](oauth.md) instead of the
+template guidance below. It covers authorization-code provider discovery,
+private client input, PKCE and the direct protected-template execution branch.
+
+Example public metadata for a two-pair secret-token request (add the explicit credential details below):
 
 ```json
 {"displayName":"integration_keys","credentialDescription":"Integration access"}
 ```
 
-```bash
-python3 <skill_dir>/scripts/credentials/prepare-body.py --operation create \
-  --type SECRET_TOKEN --secret-key api_token --secret-key client_secret \
-  --metadata @/tmp/credential-metadata-<unique>.json --output /tmp/body-credential-<unique>.json
-```
+Prepare the complete unresolved JSON template using the [common template guidance](common.md#template-preparation).
 
-Each generated pair has a required hidden prompt identifying its exact `secretKey`,
+Include `type: SECRET_TOKEN`, matching `credentialDetails.credentialType`, and
+`secretTokenPair` entries with a required hidden placeholder at each `secretValue`.
+Each placeholder identifies its exact `secretKey`,
 for example, "Enter secret value `api_token`"; values are not reused across pairs.
 Service-account metadata instead includes `credentialDetails`
 with `userId`, `tenancy`, `region`, `fingerprint`, and `isReadOnly` when needed;
-use `--type SERVICE_ACCOUNT --private-key-path /local/key.pem`.
-Vault metadata includes `credentialDetails.secretId`; use `--type VAULT_REFERENCE`
-and request no password or token.
+include `type: SERVICE_ACCOUNT`, the matching detail discriminator, and
+`privateKey: "{textof:/local/key.pem}"`.
+Vault metadata includes `credentialDetails.secretId`
+and matching `VAULT_REFERENCE` discriminators; request no password or token.
 
-Validate paths separately. After the concrete requested credential change has
-any required confirmation, provide the exact installed CLI command wrapped as:
+Validate paths separately and follow the common execution-mode rules.
+For `SERVICE_ACCOUNT` and `VAULT_REFERENCE` with no prompts, summarize the public
+inputs, target, file path/reference and intended credential creation, ask
+"Shall I proceed?", and wait for approval before executing the wrapper yourself.
+For `SECRET_TOKEN`, obtain any required confirmation and give the command to the
+user for private input. Both modes use the exact installed CLI command wrapped as:
 
 ```bash
 python3 <skill_dir>/scripts/protected_aidp.py \

@@ -68,6 +68,22 @@ class InstalledFolderTransferContractTests(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "REMOVED contract.models.ZipAndDownloadFolderResult.fields.downloadUrl"):
             check_folder_transfer_contract(installed=True, actual=changed)
 
+    def test_installed_unused_async_classification_values_do_not_block_release(self):
+        changed = copy.deepcopy(self.actual)
+        model = changed["models"]["AsyncOperation"]
+        for field, prefix in (("actionType", "ACTION_TYPE"), ("resourceType", "RESOURCE_TYPE")):
+            model["fields"][field]["enum"] = ["FUTURE"]
+            model["constants"][prefix + "_FUTURE"] = "FUTURE"
+        original = copy.deepcopy(changed)
+        check_folder_transfer_contract(installed=True, actual=changed)
+        self.assertEqual(changed, original, "Contract checking must not mutate the supplied snapshot")
+
+    def test_installed_async_status_drift_still_blocks_release(self):
+        changed = copy.deepcopy(self.actual)
+        changed["models"]["AsyncOperation"]["fields"]["status"]["enum"].append("PAUSED")
+        with self.assertRaisesRegex(AssertionError, "AsyncOperation.fields.status.enum"):
+            check_folder_transfer_contract(installed=True, actual=changed)
+
 
 if __name__ == "__main__":
     unittest.main()
