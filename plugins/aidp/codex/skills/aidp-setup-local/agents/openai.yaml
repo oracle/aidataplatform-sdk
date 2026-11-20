@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIDP Local Setup"
+  short_description: "Install and configure the local AIDP CLI"
+  default_prompt: "Use $aidp-setup-local to set up the AIDP CLI on my machine."

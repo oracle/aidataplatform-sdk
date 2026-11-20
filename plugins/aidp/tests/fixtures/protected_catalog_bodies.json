@@ -1,0 +1,106 @@
+{
+  "ADW": {
+    "sourceType": "ADW",
+    "connectionDetails": {
+      "connectionProperties": {
+        "ADW_USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "ADW_PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "ADW_TNS_ALIAS": "sales_low",
+        "ADW_WALLET_CONTENT_BASE64": "{base64of:/synthetic/wallet.zip}",
+        "ADW_WALLET_PASSWORD": "{invisible_prompt_input:optional:Enter wallet password}",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "ALH": {
+    "sourceType": "ALH",
+    "connectionDetails": {
+      "connectionProperties": {
+        "ALH_USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "ALH_PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "ALH_TNS_ALIAS": "sales_low",
+        "ALH_WALLET_CONTENT_BASE64": "{base64of:/synthetic/wallet.zip}",
+        "ALH_WALLET_PASSWORD": "{invisible_prompt_input:optional:Enter wallet password}",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "ATP": {
+    "sourceType": "ATP",
+    "connectionDetails": {
+      "connectionProperties": {
+        "ATP_USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "ATP_PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "ATP_TNS_ALIAS": "sales_low",
+        "ATP_WALLET_CONTENT_BASE64": "{base64of:/synthetic/wallet.zip}",
+        "ATP_WALLET_PASSWORD": "{invisible_prompt_input:optional:Enter wallet password}",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "KAFKA": {
+    "sourceType": "KAFKA",
+    "connectionDetails": {
+      "connectionProperties": {
+        "USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "BOOTSTRAP_SERVERS": "broker:9092",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "ORACLE": {
+    "sourceType": "ORACLE",
+    "connectionDetails": {
+      "connectionProperties": {
+        "ORACLE_USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "ORACLE_PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "ORACLE_HOST": "db.example",
+        "ORACLE_PORT": "1521",
+        "ORACLE_DATABASE_NAME": "sales",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "EXADATA": {
+    "sourceType": "EXADATA",
+    "connectionDetails": {
+      "connectionProperties": {
+        "EXADATA_USERNAME": "{visible_prompt_input:required:Enter account username}",
+        "EXADATA_PASSWORD": "{invisible_prompt_input:required:Enter account password}",
+        "EXADATA_HOST": "db.example",
+        "EXADATA_PORT": "1521",
+        "EXADATA_DATABASE_NAME": "sales",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  },
+  "ORACLE_ANALYTICS": {
+    "sourceType": "ORACLE_ANALYTICS",
+    "connectionDetails": {
+      "connectionProperties": {
+        "OAC_ENDPOINT_URL": "https://oac.example",
+        "OAC_IDCS_ENDPOINT_URL": "https://id.example",
+        "OAC_IDCS_CLIENT_ID": "client",
+        "OAC_IDCS_CLIENT_SCOPE": "scope",
+        "OAC_IDCS_CERTIFICATE": "{base64of:/synthetic/cert.pem}",
+        "OAC_IDCS_PRIVATE_KEY": "{base64of:/synthetic/key.pem}",
+        "WORKSPACE_KEY": "workspace"
+      }
+    },
+    "displayName": "synthetic",
+    "catalogType": "EXTERNAL"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "formatVersion": 1,
+  "repositoryUnsupportedSources": [
+    "SQLSERVER",
+    "POSTGRESQL",
+    "DATABRICKS_UNITY_CATALOG"
+  ],
+  "sources": {
+    "SQLSERVER": {
+      "folder": "sqlserver",
+      "feature": "AIDP_CONNECTORS_SQLSERVER_ENABLED",
+      "defaultPort": "1433",
+      "requiredConnectionPropertyKeys": [
+        "SQLSERVER_HOST",
+        "SQLSERVER_PORT",
+        "SQLSERVER_USERNAME",
+        "SQLSERVER_PASSWORD"
+      ],
+      "optionalConnectionPropertyKeys": [
+        "SQLSERVER_DATABASE_NAME",
+        "WORKSPACE_KEY"
+      ],
+      "sensitiveConnectionPropertyKeys": [
+        "SQLSERVER_PASSWORD"
+      ],
+      "storedTestProperty": "SQLSERVER_PASSWORD"
+    },
+    "POSTGRESQL": {
+      "folder": "postgresql",
+      "feature": "AIDP_CONNECTORS_POSTGRESQL_ENABLED",
+      "defaultPort": null,
+      "requiredConnectionPropertyKeys": [
+        "POSTGRESQL_HOST",
+        "POSTGRESQL_PORT",
+        "POSTGRESQL_DATABASE_NAME",
+        "POSTGRESQL_USERNAME",
+        "POSTGRESQL_PASSWORD"
+      ],
+      "optionalConnectionPropertyKeys": [
+        "WORKSPACE_KEY"
+      ],
+      "sensitiveConnectionPropertyKeys": [
+        "POSTGRESQL_PASSWORD"
+      ],
+      "storedTestProperty": "POSTGRESQL_PASSWORD"
+    },
+    "DATABRICKS_UNITY_CATALOG": {
+      "folder": "databricks",
+      "feature": "AIDP_CONNECTORS_DATABRICKS_ENABLED",
+      "authenticationType": "oauth-m2m",
+      "requiredConnectionPropertyKeys": [
+        "DATABRICKS_UNITY_CATALOG_WORKSPACE_URL",
+        "DATABRICKS_UNITY_CATALOG_AUTH_TYPE",
+        "DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_ID",
+        "DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_SECRET",
+        "DATABRICKS_UNITY_CATALOG_REMOTE_CATALOG"
+      ],
+      "optionalConnectionPropertyKeys": [],
+      "sensitiveConnectionPropertyKeys": [
+        "DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_SECRET"
+      ],
+      "storedTestProperty": "DATABRICKS_UNITY_CATALOG_OAUTH_CLIENT_SECRET"
+    }
+  }
+}

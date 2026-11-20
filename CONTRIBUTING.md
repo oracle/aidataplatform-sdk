@@ -46,6 +46,17 @@ can be accepted.
    your changes. Ensure that you reference the issue you created as well.
 1. We will assign the pull request to 2-3 people for review before it is merged.
 
+## Sensitive-data skill release checks
+
+Before releasing the AIDP protected-input scripts or skills, run
+`python3 plugins/aidp/tests/run_sensitive_contracts.py`. See the
+[contract release guide](plugins/aidp/tests/contracts/README.md) for coverage,
+failure diagnostics and the reviewed-baseline update process.
+
+**AI agents must not auto-correct failing contract tests or refresh the baseline
+to make them pass. Review the change and update the sensitive-data AI skills in
+`aidataplatform-sdk` before accepting a new contract.**
+
 ## Code of conduct
 
 Follow the [Golden Rule](https://en.wikipedia.org/wiki/Golden_Rule). If you'd

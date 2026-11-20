@@ -1,0 +1,175 @@
+{
+  "credential_secret_token": {
+    "displayName": "integration",
+    "credentialDetails": {
+      "credentialType": "SECRET_TOKEN",
+      "secretTokenPair": [
+        {
+          "secretKey": "username",
+          "secretValue": "{invisible_prompt_input:required:Enter secret value `username`}"
+        },
+        {
+          "secretKey": "password",
+          "secretValue": "{invisible_prompt_input:required:Enter secret value `password`}"
+        }
+      ]
+    },
+    "type": "SECRET_TOKEN"
+  },
+  "credential_service_account": {
+    "displayName": "service",
+    "credentialDetails": {
+      "userId": "user",
+      "tenancy": "tenant",
+      "region": "region",
+      "fingerprint": "fingerprint",
+      "isReadOnly": false,
+      "credentialType": "SERVICE_ACCOUNT",
+      "privateKey": "{textof:/synthetic/private.pem}"
+    },
+    "type": "SERVICE_ACCOUNT"
+  },
+  "credential_vault_reference": {
+    "displayName": "vault",
+    "credentialDetails": {
+      "secretId": "ocid1.vaultsecret.synthetic",
+      "credentialType": "VAULT_REFERENCE"
+    },
+    "type": "VAULT_REFERENCE"
+  },
+  "setting_git_pat": {
+    "name": "git",
+    "isDefault": false,
+    "data": {
+      "providerName": "GITHUB",
+      "type": "GIT_ACCOUNT",
+      "entityType": "PERSONAL_ACCESS_TOKEN",
+      "username": "{visible_prompt_input:required:Enter Git account username}",
+      "personalAccessToken": "{invisible_prompt_input:required:Enter Git personal access token}"
+    }
+  },
+  "setting_iam": {
+    "name": "iam",
+    "isDefault": true,
+    "data": {
+      "userId": "user",
+      "tenancy": "tenant",
+      "region": "region",
+      "fingerprint": "fingerprint",
+      "type": "IAM_USER_CREDENTIAL",
+      "privateApiKey": "{textof:/synthetic/private.pem}"
+    }
+  },
+  "setting_metadata_only": {
+    "name": "renamed",
+    "isDefault": true,
+    "data": {
+      "type": "IAM_USER_CREDENTIAL",
+      "tenancy": "existing-tenant",
+      "region": "existing-region",
+      "userId": "existing-user",
+      "fingerprint": "existing-fingerprint"
+    }
+  },
+  "credential_metadata_only": {
+    "credentialDescription": "changed"
+  },
+  "agent_metadata_only": {
+    "description": "changed"
+  },
+  "agent_auth": {
+    "displayName": "agent",
+    "pathInfo": "/Shared",
+    "diagram": {
+      "toolsMap": {
+        "http": {
+          "toolType": "HTTP",
+          "toolConfig": {
+            "auth": {
+              "authType": "BEARER_TOKEN",
+              "token": "{invisible_prompt_input:required:Enter bearer token for /diagram/toolsMap/http/toolConfig}"
+            }
+          }
+        },
+        "mcp": {
+          "toolType": "MCP",
+          "toolConfig": {
+            "endpoint": "https://mcp.example",
+            "auth": {
+              "authType": "OAUTH",
+              "clientId": "public-id",
+              "issuerIdpEndpoint": "https://idp.example",
+              "scopes": [
+                "read"
+              ],
+              "clientSecret": "{invisible_prompt_input:required:Enter OAuth client secret for /diagram/toolsMap/mcp/toolConfig}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "agent_credential_reference": {
+    "displayName": "agent",
+    "pathInfo": "/Shared",
+    "diagram": {
+      "toolsMap": {
+        "http": {
+          "toolType": "HTTP",
+          "toolConfig": {
+            "auth": {
+              "authType": "BEARER_TOKEN",
+              "token": "{\"displayName\": \"integration\", \"secretKey\": \"api_token\"}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "agent_registry_reference": {
+    "displayName": "agent",
+    "pathInfo": "/Shared",
+    "diagram": {
+      "toolsMap": {
+        "mcp": {
+          "toolType": "MCP",
+          "toolConfig": {
+            "endpoint": "https://mcp.example",
+            "aiRegistryId": "verified-registry-key",
+            "auth": {
+              "authType": "BEARER_TOKEN",
+              "token": "{\"type\": \"AGENT_REGISTRY\", \"resource_type\": \"MCP_SERVER\", \"resource_key\": \"verified-registry-key\"}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "credential_oauth": {
+    "displayName": "provider",
+    "type": "OAUTH",
+    "credentialDetails": {
+      "credentialType": "OAUTH",
+      "flowConfigDetails": {
+        "grantType": "AUTHORIZATION_CODE",
+        "issuer": "https://idp.example",
+        "redirectUrls": [
+          "https://app.example/callback"
+        ],
+        "clientId": "{invisible_prompt_input:required:Enter OAuth client ID}",
+        "clientSecret": "{invisible_prompt_input:required:Enter OAuth client secret}",
+        "isPkceRequired": true
+      }
+    }
+  },
+  "setting_git_metadata_only": {
+    "name": "renamed-git",
+    "isDefault": false,
+    "data": {
+      "type": "GIT_ACCOUNT",
+      "entityType": "PERSONAL_ACCESS_TOKEN",
+      "providerName": "GITHUB",
+      "username": "existing-user"
+    }
+  }
+}

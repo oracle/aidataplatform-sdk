@@ -1,0 +1,818 @@
+{
+  "cli": {
+    "AUTH_CHOICES": "('api_key', 'security_token', 'instance_principal', 'resource_principal')",
+    "GLOBAL_BOOLEAN_OPTIONS": "{'--debug': 'debug'}",
+    "GLOBAL_VALUE_OPTIONS": "{'--config-file': 'config_file', '--profile': 'profile', '-p': 'profile', '--auth': 'auth', '--region': 'region', '--endpoint': 'endpoint', '--timeout': 'timeout', '--instance-id': 'ai_data_platform_id'}",
+    "SKIPPED_COMMAND_FIELDS": "{'opc_request_id'}",
+    "apply_global_option": "FunctionDef(name='apply_global_option', args=arguments(args=[arg(arg='values', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='option_name', annotation=Name(id='str', ctx=Load())), arg(arg='value', annotation=Name(id='str', ctx=Load()))]), body=[Assign(targets=[Name(id='key', ctx=Store())], value=Subscript(value=Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load())), If(test=Compare(left=Name(id='key', ctx=Load()), ops=[Eq()], comparators=[Constant(value='timeout')]), body=[Try(body=[Assign(targets=[Name(id='timeout', ctx=Store())], value=Call(func=Name(id='float', ctx=Load()), args=[Name(id='value', ctx=Load())]))], handlers=[ExceptHandler(type=Name(id='ValueError', ctx=Load()), name='exc', body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--timeout must be a positive number of seconds.')]), cause=Name(id='exc', ctx=Load()))])]), If(test=Compare(left=Name(id='timeout', ctx=Load()), ops=[LtE()], comparators=[Constant(value=0)]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--timeout must be a positive number of seconds.')]))]), Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Name(id='key', ctx=Load()), ctx=Store())], value=Name(id='timeout', ctx=Load())), Return()]), Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Name(id='key', ctx=Load()), ctx=Store())], value=Name(id='value', ctx=Load()))], returns=Constant(value=None))",
+    "bind_command_args": "FunctionDef(name='bind_command_args', args=arguments(args=[arg(arg='sdk_method', annotation=Subscript(value=Name(id='Callable', ctx=Load()), slice=Tuple(elts=[Constant(value=Ellipsis), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='params', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='body', annotation=Name(id='Any', ctx=Load())), arg(arg='body_param_name', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[Assign(targets=[Name(id='signature', ctx=Store())], value=Call(func=Attribute(value=Name(id='inspect', ctx=Load()), attr='signature', ctx=Load()), args=[Name(id='sdk_method', ctx=Load())])), AnnAssign(target=Name(id='positional', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='Any', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), AnnAssign(target=Name(id='kwargs', ctx=Store()), annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), value=Dict(), simple=1), Assign(targets=[Name(id='body_consumed', ctx=Store())], value=Constant(value=False)), For(target=Name(id='parameter', ctx=Store()), iter=Call(func=Attribute(value=Attribute(value=Name(id='signature', ctx=Load()), attr='parameters', ctx=Load()), attr='values', ctx=Load())), body=[If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='self')]), body=[Continue()]), If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='kind', ctx=Load()), ops=[Eq()], comparators=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='VAR_KEYWORD', ctx=Load())]), body=[Expr(value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='update', ctx=Load()), args=[Name(id='params', ctx=Load())])), Assign(targets=[Name(id='params', ctx=Store())], value=Dict()), Continue()]), Assign(targets=[Name(id='value_present', ctx=Store())], value=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[In()], comparators=[Name(id='params', ctx=Load())])), If(test=Name(id='value_present', ctx=Load()), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Call(func=Attribute(value=Name(id='params', ctx=Load()), attr='pop', ctx=Load()), args=[Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load())]))], orelse=[If(test=BoolOp(op=And(), values=[Compare(left=Name(id='body', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), UnaryOp(op=Not(), operand=Name(id='body_consumed', ctx=Load())), Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[Eq()], comparators=[Name(id='body_param_name', ctx=Load())])]), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Name(id='body', ctx=Load())), Assign(targets=[Name(id='body_consumed', ctx=Store())], value=Constant(value=True))], orelse=[If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='default', ctx=Load()), ops=[Is()], comparators=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='empty', ctx=Load())]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='Missing required parameter '), FormattedValue(value=Call(func=Name(id='parameter_option_name', ctx=Load()), args=[Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), Name(id='body_param_name', ctx=Load())]), conversion=-1), Constant(value='.')])]))], orelse=[Continue()])])]), If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='kind', ctx=Load()), ops=[In()], comparators=[Tuple(elts=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='POSITIONAL_ONLY', ctx=Load()), Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='POSITIONAL_OR_KEYWORD', ctx=Load())], ctx=Load())]), body=[Expr(value=Call(func=Attribute(value=Name(id='positional', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='value', ctx=Load())]))], orelse=[Assign(targets=[Subscript(value=Name(id='kwargs', ctx=Load()), slice=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=Name(id='value', ctx=Load()))])]), If(test=BoolOp(op=And(), values=[Compare(left=Name(id='body', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), UnaryOp(op=Not(), operand=Name(id='body_consumed', ctx=Load()))]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='A request body was provided, but this command has no body parameter.')]))]), If(test=Name(id='params', ctx=Load()), body=[Expr(value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='update', ctx=Load()), args=[Name(id='params', ctx=Load())]))]), Return(value=Tuple(elts=[Name(id='positional', ctx=Load()), Name(id='kwargs', ctx=Load())], ctx=Load()))], returns=Subscript(value=Name(id='tuple', ctx=Load()), slice=Tuple(elts=[Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='Any', ctx=Load()), ctx=Load()), Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())], ctx=Load()), ctx=Load()))",
+    "global_defaults": "FunctionDef(name='global_defaults', args=arguments(), body=[Return(value=Dict(keys=[Constant(value='config_file'), Constant(value='profile'), Constant(value='auth'), Constant(value='region'), Constant(value='endpoint'), Constant(value='timeout'), Constant(value='ai_data_platform_id'), Constant(value='debug')], values=[Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_CONFIG_FILE'), Constant(value='~/.oci/config')]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_PROFILE'), Name(id='DEFAULT_PROFILE', ctx=Load())]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_AUTH'), Name(id='DEFAULT_AUTH', ctx=Load())]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_REGION')]), BoolOp(op=Or(), values=[Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='AIDP_ENDPOINT')]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_ENDPOINT')])]), Constant(value=None), Call(func=Name(id='configured_instance_id', ctx=Load())), Constant(value=False)]))], returns=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()))",
+    "load_body_input": "FunctionDef(name='load_body_input', args=arguments(args=[arg(arg='command', annotation=Name(id='CommandDefinition', ctx=Load())), arg(arg='value', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[If(test=Call(func=Name(id='command_uses_raw_body', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[Return(value=Call(func=Name(id='read_raw_body_argument', ctx=Load()), args=[Name(id='value', ctx=Load())]))]), Return(value=Call(func=Name(id='load_json_input', ctx=Load()), args=[Name(id='value', ctx=Load())]))], returns=Name(id='Any', ctx=Load()))",
+    "load_json_input": "FunctionDef(name='load_json_input', args=arguments(args=[arg(arg='value', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[Return(value=Constant(value=None))]), Assign(targets=[Name(id='raw', ctx=Store())], value=Call(func=Name(id='read_json_argument', ctx=Load()), args=[Name(id='value', ctx=Load())])), Try(body=[Assign(targets=[Name(id='parsed', ctx=Store())], value=Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='loads', ctx=Load()), args=[Name(id='raw', ctx=Load())]))], handlers=[ExceptHandler(type=Attribute(value=Name(id='json', ctx=Load()), attr='JSONDecodeError', ctx=Load()), name='exc', body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='--body is not valid JSON: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])]), cause=Name(id='exc', ctx=Load()))])]), If(test=UnaryOp(op=Not(), operand=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='parsed', ctx=Load()), Tuple(elts=[Name(id='dict', ctx=Load()), Name(id='list', ctx=Load())], ctx=Load())])), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--body must contain a JSON object or array.')]))]), Return(value=Name(id='parsed', ctx=Load()))], returns=Name(id='Any', ctx=Load()))",
+    "main": "FunctionDef(name='main', args=arguments(args=[arg(arg='argv', annotation=BinOp(left=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), op=BitOr(), right=Constant(value=None)))], defaults=[Constant(value=None)]), body=[Assign(targets=[Name(id='raw_argv', ctx=Store())], value=IfExp(test=Compare(left=Name(id='argv', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=Subscript(value=Attribute(value=Name(id='sys', ctx=Load()), attr='argv', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load()), orelse=Name(id='argv', ctx=Load()))), Try(body=[Assign(targets=[Tuple(elts=[Name(id='globals_ns', ctx=Store()), Name(id='args', ctx=Store()), Name(id='help_requested', ctx=Store()), Name(id='version_requested', ctx=Store())], ctx=Store())], value=Call(func=Name(id='parse_global_options', ctx=Load()), args=[Name(id='raw_argv', ctx=Load())])), If(test=Name(id='version_requested', ctx=Load()), body=[Expr(value=Call(func=Name(id='print_version', ctx=Load()))), Return(value=Constant(value=0))]), Expr(value=Call(func=Name(id='ensure_manifest_loaded', ctx=Load()))), If(test=UnaryOp(op=Not(), operand=Name(id='args', ctx=Load())), body=[Expr(value=Call(func=Name(id='print_root_help', ctx=Load()))), Return(value=Constant(value=0))]), Return(value=Call(func=Name(id='dispatch', ctx=Load()), args=[Name(id='args', ctx=Load()), Name(id='globals_ns', ctx=Load()), Name(id='help_requested', ctx=Load())]))], handlers=[ExceptHandler(type=Name(id='CliError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Tuple(elts=[Name(id='ConfigFileNotFound', ctx=Load()), Name(id='InvalidConfig', ctx=Load())], ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: OCI config error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='FileNotFoundError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: file not found: '), FormattedValue(value=Attribute(value=Name(id='exc', ctx=Load()), attr='filename', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='PermissionError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: permission denied: '), FormattedValue(value=Attribute(value=Name(id='exc', ctx=Load()), attr='filename', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='JSONDecodeError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: invalid JSON: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='VendorRequestException', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: request failed: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=1))]), ExceptHandler(type=Name(id='RequestException', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: request failed: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=1))]), ExceptHandler(type=Name(id='OSError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: file error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='ValueError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='ServiceError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print_error_response', ctx=Load()), args=[Dict(keys=[Constant(value='status'), Constant(value='code'), Constant(value='message'), Constant(value='opc-request-id')], values=[Attribute(value=Name(id='exc', ctx=Load()), attr='status', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='code', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='message', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='request_id', ctx=Load())])])), Return(value=Call(func=Name(id='int', ctx=Load()), args=[BoolOp(op=Or(), values=[Attribute(value=Name(id='exc', ctx=Load()), attr='status', ctx=Load()), Constant(value=1)])]))])])], returns=Name(id='int', ctx=Load()))",
+    "parse_command_options": "FunctionDef(name='parse_command_options', args=arguments(args=[arg(arg='group', annotation=Name(id='CommandGroup', ctx=Load())), arg(arg='command', annotation=Name(id='CommandDefinition', ctx=Load())), arg(arg='tokens', annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load())), arg(arg='globals_ns', annotation=Name(id='SimpleNamespace', ctx=Load()))]), body=[AnnAssign(target=Name(id='params', ctx=Store()), annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), value=Dict(), simple=1), Assign(targets=[Name(id='body', ctx=Store())], value=Constant(value=None)), Assign(targets=[Name(id='opc_request_id', ctx=Store())], value=Constant(value=None)), Assign(targets=[Name(id='no_request_id', ctx=Store())], value=Constant(value=False)), AnnAssign(target=Name(id='positionals', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), Assign(targets=[Name(id='option_fields', ctx=Store())], value=DictComp(key=JoinedStr(values=[Constant(value='--'), FormattedValue(value=Attribute(value=Name(id='field', ctx=Load()), attr='cli_name', ctx=Load()), conversion=-1)]), value=Name(id='field', ctx=Load()), generators=[comprehension(target=Name(id='field', ctx=Store()), iter=Call(func=Name(id='command_option_fields', ctx=Load()), args=[Name(id='command', ctx=Load())]), is_async=0)])), Assign(targets=[Name(id='global_values', ctx=Store())], value=Call(func=Attribute(value=Call(func=Name(id='vars', ctx=Load()), args=[Name(id='globals_ns', ctx=Load())]), attr='copy', ctx=Load()))), Assign(targets=[Name(id='index', ctx=Store())], value=Constant(value=0)), While(test=Compare(left=Name(id='index', ctx=Load()), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='tokens', ctx=Load())])]), body=[Assign(targets=[Name(id='token', ctx=Store())], value=Subscript(value=Name(id='tokens', ctx=Load()), slice=Name(id='index', ctx=Load()), ctx=Load())), Assign(targets=[Tuple(elts=[Name(id='option_name', ctx=Store()), Name(id='inline_value', ctx=Store())], ctx=Store())], value=Call(func=Name(id='split_inline_option', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--body')]), body=[If(test=Compare(left=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[FormattedValue(value=Attribute(value=Name(id='command', ctx=Load()), attr='name', ctx=Load()), conversion=-1), Constant(value=' does not accept --body.')])]))]), Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Assign(targets=[Name(id='body', ctx=Store())], value=Call(func=Name(id='load_body_input', ctx=Load()), args=[Name(id='command', ctx=Load()), Name(id='value', ctx=Load())])), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Call(func=Name(id='command_uses_raw_body', ctx=Load()), args=[Name(id='command', ctx=Load())])), Compare(left=Call(func=Name(id='json_body_argument_source', ctx=Load()), args=[Name(id='value', ctx=Load())]), ops=[Eq()], comparators=[Constant(value='inline')]), Call(func=Name(id='body_contains_sensitive_field', ctx=Load()), args=[Name(id='command', ctx=Load()), Name(id='body', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Inline --body JSON is blocked because this request body contains sensitive fields. Use --body @request.json, --body file:///path/request.json, or --body -.')]))]), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--opc-request-id')]), body=[Assign(targets=[Tuple(elts=[Name(id='opc_request_id', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--no-request-id')]), body=[Assign(targets=[Name(id='no_request_id', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='option_fields', ctx=Load())]), body=[Assign(targets=[Name(id='field', ctx=Store())], value=Subscript(value=Name(id='option_fields', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load())), Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='field_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load()), Name(id='field', ctx=Load())])), Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=IfExp(test=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='value', ctx=Load()), Name(id='bool', ctx=Load())]), body=Name(id='value', ctx=Load()), orelse=Call(func=Name(id='parse_value', ctx=Load()), args=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='value', ctx=Load())])]))), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load())]), body=[Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Expr(value=Call(func=Name(id='apply_global_option', ctx=Load()), args=[Name(id='global_values', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='value', ctx=Load())])), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load())]), body=[Assign(targets=[Subscript(value=Name(id='global_values', ctx=Load()), slice=Subscript(value=Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load()), ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')]), body=[Raise(exc=Call(func=Name(id='unknown_option', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='option_fields', ctx=Load())]))]), Expr(value=Call(func=Attribute(value=Name(id='positionals', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='token', ctx=Load())])), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='validate_global_options', ctx=Load()), args=[Name(id='global_values', ctx=Load())])), Assign(targets=[Name(id='argument_fields', ctx=Store())], value=Call(func=Name(id='command_argument_fields', ctx=Load()), args=[Name(id='command', ctx=Load())])), If(test=Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())])]), body=[Assign(targets=[Name(id='missing', ctx=Store())], value=Call(func=Name(id='argument_metavar', ctx=Load()), args=[Subscript(value=Name(id='argument_fields', ctx=Load()), slice=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ctx=Load())])), Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Missing required argument '), FormattedValue(value=Name(id='missing', ctx=Load()), conversion=-1), Constant(value='.')])]))]), If(test=Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ops=[Gt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Unexpected argument '), FormattedValue(value=Subscript(value=Name(id='positionals', ctx=Load()), slice=Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())]), ctx=Load()), conversion=114), Constant(value='.')])]))]), For(target=Tuple(elts=[Name(id='field', ctx=Store()), Name(id='value', ctx=Store())], ctx=Store()), iter=Call(func=Name(id='zip', ctx=Load()), args=[Name(id='argument_fields', ctx=Load()), Name(id='positionals', ctx=Load())]), body=[Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=Call(func=Name(id='parse_value', ctx=Load()), args=[Name(id='value', ctx=Load())]))]), For(target=Name(id='field', ctx=Store()), iter=Call(func=Name(id='command_option_fields', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[If(test=BoolOp(op=And(), values=[Attribute(value=Name(id='field', ctx=Load()), attr='required', ctx=Load()), Compare(left=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ops=[NotIn()], comparators=[Name(id='params', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Missing required flag --'), FormattedValue(value=Attribute(value=Name(id='field', ctx=Load()), attr='cli_name', ctx=Load()), conversion=-1), Constant(value='.')])]))])]), If(test=BoolOp(op=And(), values=[Compare(left=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), Attribute(value=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), attr='required', ctx=Load()), Compare(left=Name(id='body', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Missing required flag --body.')]))]), If(test=Call(func=Name(id='command_requires_instance_id', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[If(test=UnaryOp(op=Not(), operand=Subscript(value=Name(id='global_values', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Load())), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Missing AIDP instance OCID. Set --instance-id or AIDP_INSTANCE_ID.')]))]), Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Store())], value=Subscript(value=Name(id='global_values', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Load()))]), Assign(targets=[Name(id='values', ctx=Store())], value=Call(func=Attribute(value=Name(id='global_values', ctx=Load()), attr='copy', ctx=Load()))), Expr(value=Call(func=Attribute(value=Name(id='values', ctx=Load()), attr='update', ctx=Load()), args=[Dict(keys=[Constant(value='params'), Constant(value='body'), Constant(value='opc_request_id'), Constant(value='no_request_id')], values=[Name(id='params', ctx=Load()), Name(id='body', ctx=Load()), Name(id='opc_request_id', ctx=Load()), Name(id='no_request_id', ctx=Load())])])), Return(value=Call(func=Name(id='SimpleNamespace', ctx=Load()), keywords=[keyword(value=Name(id='values', ctx=Load()))]))], returns=Name(id='SimpleNamespace', ctx=Load()))",
+    "parse_global_options": "FunctionDef(name='parse_global_options', args=arguments(args=[arg(arg='argv', annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()))]), body=[Assign(targets=[Name(id='values', ctx=Store())], value=Call(func=Name(id='global_defaults', ctx=Load()))), AnnAssign(target=Name(id='remaining', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), Assign(targets=[Name(id='help_requested', ctx=Store())], value=Constant(value=False)), Assign(targets=[Name(id='version_requested', ctx=Store())], value=Constant(value=False)), Assign(targets=[Name(id='index', ctx=Store())], value=Constant(value=0)), Assign(targets=[Name(id='command_seen', ctx=Store())], value=Constant(value=False)), While(test=Compare(left=Name(id='index', ctx=Load()), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argv', ctx=Load())])]), body=[Assign(targets=[Name(id='token', ctx=Store())], value=Subscript(value=Name(id='argv', ctx=Load()), slice=Name(id='index', ctx=Load()), ctx=Load())), If(test=Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Set(elts=[Constant(value='-h'), Constant(value='--help')])]), body=[Assign(targets=[Name(id='help_requested', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Set(elts=[Constant(value='-v'), Constant(value='--version')])]), body=[Assign(targets=[Name(id='version_requested', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load())])]), body=[Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Subscript(value=Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load()), slice=Name(id='token', ctx=Load()), ctx=Load()), ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), Assign(targets=[Tuple(elts=[Name(id='option_name', ctx=Store()), Name(id='inline_value', ctx=Store())], ctx=Store())], value=Call(func=Name(id='split_inline_option', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load())])]), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Name(id='inline_value', ctx=Load())), If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[If(test=Compare(left=BinOp(left=Name(id='index', ctx=Load()), op=Add(), right=Constant(value=1)), ops=[GtE()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argv', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[FormattedValue(value=Name(id='option_name', ctx=Load()), conversion=-1), Constant(value=' requires a value.')])]))]), Assign(targets=[Name(id='value', ctx=Store())], value=Subscript(value=Name(id='argv', ctx=Load()), slice=BinOp(left=Name(id='index', ctx=Load()), op=Add(), right=Constant(value=1)), ctx=Load())), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='apply_global_option', ctx=Load()), args=[Name(id='values', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='value', ctx=Load())])), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')])]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='Unknown option '), FormattedValue(value=Name(id='option_name', ctx=Load()), conversion=114), Constant(value='.')])]))]), Expr(value=Call(func=Attribute(value=Name(id='remaining', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=UnaryOp(op=Not(), operand=Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')])), body=[Assign(targets=[Name(id='command_seen', ctx=Store())], value=Constant(value=True))]), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='validate_global_options', ctx=Load()), args=[Name(id='values', ctx=Load())])), Return(value=Tuple(elts=[Call(func=Name(id='SimpleNamespace', ctx=Load()), keywords=[keyword(value=Name(id='values', ctx=Load()))]), Name(id='remaining', ctx=Load()), Name(id='help_requested', ctx=Load()), Name(id='version_requested', ctx=Load())], ctx=Load()))], returns=Subscript(value=Name(id='tuple', ctx=Load()), slice=Tuple(elts=[Name(id='SimpleNamespace', ctx=Load()), Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), Name(id='bool', ctx=Load()), Name(id='bool', ctx=Load())], ctx=Load()), ctx=Load()))",
+    "print_error_response": "FunctionDef(name='print_error_response', args=arguments(args=[arg(arg='payload', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()))]), body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Constant(value='Response:')], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='dumps', ctx=Load()), args=[Name(id='payload', ctx=Load())], keywords=[keyword(arg='indent', value=Constant(value=2)), keyword(arg='default', value=Name(id='str', ctx=Load()))])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))]))], returns=Constant(value=None))",
+    "print_response": "FunctionDef(name='print_response', args=arguments(args=[arg(arg='response', annotation=Name(id='Any', ctx=Load()))]), body=[Assign(targets=[Name(id='data', ctx=Store())], value=Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='data'), Name(id='response', ctx=Load())])), Assign(targets=[Name(id='payload', ctx=Store())], value=Dict(keys=[Constant(value='data'), Constant(value='headers'), Constant(value='status')], values=[Call(func=Name(id='to_dict', ctx=Load()), args=[Name(id='data', ctx=Load())]), Call(func=Name(id='dict', ctx=Load()), args=[BoolOp(op=Or(), values=[Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='headers'), Dict()]), Dict()])]), Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='status'), Constant(value=None)])])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Constant(value='Response:')])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='dumps', ctx=Load()), args=[Name(id='payload', ctx=Load())], keywords=[keyword(arg='indent', value=Constant(value=2)), keyword(arg='default', value=Name(id='str', ctx=Load()))])]))], returns=Constant(value=None))",
+    "read_json_argument": "FunctionDef(name='read_json_argument', args=arguments(args=[arg(arg='value', annotation=Name(id='str', ctx=Load()))]), body=[If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Eq()], comparators=[Constant(value='-')]), body=[Return(value=Call(func=Attribute(value=Attribute(value=Name(id='sys', ctx=Load()), attr='stdin', ctx=Load()), attr='read', ctx=Load())))]), If(test=Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='@')]), body=[Return(value=Call(func=Attribute(value=Call(func=Attribute(value=Call(func=Name(id='Path', ctx=Load()), args=[Subscript(value=Name(id='value', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load())]), attr='expanduser', ctx=Load())), attr='read_text', ctx=Load()), keywords=[keyword(arg='encoding', value=Constant(value='utf-8'))]))]), If(test=Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='file://')]), body=[Return(value=Call(func=Attribute(value=Call(func=Attribute(value=Call(func=Name(id='Path', ctx=Load()), args=[Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='removeprefix', ctx=Load()), args=[Constant(value='file://')])]), attr='expanduser', ctx=Load())), attr='read_text', ctx=Load()), keywords=[keyword(arg='encoding', value=Constant(value='utf-8'))]))]), Return(value=Name(id='value', ctx=Load()))], returns=Name(id='str', ctx=Load()))"
+  },
+  "formatVersion": 1,
+  "models": {
+    "AsyncOperation": {
+      "bases": [],
+      "constants": {
+        "ACTION_TYPE_ACTIVATE_MODEL_DEPLOYMENT": "ACTIVATE_MODEL_DEPLOYMENT",
+        "ACTION_TYPE_BUNDLE_DEPLOY": "BUNDLE_DEPLOY",
+        "ACTION_TYPE_BUNDLE_PUBLISH": "BUNDLE_PUBLISH",
+        "ACTION_TYPE_BUNDLE_PURGE": "BUNDLE_PURGE",
+        "ACTION_TYPE_BUNDLE_SYNC": "BUNDLE_SYNC",
+        "ACTION_TYPE_COPY_VOLUME_FILE": "COPY_VOLUME_FILE",
+        "ACTION_TYPE_CREATE_BUNDLE": "CREATE_BUNDLE",
+        "ACTION_TYPE_CREATE_CATALOG": "CREATE_CATALOG",
+        "ACTION_TYPE_CREATE_CLUSTER": "CREATE_CLUSTER",
+        "ACTION_TYPE_CREATE_GIT_FOLDER": "CREATE_GIT_FOLDER",
+        "ACTION_TYPE_CREATE_KNOWLEDGE_BASE": "CREATE_KNOWLEDGE_BASE",
+        "ACTION_TYPE_CREATE_KNOWLEDGE_BASE_JOB": "CREATE_KNOWLEDGE_BASE_JOB",
+        "ACTION_TYPE_CREATE_KNOWLEDGE_BASE_JOB_RUN": "CREATE_KNOWLEDGE_BASE_JOB_RUN",
+        "ACTION_TYPE_CREATE_PRIVATE_NETWORK_PROFILE": "CREATE_PRIVATE_NETWORK_PROFILE",
+        "ACTION_TYPE_CREATE_SCHEMA": "CREATE_SCHEMA",
+        "ACTION_TYPE_CREATE_TABLE": "CREATE_TABLE",
+        "ACTION_TYPE_CREATE_USER_SCHEMA_IN_CATALOG": "CREATE_USER_SCHEMA_IN_CATALOG",
+        "ACTION_TYPE_CREATE_VOLUME": "CREATE_VOLUME",
+        "ACTION_TYPE_CREATE_WORKSPACE": "CREATE_WORKSPACE",
+        "ACTION_TYPE_DEACTIVATE_MODEL_DEPLOYMENT": "DEACTIVATE_MODEL_DEPLOYMENT",
+        "ACTION_TYPE_DELETE_CATALOG": "DELETE_CATALOG",
+        "ACTION_TYPE_DELETE_CLUSTER": "DELETE_CLUSTER",
+        "ACTION_TYPE_DELETE_KNOWLEDGE_BASE": "DELETE_KNOWLEDGE_BASE",
+        "ACTION_TYPE_DELETE_KNOWLEDGE_BASE_JOB": "DELETE_KNOWLEDGE_BASE_JOB",
+        "ACTION_TYPE_DELETE_LINEAGE_IMPORT": "DELETE_LINEAGE_IMPORT",
+        "ACTION_TYPE_DELETE_PRIVATE_NETWORK_PROFILE": "DELETE_PRIVATE_NETWORK_PROFILE",
+        "ACTION_TYPE_DELETE_SCHEMA": "DELETE_SCHEMA",
+        "ACTION_TYPE_DELETE_TABLE": "DELETE_TABLE",
+        "ACTION_TYPE_DELETE_VOLUME": "DELETE_VOLUME",
+        "ACTION_TYPE_DELETE_VOLUME_FILE": "DELETE_VOLUME_FILE",
+        "ACTION_TYPE_DELETE_VOLUME_FOLDER": "DELETE_VOLUME_FOLDER",
+        "ACTION_TYPE_DELETE_WORKSPACE": "DELETE_WORKSPACE",
+        "ACTION_TYPE_DEPLOY_AGENT": "DEPLOY_AGENT",
+        "ACTION_TYPE_DOWNLOAD_CLUSTER_LOG": "DOWNLOAD_CLUSTER_LOG",
+        "ACTION_TYPE_EXPORT_MODEL_DEPLOYMENT_INFERENCES": "EXPORT_MODEL_DEPLOYMENT_INFERENCES",
+        "ACTION_TYPE_GIT_CHECKOUT_BRANCH": "GIT_CHECKOUT_BRANCH",
+        "ACTION_TYPE_GIT_COMMIT_PUSH": "GIT_COMMIT_PUSH",
+        "ACTION_TYPE_GIT_CREATE_BRANCH": "GIT_CREATE_BRANCH",
+        "ACTION_TYPE_GIT_OPERATION_MERGE": "GIT_OPERATION_MERGE",
+        "ACTION_TYPE_GIT_OPERATION_PULL": "GIT_OPERATION_PULL",
+        "ACTION_TYPE_GIT_OPERATION_REBASE": "GIT_OPERATION_REBASE",
+        "ACTION_TYPE_GIT_OPERATION_RESET": "GIT_OPERATION_RESET",
+        "ACTION_TYPE_GIT_OPERATION_RESET_STATE": "GIT_OPERATION_RESET_STATE",
+        "ACTION_TYPE_IMPORT_LINEAGE": "IMPORT_LINEAGE",
+        "ACTION_TYPE_LOAD_MODELS_IN_CATALOG": "LOAD_MODELS_IN_CATALOG",
+        "ACTION_TYPE_MANAGE_EXTRACTED_ENTITIES": "MANAGE_EXTRACTED_ENTITIES",
+        "ACTION_TYPE_MARK_AS_BUNDLE": "MARK_AS_BUNDLE",
+        "ACTION_TYPE_MIGRATE_EXTERNAL_CATALOG": "MIGRATE_EXTERNAL_CATALOG",
+        "ACTION_TYPE_MOVE_VOLUME_FILE": "MOVE_VOLUME_FILE",
+        "ACTION_TYPE_PATCH_CLUSTER_LIBRARIES": "PATCH_CLUSTER_LIBRARIES",
+        "ACTION_TYPE_REFRESH_ENTITY": "REFRESH_ENTITY",
+        "ACTION_TYPE_RESTART_CLUSTER": "RESTART_CLUSTER",
+        "ACTION_TYPE_ROLL_BACK_MODEL_DEPLOYMENT": "ROLL_BACK_MODEL_DEPLOYMENT",
+        "ACTION_TYPE_ROLL_FORWARD_MODEL_DEPLOYMENT": "ROLL_FORWARD_MODEL_DEPLOYMENT",
+        "ACTION_TYPE_START_CLUSTER": "START_CLUSTER",
+        "ACTION_TYPE_STOP_CLUSTER": "STOP_CLUSTER",
+        "ACTION_TYPE_TEST_AGENT_MEMORY_CONNECTION": "TEST_AGENT_MEMORY_CONNECTION",
+        "ACTION_TYPE_TEST_CONNECTION_CATALOG": "TEST_CONNECTION_CATALOG",
+        "ACTION_TYPE_UNKNOWN": "UNKNOWN",
+        "ACTION_TYPE_UPDATE_CATALOG": "UPDATE_CATALOG",
+        "ACTION_TYPE_UPDATE_CLUSTER": "UPDATE_CLUSTER",
+        "ACTION_TYPE_UPDATE_GIT_REPOSITORY": "UPDATE_GIT_REPOSITORY",
+        "ACTION_TYPE_UPDATE_KNOWLEDGE_BASE": "UPDATE_KNOWLEDGE_BASE",
+        "ACTION_TYPE_UPDATE_TABLE": "UPDATE_TABLE",
+        "ACTION_TYPE_UPDATE_WORKSPACE": "UPDATE_WORKSPACE",
+        "ACTION_TYPE_UPLOAD_AND_EXTRACT_ZIP": "UPLOAD_AND_EXTRACT_ZIP",
+        "ACTION_TYPE_ZIP_AND_DOWNLOAD_FOLDER": "ZIP_AND_DOWNLOAD_FOLDER",
+        "RESOURCE_TYPE_AGENT": "AGENT",
+        "RESOURCE_TYPE_AI_COMPUTE": "AI_COMPUTE",
+        "RESOURCE_TYPE_BUNDLE_OPERATION": "BUNDLE_OPERATION",
+        "RESOURCE_TYPE_CATALOG": "CATALOG",
+        "RESOURCE_TYPE_CLUSTER": "CLUSTER",
+        "RESOURCE_TYPE_GIT_OPERATION": "GIT_OPERATION",
+        "RESOURCE_TYPE_KNOWLEDGE_BASE": "KNOWLEDGE_BASE",
+        "RESOURCE_TYPE_KNOWLEDGE_BASE_JOB": "KNOWLEDGE_BASE_JOB",
+        "RESOURCE_TYPE_KNOWLEDGE_BASE_JOB_RUN": "KNOWLEDGE_BASE_JOB_RUN",
+        "RESOURCE_TYPE_LINEAGE_IMPORT": "LINEAGE_IMPORT",
+        "RESOURCE_TYPE_MODEL_DEPLOYMENT": "MODEL_DEPLOYMENT",
+        "RESOURCE_TYPE_PRIVATE_NETWORK_PROFILE": "PRIVATE_NETWORK_PROFILE",
+        "RESOURCE_TYPE_SCHEMA": "SCHEMA",
+        "RESOURCE_TYPE_TABLE": "TABLE",
+        "RESOURCE_TYPE_UNKNOWN": "UNKNOWN",
+        "RESOURCE_TYPE_VIEW": "VIEW",
+        "RESOURCE_TYPE_VOLUME": "VOLUME",
+        "RESOURCE_TYPE_VOLUME_FILE": "VOLUME_FILE",
+        "RESOURCE_TYPE_WORKSPACE": "WORKSPACE",
+        "RESOURCE_TYPE_WORKSPACE_OBJECT": "WORKSPACE_OBJECT",
+        "STATUS_CANCELED": "CANCELED",
+        "STATUS_FAILED": "FAILED",
+        "STATUS_IN_PROGRESS": "IN_PROGRESS",
+        "STATUS_SUCCEEDED": "SUCCEEDED"
+      },
+      "defaults": {
+        "actionType": "None",
+        "createdBy": "None",
+        "createdByName": "None",
+        "errorCode": "None",
+        "errorMessage": "None",
+        "key": "None",
+        "resourceDisplayName": "None",
+        "resourceName": "None",
+        "resourceType": "None",
+        "status": "None",
+        "statusDetails": "None",
+        "timeFinished": "None",
+        "timeStarted": "None"
+      },
+      "fields": {
+        "actionType": {
+          "enum": [
+            "ACTIVATE_MODEL_DEPLOYMENT",
+            "BUNDLE_DEPLOY",
+            "BUNDLE_PUBLISH",
+            "BUNDLE_PURGE",
+            "BUNDLE_SYNC",
+            "COPY_VOLUME_FILE",
+            "CREATE_BUNDLE",
+            "CREATE_CATALOG",
+            "CREATE_CLUSTER",
+            "CREATE_GIT_FOLDER",
+            "CREATE_KNOWLEDGE_BASE",
+            "CREATE_KNOWLEDGE_BASE_JOB",
+            "CREATE_KNOWLEDGE_BASE_JOB_RUN",
+            "CREATE_PRIVATE_NETWORK_PROFILE",
+            "CREATE_SCHEMA",
+            "CREATE_TABLE",
+            "CREATE_USER_SCHEMA_IN_CATALOG",
+            "CREATE_VOLUME",
+            "CREATE_WORKSPACE",
+            "DEACTIVATE_MODEL_DEPLOYMENT",
+            "DELETE_CATALOG",
+            "DELETE_CLUSTER",
+            "DELETE_KNOWLEDGE_BASE",
+            "DELETE_KNOWLEDGE_BASE_JOB",
+            "DELETE_LINEAGE_IMPORT",
+            "DELETE_PRIVATE_NETWORK_PROFILE",
+            "DELETE_SCHEMA",
+            "DELETE_TABLE",
+            "DELETE_VOLUME",
+            "DELETE_VOLUME_FILE",
+            "DELETE_VOLUME_FOLDER",
+            "DELETE_WORKSPACE",
+            "DEPLOY_AGENT",
+            "DOWNLOAD_CLUSTER_LOG",
+            "EXPORT_MODEL_DEPLOYMENT_INFERENCES",
+            "GIT_CHECKOUT_BRANCH",
+            "GIT_COMMIT_PUSH",
+            "GIT_CREATE_BRANCH",
+            "GIT_OPERATION_MERGE",
+            "GIT_OPERATION_PULL",
+            "GIT_OPERATION_REBASE",
+            "GIT_OPERATION_RESET",
+            "GIT_OPERATION_RESET_STATE",
+            "IMPORT_LINEAGE",
+            "LOAD_MODELS_IN_CATALOG",
+            "MANAGE_EXTRACTED_ENTITIES",
+            "MARK_AS_BUNDLE",
+            "MIGRATE_EXTERNAL_CATALOG",
+            "MOVE_VOLUME_FILE",
+            "PATCH_CLUSTER_LIBRARIES",
+            "REFRESH_ENTITY",
+            "RESTART_CLUSTER",
+            "ROLL_BACK_MODEL_DEPLOYMENT",
+            "ROLL_FORWARD_MODEL_DEPLOYMENT",
+            "START_CLUSTER",
+            "STOP_CLUSTER",
+            "TEST_AGENT_MEMORY_CONNECTION",
+            "TEST_CONNECTION_CATALOG",
+            "UNKNOWN",
+            "UPDATE_CATALOG",
+            "UPDATE_CLUSTER",
+            "UPDATE_GIT_REPOSITORY",
+            "UPDATE_KNOWLEDGE_BASE",
+            "UPDATE_TABLE",
+            "UPDATE_WORKSPACE",
+            "UPLOAD_AND_EXTRACT_ZIP",
+            "ZIP_AND_DOWNLOAD_FOLDER"
+          ],
+          "pythonName": "action_type",
+          "required": true,
+          "type": "str"
+        },
+        "createdBy": {
+          "enum": [],
+          "pythonName": "created_by",
+          "required": false,
+          "type": "str"
+        },
+        "createdByName": {
+          "enum": [],
+          "pythonName": "created_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "errorCode": {
+          "enum": [],
+          "pythonName": "error_code",
+          "required": false,
+          "type": "str"
+        },
+        "errorMessage": {
+          "enum": [],
+          "pythonName": "error_message",
+          "required": false,
+          "type": "str"
+        },
+        "key": {
+          "enum": [],
+          "pythonName": "key",
+          "required": true,
+          "type": "str"
+        },
+        "resourceDisplayName": {
+          "enum": [],
+          "pythonName": "resource_display_name",
+          "required": false,
+          "type": "str"
+        },
+        "resourceName": {
+          "enum": [],
+          "pythonName": "resource_name",
+          "required": true,
+          "type": "str"
+        },
+        "resourceType": {
+          "enum": [
+            "AGENT",
+            "AI_COMPUTE",
+            "BUNDLE_OPERATION",
+            "CATALOG",
+            "CLUSTER",
+            "GIT_OPERATION",
+            "KNOWLEDGE_BASE",
+            "KNOWLEDGE_BASE_JOB",
+            "KNOWLEDGE_BASE_JOB_RUN",
+            "LINEAGE_IMPORT",
+            "MODEL_DEPLOYMENT",
+            "PRIVATE_NETWORK_PROFILE",
+            "SCHEMA",
+            "TABLE",
+            "UNKNOWN",
+            "VIEW",
+            "VOLUME",
+            "VOLUME_FILE",
+            "WORKSPACE",
+            "WORKSPACE_OBJECT"
+          ],
+          "pythonName": "resource_type",
+          "required": true,
+          "type": "str"
+        },
+        "status": {
+          "enum": [
+            "CANCELED",
+            "FAILED",
+            "IN_PROGRESS",
+            "SUCCEEDED"
+          ],
+          "pythonName": "status",
+          "required": true,
+          "type": "str"
+        },
+        "statusDetails": {
+          "enum": [],
+          "pythonName": "status_details",
+          "required": false,
+          "type": "str"
+        },
+        "timeFinished": {
+          "enum": [],
+          "pythonName": "time_finished",
+          "required": false,
+          "type": "datetime"
+        },
+        "timeStarted": {
+          "enum": [],
+          "pythonName": "time_started",
+          "required": true,
+          "type": "datetime"
+        }
+      },
+      "variants": {}
+    },
+    "UploadAndExtractZipDetails": {
+      "bases": [],
+      "constants": {
+        "ACTION_CREATE": "CREATE",
+        "ACTION_UPDATE": "UPDATE"
+      },
+      "defaults": {
+        "action": "None",
+        "destinationFolderPath": "None",
+        "eTag": "None",
+        "isOverwrite": "None",
+        "operationKey": "None",
+        "sizeInBytes": "None",
+        "zipFileName": "None"
+      },
+      "fields": {
+        "action": {
+          "enum": [
+            "CREATE",
+            "UPDATE"
+          ],
+          "pythonName": "action",
+          "required": true,
+          "type": "str"
+        },
+        "destinationFolderPath": {
+          "enum": [],
+          "pythonName": "destination_folder_path",
+          "required": false,
+          "type": "str"
+        },
+        "eTag": {
+          "enum": [],
+          "pythonName": "e_tag",
+          "required": false,
+          "type": "str"
+        },
+        "isOverwrite": {
+          "enum": [],
+          "pythonName": "is_overwrite",
+          "required": false,
+          "type": "bool"
+        },
+        "operationKey": {
+          "enum": [],
+          "pythonName": "operation_key",
+          "required": false,
+          "type": "str"
+        },
+        "sizeInBytes": {
+          "enum": [],
+          "pythonName": "size_in_bytes",
+          "required": false,
+          "type": "int"
+        },
+        "zipFileName": {
+          "enum": [],
+          "pythonName": "zip_file_name",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "UploadAndExtractZipResult": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['upload_url']]",
+        "destinationFolderPath": "None",
+        "operationKey": "None",
+        "uploadUrl": "None"
+      },
+      "fields": {
+        "destinationFolderPath": {
+          "enum": [],
+          "pythonName": "destination_folder_path",
+          "required": false,
+          "type": "str"
+        },
+        "operationKey": {
+          "enum": [],
+          "pythonName": "operation_key",
+          "required": true,
+          "type": "str"
+        },
+        "uploadUrl": {
+          "enum": [],
+          "pythonName": "upload_url",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "ZipAndDownloadFolderDetails": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "sourceFolderPath": "None"
+      },
+      "fields": {
+        "sourceFolderPath": {
+          "enum": [],
+          "pythonName": "source_folder_path",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "ZipAndDownloadFolderResult": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "_redacted_field_paths": "[['download_url']]",
+        "archiveName": "None",
+        "downloadUrl": "None",
+        "operationKey": "None"
+      },
+      "fields": {
+        "archiveName": {
+          "enum": [],
+          "pythonName": "archive_name",
+          "required": true,
+          "type": "str"
+        },
+        "downloadUrl": {
+          "enum": [],
+          "pythonName": "download_url",
+          "required": true,
+          "type": "str"
+        },
+        "operationKey": {
+          "enum": [],
+          "pythonName": "operation_key",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    }
+  },
+  "operations": {
+    "async-operations": {
+      "operations": {
+        "get_async_operation": {
+          "bodyEnumFields": {},
+          "bodyFields": {},
+          "bodyRequiredFields": [],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "async_operation_key": {
+              "cliName": "async-operation-key",
+              "in": "path",
+              "originalName": "asyncOperationKey",
+              "required": true,
+              "type": "string"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            }
+          },
+          "httpMethod": "GET",
+          "name": "get",
+          "operationId": "GetAsyncOperation",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/asyncOperations/{asyncOperationKey}",
+          "responseModel": "AsyncOperation",
+          "sdkMethodName": "get_async_operation",
+          "signature": "self, ai_data_platform_id, async_operation_key, **kwargs"
+        }
+      }
+    },
+    "volume": {
+      "operations": {
+        "upload_and_extract_volume_zip": {
+          "bodyEnumFields": {
+            "action": [
+              "CREATE",
+              "UPDATE"
+            ]
+          },
+          "bodyField": "upload_and_extract_zip_details",
+          "bodyFields": {
+            "action": {
+              "enumValues": [
+                "CREATE",
+                "UPDATE"
+              ],
+              "required": true,
+              "type": "string"
+            },
+            "destinationFolderPath": {
+              "required": false,
+              "type": "string"
+            },
+            "eTag": {
+              "required": false,
+              "type": "string"
+            },
+            "isOverwrite": {
+              "required": false,
+              "type": "boolean"
+            },
+            "operationKey": {
+              "required": false,
+              "type": "string"
+            },
+            "sizeInBytes": {
+              "required": false,
+              "type": "integer"
+            },
+            "zipFileName": {
+              "required": false,
+              "type": "string"
+            }
+          },
+          "bodyModel": "UploadAndExtractZipDetails",
+          "bodyRequiredFields": [
+            "action"
+          ],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            },
+            "opc_retry_token": {
+              "cliName": "opc-retry-token",
+              "in": "header",
+              "originalName": "opc-retry-token",
+              "required": false,
+              "type": "string"
+            },
+            "upload_and_extract_zip_details": {
+              "cliName": "upload-and-extract-zip-details",
+              "in": "body",
+              "modelName": "UploadAndExtractZipDetails",
+              "originalName": "UploadAndExtractZipDetails",
+              "required": true,
+              "type": "object"
+            },
+            "volume_key": {
+              "cliName": "volume-key",
+              "in": "path",
+              "originalName": "volumeKey",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "httpMethod": "POST",
+          "name": "upload-and-extract-volume-zip",
+          "operationId": "UploadAndExtractVolumeZip",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/volumes/{volumeKey}/actions/uploadAndExtractZip",
+          "responseModel": "UploadAndExtractZipResult",
+          "sdkMethodName": "upload_and_extract_volume_zip",
+          "signature": "self, ai_data_platform_id, volume_key, upload_and_extract_zip_details, **kwargs"
+        },
+        "zip_and_download_volume_folder": {
+          "bodyEnumFields": {},
+          "bodyField": "zip_and_download_folder_details",
+          "bodyFields": {
+            "sourceFolderPath": {
+              "required": true,
+              "type": "string"
+            }
+          },
+          "bodyModel": "ZipAndDownloadFolderDetails",
+          "bodyRequiredFields": [
+            "sourceFolderPath"
+          ],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            },
+            "opc_retry_token": {
+              "cliName": "opc-retry-token",
+              "in": "header",
+              "originalName": "opc-retry-token",
+              "required": false,
+              "type": "string"
+            },
+            "volume_key": {
+              "cliName": "volume-key",
+              "in": "path",
+              "originalName": "volumeKey",
+              "required": true,
+              "type": "string"
+            },
+            "zip_and_download_folder_details": {
+              "cliName": "zip-and-download-folder-details",
+              "in": "body",
+              "modelName": "ZipAndDownloadFolderDetails",
+              "originalName": "ZipAndDownloadFolderDetails",
+              "required": true,
+              "type": "object"
+            }
+          },
+          "httpMethod": "POST",
+          "name": "zip-and-download-volume-folder",
+          "operationId": "ZipAndDownloadVolumeFolder",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/volumes/{volumeKey}/actions/zipAndDownloadFolder",
+          "responseModel": "ZipAndDownloadFolderResult",
+          "sdkMethodName": "zip_and_download_volume_folder",
+          "signature": "self, ai_data_platform_id, volume_key, zip_and_download_folder_details, **kwargs"
+        }
+      }
+    },
+    "workspace-object": {
+      "operations": {
+        "upload_and_extract_workspace_zip": {
+          "bodyEnumFields": {
+            "action": [
+              "CREATE",
+              "UPDATE"
+            ]
+          },
+          "bodyField": "upload_and_extract_zip_details",
+          "bodyFields": {
+            "action": {
+              "enumValues": [
+                "CREATE",
+                "UPDATE"
+              ],
+              "required": true,
+              "type": "string"
+            },
+            "destinationFolderPath": {
+              "required": false,
+              "type": "string"
+            },
+            "eTag": {
+              "required": false,
+              "type": "string"
+            },
+            "isOverwrite": {
+              "required": false,
+              "type": "boolean"
+            },
+            "operationKey": {
+              "required": false,
+              "type": "string"
+            },
+            "sizeInBytes": {
+              "required": false,
+              "type": "integer"
+            },
+            "zipFileName": {
+              "required": false,
+              "type": "string"
+            }
+          },
+          "bodyModel": "UploadAndExtractZipDetails",
+          "bodyRequiredFields": [
+            "action"
+          ],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            },
+            "opc_retry_token": {
+              "cliName": "opc-retry-token",
+              "in": "header",
+              "originalName": "opc-retry-token",
+              "required": false,
+              "type": "string"
+            },
+            "upload_and_extract_zip_details": {
+              "cliName": "upload-and-extract-zip-details",
+              "in": "body",
+              "modelName": "UploadAndExtractZipDetails",
+              "originalName": "UploadAndExtractZipDetails",
+              "required": true,
+              "type": "object"
+            },
+            "workspace_key": {
+              "cliName": "workspace-key",
+              "in": "path",
+              "originalName": "workspaceKey",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "httpMethod": "POST",
+          "name": "upload-and-extract-workspace-zip",
+          "operationId": "UploadAndExtractWorkspaceZip",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/workspaces/{workspaceKey}/actions/uploadAndExtractZip",
+          "responseModel": "UploadAndExtractZipResult",
+          "sdkMethodName": "upload_and_extract_workspace_zip",
+          "signature": "self, ai_data_platform_id, workspace_key, upload_and_extract_zip_details, **kwargs"
+        },
+        "zip_and_download_workspace_folder": {
+          "bodyEnumFields": {},
+          "bodyField": "zip_and_download_folder_details",
+          "bodyFields": {
+            "sourceFolderPath": {
+              "required": true,
+              "type": "string"
+            }
+          },
+          "bodyModel": "ZipAndDownloadFolderDetails",
+          "bodyRequiredFields": [
+            "sourceFolderPath"
+          ],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            },
+            "opc_retry_token": {
+              "cliName": "opc-retry-token",
+              "in": "header",
+              "originalName": "opc-retry-token",
+              "required": false,
+              "type": "string"
+            },
+            "workspace_key": {
+              "cliName": "workspace-key",
+              "in": "path",
+              "originalName": "workspaceKey",
+              "required": true,
+              "type": "string"
+            },
+            "zip_and_download_folder_details": {
+              "cliName": "zip-and-download-folder-details",
+              "in": "body",
+              "modelName": "ZipAndDownloadFolderDetails",
+              "originalName": "ZipAndDownloadFolderDetails",
+              "required": true,
+              "type": "object"
+            }
+          },
+          "httpMethod": "POST",
+          "name": "zip-and-download-workspace-folder",
+          "operationId": "ZipAndDownloadWorkspaceFolder",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/workspaces/{workspaceKey}/actions/zipAndDownloadFolder",
+          "responseModel": "ZipAndDownloadFolderResult",
+          "sdkMethodName": "zip_and_download_workspace_folder",
+          "signature": "self, ai_data_platform_id, workspace_key, zip_and_download_folder_details, **kwargs"
+        }
+      }
+    }
+  },
+  "sdkBasePaths": {
+    "async-operations": "/20260430",
+    "volume": "/20260430",
+    "workspace-object": "/20260430"
+  },
+  "sdkResponseDeclarations": {
+    "get_async_operation": "import * as model from '../model'; import common = require(\"oci-common\"); export interface GetAsyncOperationResponse { 'opcRequestId': string; 'opcNextPage': string; 'asyncOperation': model.AsyncOperation; }",
+    "upload_and_extract_volume_zip": "import * as model from '../model'; import common = require(\"oci-common\"); export interface UploadAndExtractVolumeZipResponse { 'aidpAsyncOperationKey': string; 'opcRequestId': string; 'uploadAndExtractZipResult': model.UploadAndExtractZipResult; }",
+    "upload_and_extract_workspace_zip": "import * as model from '../model'; import common = require(\"oci-common\"); export interface UploadAndExtractWorkspaceZipResponse { 'aidpAsyncOperationKey': string; 'opcRequestId': string; 'uploadAndExtractZipResult': model.UploadAndExtractZipResult; }",
+    "zip_and_download_volume_folder": "import * as model from '../model'; import common = require(\"oci-common\"); export interface ZipAndDownloadVolumeFolderResponse { 'aidpAsyncOperationKey': string; 'opcRequestId': string; 'zipAndDownloadFolderResult': model.ZipAndDownloadFolderResult; }",
+    "zip_and_download_workspace_folder": "import * as model from '../model'; import common = require(\"oci-common\"); export interface ZipAndDownloadWorkspaceFolderResponse { 'aidpAsyncOperationKey': string; 'opcRequestId': string; 'zipAndDownloadFolderResult': model.ZipAndDownloadFolderResult; }"
+  }
+}

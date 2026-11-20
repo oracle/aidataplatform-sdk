@@ -1,0 +1,1726 @@
+{
+  "cli": {
+    "AUTH_CHOICES": "('api_key', 'security_token', 'instance_principal', 'resource_principal')",
+    "GLOBAL_BOOLEAN_OPTIONS": "{'--debug': 'debug'}",
+    "GLOBAL_VALUE_OPTIONS": "{'--config-file': 'config_file', '--profile': 'profile', '-p': 'profile', '--auth': 'auth', '--region': 'region', '--endpoint': 'endpoint', '--timeout': 'timeout', '--instance-id': 'ai_data_platform_id'}",
+    "SKIPPED_COMMAND_FIELDS": "{'opc_request_id'}",
+    "apply_global_option": "FunctionDef(name='apply_global_option', args=arguments(args=[arg(arg='values', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='option_name', annotation=Name(id='str', ctx=Load())), arg(arg='value', annotation=Name(id='str', ctx=Load()))]), body=[Assign(targets=[Name(id='key', ctx=Store())], value=Subscript(value=Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load())), If(test=Compare(left=Name(id='key', ctx=Load()), ops=[Eq()], comparators=[Constant(value='timeout')]), body=[Try(body=[Assign(targets=[Name(id='timeout', ctx=Store())], value=Call(func=Name(id='float', ctx=Load()), args=[Name(id='value', ctx=Load())]))], handlers=[ExceptHandler(type=Name(id='ValueError', ctx=Load()), name='exc', body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--timeout must be a positive number of seconds.')]), cause=Name(id='exc', ctx=Load()))])]), If(test=Compare(left=Name(id='timeout', ctx=Load()), ops=[LtE()], comparators=[Constant(value=0)]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--timeout must be a positive number of seconds.')]))]), Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Name(id='key', ctx=Load()), ctx=Store())], value=Name(id='timeout', ctx=Load())), Return()]), Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Name(id='key', ctx=Load()), ctx=Store())], value=Name(id='value', ctx=Load()))], returns=Constant(value=None))",
+    "bind_command_args": "FunctionDef(name='bind_command_args', args=arguments(args=[arg(arg='sdk_method', annotation=Subscript(value=Name(id='Callable', ctx=Load()), slice=Tuple(elts=[Constant(value=Ellipsis), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='params', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())), arg(arg='body', annotation=Name(id='Any', ctx=Load())), arg(arg='body_param_name', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[Assign(targets=[Name(id='signature', ctx=Store())], value=Call(func=Attribute(value=Name(id='inspect', ctx=Load()), attr='signature', ctx=Load()), args=[Name(id='sdk_method', ctx=Load())])), AnnAssign(target=Name(id='positional', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='Any', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), AnnAssign(target=Name(id='kwargs', ctx=Store()), annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), value=Dict(), simple=1), Assign(targets=[Name(id='body_consumed', ctx=Store())], value=Constant(value=False)), For(target=Name(id='parameter', ctx=Store()), iter=Call(func=Attribute(value=Attribute(value=Name(id='signature', ctx=Load()), attr='parameters', ctx=Load()), attr='values', ctx=Load())), body=[If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='self')]), body=[Continue()]), If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='kind', ctx=Load()), ops=[Eq()], comparators=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='VAR_KEYWORD', ctx=Load())]), body=[Expr(value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='update', ctx=Load()), args=[Name(id='params', ctx=Load())])), Assign(targets=[Name(id='params', ctx=Store())], value=Dict()), Continue()]), Assign(targets=[Name(id='value_present', ctx=Store())], value=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[In()], comparators=[Name(id='params', ctx=Load())])), If(test=Name(id='value_present', ctx=Load()), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Call(func=Attribute(value=Name(id='params', ctx=Load()), attr='pop', ctx=Load()), args=[Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load())]))], orelse=[If(test=BoolOp(op=And(), values=[Compare(left=Name(id='body', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), UnaryOp(op=Not(), operand=Name(id='body_consumed', ctx=Load())), Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ops=[Eq()], comparators=[Name(id='body_param_name', ctx=Load())])]), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Name(id='body', ctx=Load())), Assign(targets=[Name(id='body_consumed', ctx=Store())], value=Constant(value=True))], orelse=[If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='default', ctx=Load()), ops=[Is()], comparators=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='empty', ctx=Load())]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='Missing required parameter '), FormattedValue(value=Call(func=Name(id='parameter_option_name', ctx=Load()), args=[Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), Name(id='body_param_name', ctx=Load())]), conversion=-1), Constant(value='.')])]))], orelse=[Continue()])])]), If(test=Compare(left=Attribute(value=Name(id='parameter', ctx=Load()), attr='kind', ctx=Load()), ops=[In()], comparators=[Tuple(elts=[Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='POSITIONAL_ONLY', ctx=Load()), Attribute(value=Attribute(value=Name(id='inspect', ctx=Load()), attr='Parameter', ctx=Load()), attr='POSITIONAL_OR_KEYWORD', ctx=Load())], ctx=Load())]), body=[Expr(value=Call(func=Attribute(value=Name(id='positional', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='value', ctx=Load())]))], orelse=[Assign(targets=[Subscript(value=Name(id='kwargs', ctx=Load()), slice=Attribute(value=Name(id='parameter', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=Name(id='value', ctx=Load()))])]), If(test=BoolOp(op=And(), values=[Compare(left=Name(id='body', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), UnaryOp(op=Not(), operand=Name(id='body_consumed', ctx=Load()))]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='A request body was provided, but this command has no body parameter.')]))]), If(test=Name(id='params', ctx=Load()), body=[Expr(value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='update', ctx=Load()), args=[Name(id='params', ctx=Load())]))]), Return(value=Tuple(elts=[Name(id='positional', ctx=Load()), Name(id='kwargs', ctx=Load())], ctx=Load()))], returns=Subscript(value=Name(id='tuple', ctx=Load()), slice=Tuple(elts=[Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='Any', ctx=Load()), ctx=Load()), Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load())], ctx=Load()), ctx=Load()))",
+    "global_defaults": "FunctionDef(name='global_defaults', args=arguments(), body=[Return(value=Dict(keys=[Constant(value='config_file'), Constant(value='profile'), Constant(value='auth'), Constant(value='region'), Constant(value='endpoint'), Constant(value='timeout'), Constant(value='ai_data_platform_id'), Constant(value='debug')], values=[Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_CONFIG_FILE'), Constant(value='~/.oci/config')]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_PROFILE'), Name(id='DEFAULT_PROFILE', ctx=Load())]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_AUTH'), Name(id='DEFAULT_AUTH', ctx=Load())]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_REGION')]), BoolOp(op=Or(), values=[Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='AIDP_ENDPOINT')]), Call(func=Attribute(value=Name(id='os', ctx=Load()), attr='getenv', ctx=Load()), args=[Constant(value='OCI_CLI_ENDPOINT')])]), Constant(value=None), Call(func=Name(id='configured_instance_id', ctx=Load())), Constant(value=False)]))], returns=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()))",
+    "load_body_input": "FunctionDef(name='load_body_input', args=arguments(args=[arg(arg='command', annotation=Name(id='CommandDefinition', ctx=Load())), arg(arg='value', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[If(test=Call(func=Name(id='command_uses_raw_body', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[Return(value=Call(func=Name(id='read_raw_body_argument', ctx=Load()), args=[Name(id='value', ctx=Load())]))]), Return(value=Call(func=Name(id='load_json_input', ctx=Load()), args=[Name(id='value', ctx=Load())]))], returns=Name(id='Any', ctx=Load()))",
+    "load_json_input": "FunctionDef(name='load_json_input', args=arguments(args=[arg(arg='value', annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)))]), body=[If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[Return(value=Constant(value=None))]), Assign(targets=[Name(id='raw', ctx=Store())], value=Call(func=Name(id='read_json_argument', ctx=Load()), args=[Name(id='value', ctx=Load())])), Try(body=[Assign(targets=[Name(id='parsed', ctx=Store())], value=Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='loads', ctx=Load()), args=[Name(id='raw', ctx=Load())]))], handlers=[ExceptHandler(type=Attribute(value=Name(id='json', ctx=Load()), attr='JSONDecodeError', ctx=Load()), name='exc', body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='--body is not valid JSON: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])]), cause=Name(id='exc', ctx=Load()))])]), If(test=UnaryOp(op=Not(), operand=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='parsed', ctx=Load()), Tuple(elts=[Name(id='dict', ctx=Load()), Name(id='list', ctx=Load())], ctx=Load())])), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[Constant(value='--body must contain a JSON object or array.')]))]), Return(value=Name(id='parsed', ctx=Load()))], returns=Name(id='Any', ctx=Load()))",
+    "main": "FunctionDef(name='main', args=arguments(args=[arg(arg='argv', annotation=BinOp(left=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), op=BitOr(), right=Constant(value=None)))], defaults=[Constant(value=None)]), body=[Assign(targets=[Name(id='raw_argv', ctx=Store())], value=IfExp(test=Compare(left=Name(id='argv', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=Subscript(value=Attribute(value=Name(id='sys', ctx=Load()), attr='argv', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load()), orelse=Name(id='argv', ctx=Load()))), Try(body=[Assign(targets=[Tuple(elts=[Name(id='globals_ns', ctx=Store()), Name(id='args', ctx=Store()), Name(id='help_requested', ctx=Store()), Name(id='version_requested', ctx=Store())], ctx=Store())], value=Call(func=Name(id='parse_global_options', ctx=Load()), args=[Name(id='raw_argv', ctx=Load())])), If(test=Name(id='version_requested', ctx=Load()), body=[Expr(value=Call(func=Name(id='print_version', ctx=Load()))), Return(value=Constant(value=0))]), Expr(value=Call(func=Name(id='ensure_manifest_loaded', ctx=Load()))), If(test=UnaryOp(op=Not(), operand=Name(id='args', ctx=Load())), body=[Expr(value=Call(func=Name(id='print_root_help', ctx=Load()))), Return(value=Constant(value=0))]), Return(value=Call(func=Name(id='dispatch', ctx=Load()), args=[Name(id='args', ctx=Load()), Name(id='globals_ns', ctx=Load()), Name(id='help_requested', ctx=Load())]))], handlers=[ExceptHandler(type=Name(id='CliError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Tuple(elts=[Name(id='ConfigFileNotFound', ctx=Load()), Name(id='InvalidConfig', ctx=Load())], ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: OCI config error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='FileNotFoundError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: file not found: '), FormattedValue(value=Attribute(value=Name(id='exc', ctx=Load()), attr='filename', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='PermissionError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: permission denied: '), FormattedValue(value=Attribute(value=Name(id='exc', ctx=Load()), attr='filename', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='JSONDecodeError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: invalid JSON: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='VendorRequestException', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: request failed: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=1))]), ExceptHandler(type=Name(id='RequestException', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: request failed: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=1))]), ExceptHandler(type=Name(id='OSError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: file error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='ValueError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[JoinedStr(values=[Constant(value='aidp: error: '), FormattedValue(value=Name(id='exc', ctx=Load()), conversion=-1)])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Return(value=Constant(value=2))]), ExceptHandler(type=Name(id='ServiceError', ctx=Load()), name='exc', body=[Expr(value=Call(func=Name(id='print_error_response', ctx=Load()), args=[Dict(keys=[Constant(value='status'), Constant(value='code'), Constant(value='message'), Constant(value='opc-request-id')], values=[Attribute(value=Name(id='exc', ctx=Load()), attr='status', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='code', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='message', ctx=Load()), Attribute(value=Name(id='exc', ctx=Load()), attr='request_id', ctx=Load())])])), Return(value=Call(func=Name(id='int', ctx=Load()), args=[BoolOp(op=Or(), values=[Attribute(value=Name(id='exc', ctx=Load()), attr='status', ctx=Load()), Constant(value=1)])]))])])], returns=Name(id='int', ctx=Load()))",
+    "parse_command_options": "FunctionDef(name='parse_command_options', args=arguments(args=[arg(arg='group', annotation=Name(id='CommandGroup', ctx=Load())), arg(arg='command', annotation=Name(id='CommandDefinition', ctx=Load())), arg(arg='tokens', annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load())), arg(arg='globals_ns', annotation=Name(id='SimpleNamespace', ctx=Load()))]), body=[AnnAssign(target=Name(id='params', ctx=Store()), annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), value=Dict(), simple=1), Assign(targets=[Name(id='body', ctx=Store())], value=Constant(value=None)), Assign(targets=[Name(id='opc_request_id', ctx=Store())], value=Constant(value=None)), Assign(targets=[Name(id='no_request_id', ctx=Store())], value=Constant(value=False)), AnnAssign(target=Name(id='positionals', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), Assign(targets=[Name(id='option_fields', ctx=Store())], value=DictComp(key=JoinedStr(values=[Constant(value='--'), FormattedValue(value=Attribute(value=Name(id='field', ctx=Load()), attr='cli_name', ctx=Load()), conversion=-1)]), value=Name(id='field', ctx=Load()), generators=[comprehension(target=Name(id='field', ctx=Store()), iter=Call(func=Name(id='command_option_fields', ctx=Load()), args=[Name(id='command', ctx=Load())]), is_async=0)])), Assign(targets=[Name(id='global_values', ctx=Store())], value=Call(func=Attribute(value=Call(func=Name(id='vars', ctx=Load()), args=[Name(id='globals_ns', ctx=Load())]), attr='copy', ctx=Load()))), Assign(targets=[Name(id='index', ctx=Store())], value=Constant(value=0)), While(test=Compare(left=Name(id='index', ctx=Load()), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='tokens', ctx=Load())])]), body=[Assign(targets=[Name(id='token', ctx=Store())], value=Subscript(value=Name(id='tokens', ctx=Load()), slice=Name(id='index', ctx=Load()), ctx=Load())), Assign(targets=[Tuple(elts=[Name(id='option_name', ctx=Store()), Name(id='inline_value', ctx=Store())], ctx=Store())], value=Call(func=Name(id='split_inline_option', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--body')]), body=[If(test=Compare(left=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[FormattedValue(value=Attribute(value=Name(id='command', ctx=Load()), attr='name', ctx=Load()), conversion=-1), Constant(value=' does not accept --body.')])]))]), Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Assign(targets=[Name(id='body', ctx=Store())], value=Call(func=Name(id='load_body_input', ctx=Load()), args=[Name(id='command', ctx=Load()), Name(id='value', ctx=Load())])), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Call(func=Name(id='command_uses_raw_body', ctx=Load()), args=[Name(id='command', ctx=Load())])), Compare(left=Call(func=Name(id='json_body_argument_source', ctx=Load()), args=[Name(id='value', ctx=Load())]), ops=[Eq()], comparators=[Constant(value='inline')]), Call(func=Name(id='body_contains_sensitive_field', ctx=Load()), args=[Name(id='command', ctx=Load()), Name(id='body', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Inline --body JSON is blocked because this request body contains sensitive fields. Use --body @request.json, --body file:///path/request.json, or --body -.')]))]), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--opc-request-id')]), body=[Assign(targets=[Tuple(elts=[Name(id='opc_request_id', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[Eq()], comparators=[Constant(value='--no-request-id')]), body=[Assign(targets=[Name(id='no_request_id', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='option_fields', ctx=Load())]), body=[Assign(targets=[Name(id='field', ctx=Store())], value=Subscript(value=Name(id='option_fields', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load())), Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='field_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load()), Name(id='field', ctx=Load())])), Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=IfExp(test=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='value', ctx=Load()), Name(id='bool', ctx=Load())]), body=Name(id='value', ctx=Load()), orelse=Call(func=Name(id='parse_value', ctx=Load()), args=[Call(func=Name(id='str', ctx=Load()), args=[Name(id='value', ctx=Load())])]))), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load())]), body=[Assign(targets=[Tuple(elts=[Name(id='value', ctx=Store()), Name(id='index', ctx=Store())], ctx=Store())], value=Call(func=Name(id='command_option_value', ctx=Load()), args=[Name(id='tokens', ctx=Load()), Name(id='index', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='inline_value', ctx=Load())])), Expr(value=Call(func=Name(id='apply_global_option', ctx=Load()), args=[Name(id='global_values', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='value', ctx=Load())])), Continue()]), If(test=Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load())]), body=[Assign(targets=[Subscript(value=Name(id='global_values', ctx=Load()), slice=Subscript(value=Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load()), slice=Name(id='option_name', ctx=Load()), ctx=Load()), ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')]), body=[Raise(exc=Call(func=Name(id='unknown_option', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='option_fields', ctx=Load())]))]), Expr(value=Call(func=Attribute(value=Name(id='positionals', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='token', ctx=Load())])), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='validate_global_options', ctx=Load()), args=[Name(id='global_values', ctx=Load())])), Assign(targets=[Name(id='argument_fields', ctx=Store())], value=Call(func=Name(id='command_argument_fields', ctx=Load()), args=[Name(id='command', ctx=Load())])), If(test=Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())])]), body=[Assign(targets=[Name(id='missing', ctx=Store())], value=Call(func=Name(id='argument_metavar', ctx=Load()), args=[Subscript(value=Name(id='argument_fields', ctx=Load()), slice=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ctx=Load())])), Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Missing required argument '), FormattedValue(value=Name(id='missing', ctx=Load()), conversion=-1), Constant(value='.')])]))]), If(test=Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Name(id='positionals', ctx=Load())]), ops=[Gt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Unexpected argument '), FormattedValue(value=Subscript(value=Name(id='positionals', ctx=Load()), slice=Call(func=Name(id='len', ctx=Load()), args=[Name(id='argument_fields', ctx=Load())]), ctx=Load()), conversion=114), Constant(value='.')])]))]), For(target=Tuple(elts=[Name(id='field', ctx=Store()), Name(id='value', ctx=Store())], ctx=Store()), iter=Call(func=Name(id='zip', ctx=Load()), args=[Name(id='argument_fields', ctx=Load()), Name(id='positionals', ctx=Load())]), body=[Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ctx=Store())], value=Call(func=Name(id='parse_value', ctx=Load()), args=[Name(id='value', ctx=Load())]))]), For(target=Name(id='field', ctx=Store()), iter=Call(func=Name(id='command_option_fields', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[If(test=BoolOp(op=And(), values=[Attribute(value=Name(id='field', ctx=Load()), attr='required', ctx=Load()), Compare(left=Attribute(value=Name(id='field', ctx=Load()), attr='name', ctx=Load()), ops=[NotIn()], comparators=[Name(id='params', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), JoinedStr(values=[Constant(value='Missing required flag --'), FormattedValue(value=Attribute(value=Name(id='field', ctx=Load()), attr='cli_name', ctx=Load()), conversion=-1), Constant(value='.')])]))])]), If(test=BoolOp(op=And(), values=[Compare(left=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)]), Attribute(value=Attribute(value=Name(id='command', ctx=Load()), attr='body_field', ctx=Load()), attr='required', ctx=Load()), Compare(left=Name(id='body', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)])]), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Missing required flag --body.')]))]), If(test=Call(func=Name(id='command_requires_instance_id', ctx=Load()), args=[Name(id='command', ctx=Load())]), body=[If(test=UnaryOp(op=Not(), operand=Subscript(value=Name(id='global_values', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Load())), body=[Raise(exc=Call(func=Name(id='command_usage_error', ctx=Load()), args=[Name(id='group', ctx=Load()), Name(id='command', ctx=Load()), Constant(value='Missing AIDP instance OCID. Set --instance-id or AIDP_INSTANCE_ID.')]))]), Assign(targets=[Subscript(value=Name(id='params', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Store())], value=Subscript(value=Name(id='global_values', ctx=Load()), slice=Constant(value='ai_data_platform_id'), ctx=Load()))]), Assign(targets=[Name(id='values', ctx=Store())], value=Call(func=Attribute(value=Name(id='global_values', ctx=Load()), attr='copy', ctx=Load()))), Expr(value=Call(func=Attribute(value=Name(id='values', ctx=Load()), attr='update', ctx=Load()), args=[Dict(keys=[Constant(value='params'), Constant(value='body'), Constant(value='opc_request_id'), Constant(value='no_request_id')], values=[Name(id='params', ctx=Load()), Name(id='body', ctx=Load()), Name(id='opc_request_id', ctx=Load()), Name(id='no_request_id', ctx=Load())])])), Return(value=Call(func=Name(id='SimpleNamespace', ctx=Load()), keywords=[keyword(value=Name(id='values', ctx=Load()))]))], returns=Name(id='SimpleNamespace', ctx=Load()))",
+    "parse_global_options": "FunctionDef(name='parse_global_options', args=arguments(args=[arg(arg='argv', annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()))]), body=[Assign(targets=[Name(id='values', ctx=Store())], value=Call(func=Name(id='global_defaults', ctx=Load()))), AnnAssign(target=Name(id='remaining', ctx=Store()), annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), value=List(ctx=Load()), simple=1), Assign(targets=[Name(id='help_requested', ctx=Store())], value=Constant(value=False)), Assign(targets=[Name(id='version_requested', ctx=Store())], value=Constant(value=False)), Assign(targets=[Name(id='index', ctx=Store())], value=Constant(value=0)), Assign(targets=[Name(id='command_seen', ctx=Store())], value=Constant(value=False)), While(test=Compare(left=Name(id='index', ctx=Load()), ops=[Lt()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argv', ctx=Load())])]), body=[Assign(targets=[Name(id='token', ctx=Store())], value=Subscript(value=Name(id='argv', ctx=Load()), slice=Name(id='index', ctx=Load()), ctx=Load())), If(test=Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Set(elts=[Constant(value='-h'), Constant(value='--help')])]), body=[Assign(targets=[Name(id='help_requested', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Set(elts=[Constant(value='-v'), Constant(value='--version')])]), body=[Assign(targets=[Name(id='version_requested', ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Compare(left=Name(id='token', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load())])]), body=[Assign(targets=[Subscript(value=Name(id='values', ctx=Load()), slice=Subscript(value=Name(id='GLOBAL_BOOLEAN_OPTIONS', ctx=Load()), slice=Name(id='token', ctx=Load()), ctx=Load()), ctx=Store())], value=Constant(value=True)), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), Assign(targets=[Tuple(elts=[Name(id='option_name', ctx=Store()), Name(id='inline_value', ctx=Store())], ctx=Store())], value=Call(func=Name(id='split_inline_option', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Compare(left=Name(id='option_name', ctx=Load()), ops=[In()], comparators=[Name(id='GLOBAL_VALUE_OPTIONS', ctx=Load())])]), body=[Assign(targets=[Name(id='value', ctx=Store())], value=Name(id='inline_value', ctx=Load())), If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[If(test=Compare(left=BinOp(left=Name(id='index', ctx=Load()), op=Add(), right=Constant(value=1)), ops=[GtE()], comparators=[Call(func=Name(id='len', ctx=Load()), args=[Name(id='argv', ctx=Load())])]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[FormattedValue(value=Name(id='option_name', ctx=Load()), conversion=-1), Constant(value=' requires a value.')])]))]), Assign(targets=[Name(id='value', ctx=Store())], value=Subscript(value=Name(id='argv', ctx=Load()), slice=BinOp(left=Name(id='index', ctx=Load()), op=Add(), right=Constant(value=1)), ctx=Load())), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='apply_global_option', ctx=Load()), args=[Name(id='values', ctx=Load()), Name(id='option_name', ctx=Load()), Name(id='value', ctx=Load())])), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1)), Continue()]), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='command_seen', ctx=Load())), Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')])]), body=[Raise(exc=Call(func=Name(id='CliError', ctx=Load()), args=[JoinedStr(values=[Constant(value='Unknown option '), FormattedValue(value=Name(id='option_name', ctx=Load()), conversion=114), Constant(value='.')])]))]), Expr(value=Call(func=Attribute(value=Name(id='remaining', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='token', ctx=Load())])), If(test=UnaryOp(op=Not(), operand=Call(func=Attribute(value=Name(id='token', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='-')])), body=[Assign(targets=[Name(id='command_seen', ctx=Store())], value=Constant(value=True))]), AugAssign(target=Name(id='index', ctx=Store()), op=Add(), value=Constant(value=1))]), Expr(value=Call(func=Name(id='validate_global_options', ctx=Load()), args=[Name(id='values', ctx=Load())])), Return(value=Tuple(elts=[Call(func=Name(id='SimpleNamespace', ctx=Load()), keywords=[keyword(value=Name(id='values', ctx=Load()))]), Name(id='remaining', ctx=Load()), Name(id='help_requested', ctx=Load()), Name(id='version_requested', ctx=Load())], ctx=Load()))], returns=Subscript(value=Name(id='tuple', ctx=Load()), slice=Tuple(elts=[Name(id='SimpleNamespace', ctx=Load()), Subscript(value=Name(id='list', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), Name(id='bool', ctx=Load()), Name(id='bool', ctx=Load())], ctx=Load()), ctx=Load()))",
+    "print_error_response": "FunctionDef(name='print_error_response', args=arguments(args=[arg(arg='payload', annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()))]), body=[Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Constant(value='Response:')], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='dumps', ctx=Load()), args=[Name(id='payload', ctx=Load())], keywords=[keyword(arg='indent', value=Constant(value=2)), keyword(arg='default', value=Name(id='str', ctx=Load()))])], keywords=[keyword(arg='file', value=Attribute(value=Name(id='sys', ctx=Load()), attr='stderr', ctx=Load()))]))], returns=Constant(value=None))",
+    "print_response": "FunctionDef(name='print_response', args=arguments(args=[arg(arg='response', annotation=Name(id='Any', ctx=Load()))]), body=[Assign(targets=[Name(id='data', ctx=Store())], value=Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='data'), Name(id='response', ctx=Load())])), Assign(targets=[Name(id='payload', ctx=Store())], value=Dict(keys=[Constant(value='data'), Constant(value='headers'), Constant(value='status')], values=[Call(func=Name(id='to_dict', ctx=Load()), args=[Name(id='data', ctx=Load())]), Call(func=Name(id='dict', ctx=Load()), args=[BoolOp(op=Or(), values=[Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='headers'), Dict()]), Dict()])]), Call(func=Name(id='getattr', ctx=Load()), args=[Name(id='response', ctx=Load()), Constant(value='status'), Constant(value=None)])])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Constant(value='Response:')])), Expr(value=Call(func=Name(id='print', ctx=Load()), args=[Call(func=Attribute(value=Name(id='json', ctx=Load()), attr='dumps', ctx=Load()), args=[Name(id='payload', ctx=Load())], keywords=[keyword(arg='indent', value=Constant(value=2)), keyword(arg='default', value=Name(id='str', ctx=Load()))])]))], returns=Constant(value=None))",
+    "read_json_argument": "FunctionDef(name='read_json_argument', args=arguments(args=[arg(arg='value', annotation=Name(id='str', ctx=Load()))]), body=[If(test=Compare(left=Name(id='value', ctx=Load()), ops=[Eq()], comparators=[Constant(value='-')]), body=[Return(value=Call(func=Attribute(value=Attribute(value=Name(id='sys', ctx=Load()), attr='stdin', ctx=Load()), attr='read', ctx=Load())))]), If(test=Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='@')]), body=[Return(value=Call(func=Attribute(value=Call(func=Attribute(value=Call(func=Name(id='Path', ctx=Load()), args=[Subscript(value=Name(id='value', ctx=Load()), slice=Slice(lower=Constant(value=1)), ctx=Load())]), attr='expanduser', ctx=Load())), attr='read_text', ctx=Load()), keywords=[keyword(arg='encoding', value=Constant(value='utf-8'))]))]), If(test=Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='startswith', ctx=Load()), args=[Constant(value='file://')]), body=[Return(value=Call(func=Attribute(value=Call(func=Attribute(value=Call(func=Name(id='Path', ctx=Load()), args=[Call(func=Attribute(value=Name(id='value', ctx=Load()), attr='removeprefix', ctx=Load()), args=[Constant(value='file://')])]), attr='expanduser', ctx=Load())), attr='read_text', ctx=Load()), keywords=[keyword(arg='encoding', value=Constant(value='utf-8'))]))]), Return(value=Name(id='value', ctx=Load()))], returns=Name(id='str', ctx=Load()))"
+  },
+  "cliNaming": {
+    "apply_short_command_names": "FunctionDef(name='apply_short_command_names', args=arguments(args=[arg(arg='group_name', annotation=Name(id='str', ctx=Load())), arg(arg='commands', annotation=Subscript(value=Name(id='list', ctx=Load()), slice=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), ctx=Load()))]), body=[Assign(targets=[Name(id='candidates', ctx=Store())], value=DictComp(key=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='sdkMethodName'), ctx=Load()), value=Call(func=Name(id='short_command_name', ctx=Load()), args=[Name(id='group_name', ctx=Load()), Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load())]), generators=[comprehension(target=Name(id='command', ctx=Store()), iter=Name(id='commands', ctx=Load()), is_async=0)])), AnnAssign(target=Name(id='candidate_counts', ctx=Store()), annotation=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='int', ctx=Load())], ctx=Load()), ctx=Load()), value=Dict(), simple=1), For(target=Name(id='candidate', ctx=Store()), iter=Call(func=Attribute(value=Name(id='candidates', ctx=Load()), attr='values', ctx=Load())), body=[Assign(targets=[Subscript(value=Name(id='candidate_counts', ctx=Load()), slice=Name(id='candidate', ctx=Load()), ctx=Store())], value=BinOp(left=Call(func=Attribute(value=Name(id='candidate_counts', ctx=Load()), attr='get', ctx=Load()), args=[Name(id='candidate', ctx=Load()), Constant(value=0)]), op=Add(), right=Constant(value=1)))]), Assign(targets=[Name(id='original_owners', ctx=Store())], value=DictComp(key=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load()), value=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='sdkMethodName'), ctx=Load()), generators=[comprehension(target=Name(id='command', ctx=Store()), iter=Name(id='commands', ctx=Load()), is_async=0)])), AnnAssign(target=Name(id='used_names', ctx=Store()), annotation=Subscript(value=Name(id='set', ctx=Load()), slice=Name(id='str', ctx=Load()), ctx=Load()), value=Call(func=Name(id='set', ctx=Load())), simple=1), For(target=Name(id='command', ctx=Store()), iter=Name(id='commands', ctx=Load()), body=[Assign(targets=[Name(id='original', ctx=Store())], value=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load())), Assign(targets=[Name(id='candidate', ctx=Store())], value=Subscript(value=Name(id='candidates', ctx=Load()), slice=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='sdkMethodName'), ctx=Load()), ctx=Load())), Assign(targets=[Name(id='candidate_is_other_original', ctx=Store())], value=BoolOp(op=And(), values=[Compare(left=Name(id='candidate', ctx=Load()), ops=[In()], comparators=[Name(id='original_owners', ctx=Load())]), Compare(left=Subscript(value=Name(id='original_owners', ctx=Load()), slice=Name(id='candidate', ctx=Load()), ctx=Load()), ops=[NotEq()], comparators=[Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='sdkMethodName'), ctx=Load())])])), If(test=BoolOp(op=And(), values=[Compare(left=Name(id='candidate', ctx=Load()), ops=[NotEq()], comparators=[Name(id='original', ctx=Load())]), Compare(left=Subscript(value=Name(id='candidate_counts', ctx=Load()), slice=Name(id='candidate', ctx=Load()), ctx=Load()), ops=[Eq()], comparators=[Constant(value=1)]), Compare(left=Name(id='candidate', ctx=Load()), ops=[NotIn()], comparators=[Name(id='used_names', ctx=Load())]), UnaryOp(op=Not(), operand=Name(id='candidate_is_other_original', ctx=Load()))]), body=[Assign(targets=[Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Store())], value=Name(id='candidate', ctx=Load()))]), Expr(value=Call(func=Attribute(value=Name(id='used_names', ctx=Load()), attr='add', ctx=Load()), args=[Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load())]))])], returns=Constant(value=None))",
+    "build_command_groups": "FunctionDef(name='build_command_groups', args=arguments(args=[arg(arg='sdk_source_root', annotation=Name(id='Path', ctx=Load()))]), body=[Assign(targets=[Name(id='groups', ctx=Store())], value=List(ctx=Load())), For(target=Name(id='client_source', ctx=Store()), iter=Call(func=Name(id='client_source_files', ctx=Load()), args=[Name(id='sdk_source_root', ctx=Load())]), body=[Assign(targets=[Name(id='client_class_name', ctx=Store())], value=Call(func=Name(id='client_class_name_from_source', ctx=Load()), args=[Name(id='client_source', ctx=Load())])), Assign(targets=[Name(id='class_node', ctx=Store())], value=Call(func=Name(id='class_node_from_source', ctx=Load()), args=[Name(id='client_source', ctx=Load()), Name(id='client_class_name', ctx=Load())])), Assign(targets=[Name(id='tag', ctx=Store())], value=Call(func=Attribute(value=Name(id='client_class_name', ctx=Load()), attr='removesuffix', ctx=Load()), args=[Constant(value='Client')])), Assign(targets=[Name(id='group_name', ctx=Store())], value=Call(func=Name(id='command_group_name', ctx=Load()), args=[Call(func=Name(id='snake_to_cli_name', ctx=Load()), args=[Call(func=Attribute(value=Attribute(value=Name(id='client_source', ctx=Load()), attr='stem', ctx=Load()), attr='removesuffix', ctx=Load()), args=[Constant(value='_client')])])])), Assign(targets=[Name(id='commands', ctx=Store())], value=ListComp(elt=Call(func=Name(id='build_command_from_method', ctx=Load()), args=[Name(id='sdk_source_root', ctx=Load()), Name(id='method_node', ctx=Load())]), generators=[comprehension(target=Name(id='method_node', ctx=Store()), iter=Attribute(value=Name(id='class_node', ctx=Load()), attr='body', ctx=Load()), ifs=[Call(func=Name(id='is_sdk_operation', ctx=Load()), args=[Name(id='method_node', ctx=Load())])], is_async=0)])), Assign(targets=[Name(id='commands', ctx=Store())], value=Call(func=Name(id='sorted', ctx=Load()), args=[Name(id='commands', ctx=Load())], keywords=[keyword(arg='key', value=Lambda(args=arguments(args=[arg(arg='command')]), body=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load())))])), Assign(targets=[Name(id='description', ctx=Store())], value=Call(func=Name(id='command_group_description', ctx=Load()), args=[Name(id='tag', ctx=Load()), Name(id='commands', ctx=Load())])), Expr(value=Call(func=Name(id='apply_short_command_names', ctx=Load()), args=[Name(id='group_name', ctx=Load()), Name(id='commands', ctx=Load())])), Assign(targets=[Name(id='commands', ctx=Store())], value=Call(func=Name(id='sorted', ctx=Load()), args=[Name(id='commands', ctx=Load())], keywords=[keyword(arg='key', value=Lambda(args=arguments(args=[arg(arg='command')]), body=Subscript(value=Name(id='command', ctx=Load()), slice=Constant(value='name'), ctx=Load())))])), Expr(value=Call(func=Name(id='ensure_unique_command_names', ctx=Load()), args=[Name(id='group_name', ctx=Load()), Name(id='commands', ctx=Load())])), Assign(targets=[Name(id='group', ctx=Store())], value=Dict(keys=[Constant(value='name'), Constant(value='tag'), Constant(value='clientClassName'), Constant(value='description'), Constant(value='commands')], values=[Name(id='group_name', ctx=Load()), Name(id='tag', ctx=Load()), Name(id='client_class_name', ctx=Load()), Name(id='description', ctx=Load()), Name(id='commands', ctx=Load())])), Expr(value=Call(func=Attribute(value=Name(id='groups', ctx=Load()), attr='append', ctx=Load()), args=[Name(id='group', ctx=Load())]))]), Return(value=Call(func=Name(id='sorted', ctx=Load()), args=[Name(id='groups', ctx=Load())], keywords=[keyword(arg='key', value=Lambda(args=arguments(args=[arg(arg='group')]), body=Subscript(value=Name(id='group', ctx=Load()), slice=Constant(value='name'), ctx=Load())))]))], returns=Subscript(value=Name(id='list', ctx=Load()), slice=Subscript(value=Name(id='dict', ctx=Load()), slice=Tuple(elts=[Name(id='str', ctx=Load()), Name(id='Any', ctx=Load())], ctx=Load()), ctx=Load()), ctx=Load()))",
+    "command_group_name": "FunctionDef(name='command_group_name', args=arguments(args=[arg(arg='default_name', annotation=Name(id='str', ctx=Load()))]), body=[For(target=Tuple(elts=[Name(id='source_name', ctx=Store()), Name(id='cli_name', ctx=Store())], ctx=Store()), iter=Name(id='COMMAND_GROUP_NAME_OVERRIDES', ctx=Load()), body=[If(test=Compare(left=Name(id='source_name', ctx=Load()), ops=[Eq()], comparators=[Name(id='default_name', ctx=Load())]), body=[Return(value=Name(id='cli_name', ctx=Load()))])]), Return(value=Name(id='default_name', ctx=Load()))], returns=Name(id='str', ctx=Load()))",
+    "command_name_from_sdk_method": "FunctionDef(name='command_name_from_sdk_method', args=arguments(args=[arg(arg='method_name', annotation=Name(id='str', ctx=Load()))]), body=[Assign(targets=[Name(id='stripped', ctx=Store())], value=Call(func=Attribute(value=Name(id='PROVIDER_TOKEN_PATTERN', ctx=Load()), attr='sub', ctx=Load()), args=[Constant(value='_'), Name(id='method_name', ctx=Load())])), Assign(targets=[Name(id='stripped', ctx=Store())], value=Call(func=Attribute(value=Call(func=Attribute(value=Name(id='re', ctx=Load()), attr='sub', ctx=Load()), args=[Constant(value='_+'), Constant(value='_'), Name(id='stripped', ctx=Load())]), attr='strip', ctx=Load()), args=[Constant(value='_')])), Return(value=Call(func=Name(id='snake_to_cli_name', ctx=Load()), args=[Name(id='stripped', ctx=Load())]))], returns=Name(id='str', ctx=Load()))"
+  },
+  "formatVersion": 1,
+  "models": {
+    "ActiveClusterResources": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "activeCores": "None",
+        "activeExecutorCount": "None",
+        "activeGpuCores": "None",
+        "activeGpuMemoryInGBs": "None",
+        "activeMemoryInGBs": "None"
+      },
+      "fields": {
+        "activeCores": {
+          "enum": [],
+          "pythonName": "active_cores",
+          "required": false,
+          "type": "float"
+        },
+        "activeExecutorCount": {
+          "enum": [],
+          "pythonName": "active_executor_count",
+          "required": false,
+          "type": "float"
+        },
+        "activeGpuCores": {
+          "enum": [],
+          "pythonName": "active_gpu_cores",
+          "required": false,
+          "type": "float"
+        },
+        "activeGpuMemoryInGBs": {
+          "enum": [],
+          "pythonName": "active_gpu_memory_in_gbs",
+          "required": false,
+          "type": "float"
+        },
+        "activeMemoryInGBs": {
+          "enum": [],
+          "pythonName": "active_memory_in_gbs",
+          "required": false,
+          "type": "float"
+        }
+      },
+      "variants": {}
+    },
+    "AiCompute": {
+      "bases": [
+        "Cluster"
+      ],
+      "constants": {},
+      "defaults": {
+        "activeClusterResources": "None",
+        "autoScaleConfiguration": "None",
+        "createdBy": "None",
+        "createdByName": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "key": "None",
+        "nodeType": "None",
+        "replicaConfig": "None",
+        "sourceApi": "'AI_COMPUTE'",
+        "state": "None",
+        "stateDetails": "None",
+        "stoppedBy": "None",
+        "stoppedByName": "None",
+        "timeCreated": "None",
+        "timeUpdated": "None",
+        "type": "None",
+        "updatedBy": "None",
+        "updatedByName": "None"
+      },
+      "fields": {
+        "activeClusterResources": {
+          "enum": [],
+          "pythonName": "active_cluster_resources",
+          "required": false,
+          "type": "ActiveClusterResources"
+        },
+        "autoScaleConfiguration": {
+          "enum": [],
+          "pythonName": "auto_scale_configuration",
+          "required": false,
+          "type": "AutoScaleConfiguration"
+        },
+        "createdBy": {
+          "enum": [],
+          "pythonName": "created_by",
+          "required": false,
+          "type": "str"
+        },
+        "createdByName": {
+          "enum": [],
+          "pythonName": "created_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": false,
+          "type": "DriverConfig"
+        },
+        "key": {
+          "enum": [],
+          "pythonName": "key",
+          "required": true,
+          "type": "str"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "replicaConfig": {
+          "enum": [],
+          "pythonName": "replica_config",
+          "required": false,
+          "type": "ReplicaConfig"
+        },
+        "sourceApi": {
+          "enum": [
+            "AI_COMPUTE",
+            "CLUSTER_API",
+            "DEFAULT_CLUSTER_API"
+          ],
+          "pythonName": "source_api",
+          "required": false,
+          "type": "str"
+        },
+        "state": {
+          "enum": [
+            "ACCEPTED",
+            "ACTIVE",
+            "CREATING",
+            "DELETED",
+            "DELETING",
+            "FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL",
+            "NETWORK_CONFIGURATION_DETACH_FAILED",
+            "NETWORK_CONFIGURATION_DETACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_DETACH_SUCCESSFUL",
+            "RESTARTING",
+            "STARTING",
+            "STOPPED",
+            "STOPPING",
+            "UPDATING"
+          ],
+          "pythonName": "state",
+          "required": true,
+          "type": "str"
+        },
+        "stateDetails": {
+          "enum": [],
+          "pythonName": "state_details",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedBy": {
+          "enum": [],
+          "pythonName": "stopped_by",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedByName": {
+          "enum": [],
+          "pythonName": "stopped_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "timeCreated": {
+          "enum": [],
+          "pythonName": "time_created",
+          "required": true,
+          "type": "datetime"
+        },
+        "timeUpdated": {
+          "enum": [],
+          "pythonName": "time_updated",
+          "required": false,
+          "type": "datetime"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        },
+        "updatedBy": {
+          "enum": [],
+          "pythonName": "updated_by",
+          "required": false,
+          "type": "str"
+        },
+        "updatedByName": {
+          "enum": [],
+          "pythonName": "updated_by_name",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "AttachToNotebookConfig": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "notebookPath": "None"
+      },
+      "fields": {
+        "notebookPath": {
+          "enum": [],
+          "pythonName": "notebook_path",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "AttachedSession": {
+      "bases": [],
+      "constants": {
+        "STATE_ACTIVE": "ACTIVE",
+        "STATE_IDLE": "IDLE",
+        "TYPE_FILE": "FILE",
+        "TYPE_NOTEBOOK": "NOTEBOOK"
+      },
+      "defaults": {
+        "lastCommandRun": "None",
+        "path": "None",
+        "state": "None",
+        "type": "None"
+      },
+      "fields": {
+        "lastCommandRun": {
+          "enum": [],
+          "pythonName": "last_command_run",
+          "required": false,
+          "type": "str"
+        },
+        "path": {
+          "enum": [],
+          "pythonName": "path",
+          "required": false,
+          "type": "str"
+        },
+        "state": {
+          "enum": [
+            "ACTIVE",
+            "IDLE"
+          ],
+          "pythonName": "state",
+          "required": false,
+          "type": "str"
+        },
+        "type": {
+          "enum": [
+            "FILE",
+            "NOTEBOOK"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "AutoScaleConfiguration": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "cooldownPeriodInMinutes": "None",
+        "metrics": "None"
+      },
+      "fields": {
+        "cooldownPeriodInMinutes": {
+          "enum": [],
+          "pythonName": "cooldown_period_in_minutes",
+          "required": false,
+          "type": "int"
+        },
+        "metrics": {
+          "enum": [],
+          "pythonName": "metrics",
+          "required": false,
+          "type": "list[AutoScaleMetricConfiguration]"
+        }
+      },
+      "variants": {}
+    },
+    "AutoScaleMetricConfiguration": {
+      "bases": [],
+      "constants": {
+        "NAME_API_REQUESTS_PER_SECOND": "API_REQUESTS_PER_SECOND",
+        "NAME_CPU_UTILIZATION": "CPU_UTILIZATION",
+        "NAME_MEMORY_UTILIZATION": "MEMORY_UTILIZATION"
+      },
+      "defaults": {
+        "name": "None",
+        "targetAverageValue": "None"
+      },
+      "fields": {
+        "name": {
+          "enum": [
+            "API_REQUESTS_PER_SECOND",
+            "CPU_UTILIZATION",
+            "MEMORY_UTILIZATION"
+          ],
+          "pythonName": "name",
+          "required": true,
+          "type": "str"
+        },
+        "targetAverageValue": {
+          "enum": [],
+          "pythonName": "target_average_value",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "Cluster": {
+      "bases": [],
+      "constants": {
+        "SOURCE_API_AI_COMPUTE": "AI_COMPUTE",
+        "SOURCE_API_CLUSTER_API": "CLUSTER_API",
+        "SOURCE_API_DEFAULT_CLUSTER_API": "DEFAULT_CLUSTER_API",
+        "STATE_ACCEPTED": "ACCEPTED",
+        "STATE_ACTIVE": "ACTIVE",
+        "STATE_CREATING": "CREATING",
+        "STATE_DELETED": "DELETED",
+        "STATE_DELETING": "DELETING",
+        "STATE_FAILED": "FAILED",
+        "STATE_NETWORK_CONFIGURATION_ATTACH_FAILED": "NETWORK_CONFIGURATION_ATTACH_FAILED",
+        "STATE_NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS": "NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS",
+        "STATE_NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL": "NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL",
+        "STATE_NETWORK_CONFIGURATION_DETACH_FAILED": "NETWORK_CONFIGURATION_DETACH_FAILED",
+        "STATE_NETWORK_CONFIGURATION_DETACH_IN_PROGRESS": "NETWORK_CONFIGURATION_DETACH_IN_PROGRESS",
+        "STATE_NETWORK_CONFIGURATION_DETACH_SUCCESSFUL": "NETWORK_CONFIGURATION_DETACH_SUCCESSFUL",
+        "STATE_RESTARTING": "RESTARTING",
+        "STATE_STARTING": "STARTING",
+        "STATE_STOPPED": "STOPPED",
+        "STATE_STOPPING": "STOPPING",
+        "STATE_UPDATING": "UPDATING",
+        "TYPE_AI_COMPUTE": "AI_COMPUTE",
+        "TYPE_USER": "USER"
+      },
+      "defaults": {
+        "activeClusterResources": "None",
+        "createdBy": "None",
+        "createdByName": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "key": "None",
+        "nodeType": "None",
+        "sourceApi": "None",
+        "state": "None",
+        "stateDetails": "None",
+        "stoppedBy": "None",
+        "stoppedByName": "None",
+        "timeCreated": "None",
+        "timeUpdated": "None",
+        "type": "None",
+        "updatedBy": "None",
+        "updatedByName": "None"
+      },
+      "fields": {
+        "activeClusterResources": {
+          "enum": [],
+          "pythonName": "active_cluster_resources",
+          "required": false,
+          "type": "ActiveClusterResources"
+        },
+        "createdBy": {
+          "enum": [],
+          "pythonName": "created_by",
+          "required": false,
+          "type": "str"
+        },
+        "createdByName": {
+          "enum": [],
+          "pythonName": "created_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": false,
+          "type": "DriverConfig"
+        },
+        "key": {
+          "enum": [],
+          "pythonName": "key",
+          "required": true,
+          "type": "str"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "sourceApi": {
+          "enum": [
+            "AI_COMPUTE",
+            "CLUSTER_API",
+            "DEFAULT_CLUSTER_API"
+          ],
+          "pythonName": "source_api",
+          "required": false,
+          "type": "str"
+        },
+        "state": {
+          "enum": [
+            "ACCEPTED",
+            "ACTIVE",
+            "CREATING",
+            "DELETED",
+            "DELETING",
+            "FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL",
+            "NETWORK_CONFIGURATION_DETACH_FAILED",
+            "NETWORK_CONFIGURATION_DETACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_DETACH_SUCCESSFUL",
+            "RESTARTING",
+            "STARTING",
+            "STOPPED",
+            "STOPPING",
+            "UPDATING"
+          ],
+          "pythonName": "state",
+          "required": true,
+          "type": "str"
+        },
+        "stateDetails": {
+          "enum": [],
+          "pythonName": "state_details",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedBy": {
+          "enum": [],
+          "pythonName": "stopped_by",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedByName": {
+          "enum": [],
+          "pythonName": "stopped_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "timeCreated": {
+          "enum": [],
+          "pythonName": "time_created",
+          "required": true,
+          "type": "datetime"
+        },
+        "timeUpdated": {
+          "enum": [],
+          "pythonName": "time_updated",
+          "required": false,
+          "type": "datetime"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        },
+        "updatedBy": {
+          "enum": [],
+          "pythonName": "updated_by",
+          "required": false,
+          "type": "str"
+        },
+        "updatedByName": {
+          "enum": [],
+          "pythonName": "updated_by_name",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {
+        "sourceApi=AI_COMPUTE": "AiCompute",
+        "sourceApi=CLUSTER_API": "SparkCluster",
+        "sourceApi=DEFAULT_CLUSTER_API": "DefaultCluster"
+      }
+    },
+    "ClusterRuntimeConfig": {
+      "bases": [],
+      "constants": {
+        "TYPE_SPARK": "SPARK"
+      },
+      "defaults": {
+        "initScripts": "None",
+        "type": "None"
+      },
+      "fields": {
+        "initScripts": {
+          "enum": [],
+          "pythonName": "init_scripts",
+          "required": false,
+          "type": "list[InitScriptPath]"
+        },
+        "type": {
+          "enum": [
+            "SPARK"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {
+        "type=SPARK": "SparkRuntimeConfig"
+      }
+    },
+    "CreateAiComputeDetails": {
+      "bases": [
+        "CreateClusterDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "autoScaleConfiguration": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "nodeType": "None",
+        "replicaConfig": "None",
+        "type": "'AI_COMPUTE'"
+      },
+      "fields": {
+        "autoScaleConfiguration": {
+          "enum": [],
+          "pythonName": "auto_scale_configuration",
+          "required": false,
+          "type": "AutoScaleConfiguration"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": true,
+          "type": "DriverConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "replicaConfig": {
+          "enum": [],
+          "pythonName": "replica_config",
+          "required": false,
+          "type": "ReplicaConfig"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "CreateClusterDetails": {
+      "bases": [],
+      "constants": {
+        "TYPE_AI_COMPUTE": "AI_COMPUTE",
+        "TYPE_USER": "USER"
+      },
+      "defaults": {
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "nodeType": "None",
+        "type": "None"
+      },
+      "fields": {
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": true,
+          "type": "DriverConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {
+        "type=AI_COMPUTE": "CreateAiComputeDetails",
+        "type=DFL": "CreateDflComputeDetails",
+        "type=USER": "CreateSparkClusterDetails"
+      }
+    },
+    "CreateDflComputeDetails": {
+      "bases": [
+        "CreateClusterDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "nodeType": "None",
+        "type": "'DFL'"
+      },
+      "fields": {
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": true,
+          "type": "DriverConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "CreateSparkClusterDetails": {
+      "bases": [
+        "CreateClusterDetails"
+      ],
+      "constants": {},
+      "defaults": {
+        "attachToNotebookConfig": "None",
+        "autoTerminationMinutes": "None",
+        "clusterRuntimeConfig": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "loggingConfig": "None",
+        "nodeType": "None",
+        "subscription": "None",
+        "type": "'USER'",
+        "workerConfig": "None",
+        "yamlPaths": "None"
+      },
+      "fields": {
+        "attachToNotebookConfig": {
+          "enum": [],
+          "pythonName": "attach_to_notebook_config",
+          "required": false,
+          "type": "AttachToNotebookConfig"
+        },
+        "autoTerminationMinutes": {
+          "enum": [],
+          "pythonName": "auto_termination_minutes",
+          "required": false,
+          "type": "int"
+        },
+        "clusterRuntimeConfig": {
+          "enum": [],
+          "pythonName": "cluster_runtime_config",
+          "required": false,
+          "type": "ClusterRuntimeConfig"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": true,
+          "type": "DriverConfig"
+        },
+        "loggingConfig": {
+          "enum": [],
+          "pythonName": "logging_config",
+          "required": false,
+          "type": "LoggingConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "subscription": {
+          "enum": [],
+          "pythonName": "subscription",
+          "required": false,
+          "type": "SubscriptionDetails"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": true,
+          "type": "str"
+        },
+        "workerConfig": {
+          "enum": [],
+          "pythonName": "worker_config",
+          "required": false,
+          "type": "WorkerConfig"
+        },
+        "yamlPaths": {
+          "enum": [],
+          "pythonName": "yaml_paths",
+          "required": false,
+          "type": "list[str]"
+        }
+      },
+      "variants": {}
+    },
+    "DefaultCluster": {
+      "bases": [
+        "Cluster"
+      ],
+      "constants": {},
+      "defaults": {
+        "activeClusterResources": "None",
+        "autoTerminationMinutes": "None",
+        "clusterRuntimeConfig": "None",
+        "createdBy": "None",
+        "createdByName": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "jdbcEndpointUrl": "None",
+        "key": "None",
+        "logGroupId": "None",
+        "logId": "None",
+        "loggingConfig": "None",
+        "nodeType": "None",
+        "sourceApi": "'DEFAULT_CLUSTER_API'",
+        "state": "None",
+        "stateDetails": "None",
+        "stoppedBy": "None",
+        "stoppedByName": "None",
+        "subscription": "None",
+        "timeCreated": "None",
+        "timeUpdated": "None",
+        "type": "None",
+        "updatedBy": "None",
+        "updatedByName": "None",
+        "workerConfig": "None",
+        "workspaceKey": "None"
+      },
+      "fields": {
+        "activeClusterResources": {
+          "enum": [],
+          "pythonName": "active_cluster_resources",
+          "required": false,
+          "type": "ActiveClusterResources"
+        },
+        "autoTerminationMinutes": {
+          "enum": [],
+          "pythonName": "auto_termination_minutes",
+          "required": false,
+          "type": "int"
+        },
+        "clusterRuntimeConfig": {
+          "enum": [],
+          "pythonName": "cluster_runtime_config",
+          "required": false,
+          "type": "ClusterRuntimeConfig"
+        },
+        "createdBy": {
+          "enum": [],
+          "pythonName": "created_by",
+          "required": false,
+          "type": "str"
+        },
+        "createdByName": {
+          "enum": [],
+          "pythonName": "created_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": false,
+          "type": "DriverConfig"
+        },
+        "jdbcEndpointUrl": {
+          "enum": [],
+          "pythonName": "jdbc_endpoint_url",
+          "required": false,
+          "type": "str"
+        },
+        "key": {
+          "enum": [],
+          "pythonName": "key",
+          "required": true,
+          "type": "str"
+        },
+        "logGroupId": {
+          "enum": [],
+          "pythonName": "log_group_id",
+          "required": false,
+          "type": "str"
+        },
+        "logId": {
+          "enum": [],
+          "pythonName": "log_id",
+          "required": false,
+          "type": "str"
+        },
+        "loggingConfig": {
+          "enum": [],
+          "pythonName": "logging_config",
+          "required": false,
+          "type": "LoggingConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "sourceApi": {
+          "enum": [
+            "AI_COMPUTE",
+            "CLUSTER_API",
+            "DEFAULT_CLUSTER_API"
+          ],
+          "pythonName": "source_api",
+          "required": false,
+          "type": "str"
+        },
+        "state": {
+          "enum": [
+            "ACCEPTED",
+            "ACTIVE",
+            "CREATING",
+            "DELETED",
+            "DELETING",
+            "FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL",
+            "NETWORK_CONFIGURATION_DETACH_FAILED",
+            "NETWORK_CONFIGURATION_DETACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_DETACH_SUCCESSFUL",
+            "RESTARTING",
+            "STARTING",
+            "STOPPED",
+            "STOPPING",
+            "UPDATING"
+          ],
+          "pythonName": "state",
+          "required": true,
+          "type": "str"
+        },
+        "stateDetails": {
+          "enum": [],
+          "pythonName": "state_details",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedBy": {
+          "enum": [],
+          "pythonName": "stopped_by",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedByName": {
+          "enum": [],
+          "pythonName": "stopped_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "subscription": {
+          "enum": [],
+          "pythonName": "subscription",
+          "required": false,
+          "type": "SubscriptionDetails"
+        },
+        "timeCreated": {
+          "enum": [],
+          "pythonName": "time_created",
+          "required": true,
+          "type": "datetime"
+        },
+        "timeUpdated": {
+          "enum": [],
+          "pythonName": "time_updated",
+          "required": false,
+          "type": "datetime"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        },
+        "updatedBy": {
+          "enum": [],
+          "pythonName": "updated_by",
+          "required": false,
+          "type": "str"
+        },
+        "updatedByName": {
+          "enum": [],
+          "pythonName": "updated_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "workerConfig": {
+          "enum": [],
+          "pythonName": "worker_config",
+          "required": false,
+          "type": "WorkerConfig"
+        },
+        "workspaceKey": {
+          "enum": [],
+          "pythonName": "workspace_key",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "DriverConfig": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "driverNodeType": "None",
+        "driverShape": "None",
+        "driverShapeConfig": "None"
+      },
+      "fields": {
+        "driverNodeType": {
+          "enum": [],
+          "pythonName": "driver_node_type",
+          "required": false,
+          "type": "str"
+        },
+        "driverShape": {
+          "enum": [],
+          "pythonName": "driver_shape",
+          "required": false,
+          "type": "str"
+        },
+        "driverShapeConfig": {
+          "enum": [],
+          "pythonName": "driver_shape_config",
+          "required": false,
+          "type": "ShapeConfig"
+        }
+      },
+      "variants": {}
+    },
+    "InitScriptPath": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "destination": "None"
+      },
+      "fields": {
+        "destination": {
+          "enum": [],
+          "pythonName": "destination",
+          "required": true,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "LogGroup": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "compartmentId": "None",
+        "groupName": "None",
+        "logName": "None"
+      },
+      "fields": {
+        "compartmentId": {
+          "enum": [],
+          "pythonName": "compartment_id",
+          "required": false,
+          "type": "str"
+        },
+        "groupName": {
+          "enum": [],
+          "pythonName": "group_name",
+          "required": false,
+          "type": "str"
+        },
+        "logName": {
+          "enum": [],
+          "pythonName": "log_name",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "LoggingConfig": {
+      "bases": [],
+      "constants": {
+        "TYPE_OCI_LOGGING": "OCI_LOGGING"
+      },
+      "defaults": {
+        "type": "None"
+      },
+      "fields": {
+        "type": {
+          "enum": [
+            "OCI_LOGGING"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {
+        "type=OCI_LOGGING": "OciLogging"
+      }
+    },
+    "OciLogging": {
+      "bases": [
+        "LoggingConfig"
+      ],
+      "constants": {},
+      "defaults": {
+        "logGroups": "None",
+        "type": "'OCI_LOGGING'"
+      },
+      "fields": {
+        "logGroups": {
+          "enum": [],
+          "pythonName": "log_groups",
+          "required": false,
+          "type": "list[LogGroup]"
+        },
+        "type": {
+          "enum": [
+            "OCI_LOGGING"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "ReplicaConfig": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "maxReplica": "None",
+        "minReplica": "None"
+      },
+      "fields": {
+        "maxReplica": {
+          "enum": [],
+          "pythonName": "max_replica",
+          "required": false,
+          "type": "int"
+        },
+        "minReplica": {
+          "enum": [],
+          "pythonName": "min_replica",
+          "required": false,
+          "type": "int"
+        }
+      },
+      "variants": {}
+    },
+    "ShapeConfig": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "gpus": "None",
+        "memoryInGBs": "None",
+        "ocpus": "None"
+      },
+      "fields": {
+        "gpus": {
+          "enum": [],
+          "pythonName": "gpus",
+          "required": false,
+          "type": "int"
+        },
+        "memoryInGBs": {
+          "enum": [],
+          "pythonName": "memory_in_gbs",
+          "required": false,
+          "type": "int"
+        },
+        "ocpus": {
+          "enum": [],
+          "pythonName": "ocpus",
+          "required": false,
+          "type": "int"
+        }
+      },
+      "variants": {}
+    },
+    "SparkCluster": {
+      "bases": [
+        "Cluster"
+      ],
+      "constants": {},
+      "defaults": {
+        "activeClusterResources": "None",
+        "attachedAgentCount": "None",
+        "attachedNotebooks": "None",
+        "attachedSessions": "None",
+        "autoTerminationMinutes": "None",
+        "clusterRuntimeConfig": "None",
+        "createdBy": "None",
+        "createdByName": "None",
+        "description": "None",
+        "displayName": "None",
+        "driverConfig": "None",
+        "jdbcEndpointUrl": "None",
+        "key": "None",
+        "logGroupId": "None",
+        "logId": "None",
+        "loggingConfig": "None",
+        "nodeType": "None",
+        "sourceApi": "'CLUSTER_API'",
+        "state": "None",
+        "stateDetails": "None",
+        "stoppedBy": "None",
+        "stoppedByName": "None",
+        "subscription": "None",
+        "timeCreated": "None",
+        "timeUpdated": "None",
+        "type": "None",
+        "updatedBy": "None",
+        "updatedByName": "None",
+        "workerConfig": "None"
+      },
+      "fields": {
+        "activeClusterResources": {
+          "enum": [],
+          "pythonName": "active_cluster_resources",
+          "required": false,
+          "type": "ActiveClusterResources"
+        },
+        "attachedAgentCount": {
+          "enum": [],
+          "pythonName": "attached_agent_count",
+          "required": false,
+          "type": "int"
+        },
+        "attachedNotebooks": {
+          "enum": [],
+          "pythonName": "attached_notebooks",
+          "required": false,
+          "type": "list[str]"
+        },
+        "attachedSessions": {
+          "enum": [],
+          "pythonName": "attached_sessions",
+          "required": false,
+          "type": "list[AttachedSession]"
+        },
+        "autoTerminationMinutes": {
+          "enum": [],
+          "pythonName": "auto_termination_minutes",
+          "required": false,
+          "type": "int"
+        },
+        "clusterRuntimeConfig": {
+          "enum": [],
+          "pythonName": "cluster_runtime_config",
+          "required": false,
+          "type": "ClusterRuntimeConfig"
+        },
+        "createdBy": {
+          "enum": [],
+          "pythonName": "created_by",
+          "required": false,
+          "type": "str"
+        },
+        "createdByName": {
+          "enum": [],
+          "pythonName": "created_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "description": {
+          "enum": [],
+          "pythonName": "description",
+          "required": false,
+          "type": "str"
+        },
+        "displayName": {
+          "enum": [],
+          "pythonName": "display_name",
+          "required": true,
+          "type": "str"
+        },
+        "driverConfig": {
+          "enum": [],
+          "pythonName": "driver_config",
+          "required": false,
+          "type": "DriverConfig"
+        },
+        "jdbcEndpointUrl": {
+          "enum": [],
+          "pythonName": "jdbc_endpoint_url",
+          "required": false,
+          "type": "str"
+        },
+        "key": {
+          "enum": [],
+          "pythonName": "key",
+          "required": true,
+          "type": "str"
+        },
+        "logGroupId": {
+          "enum": [],
+          "pythonName": "log_group_id",
+          "required": false,
+          "type": "str"
+        },
+        "logId": {
+          "enum": [],
+          "pythonName": "log_id",
+          "required": false,
+          "type": "str"
+        },
+        "loggingConfig": {
+          "enum": [],
+          "pythonName": "logging_config",
+          "required": false,
+          "type": "LoggingConfig"
+        },
+        "nodeType": {
+          "enum": [],
+          "pythonName": "node_type",
+          "required": false,
+          "type": "str"
+        },
+        "sourceApi": {
+          "enum": [
+            "AI_COMPUTE",
+            "CLUSTER_API",
+            "DEFAULT_CLUSTER_API"
+          ],
+          "pythonName": "source_api",
+          "required": false,
+          "type": "str"
+        },
+        "state": {
+          "enum": [
+            "ACCEPTED",
+            "ACTIVE",
+            "CREATING",
+            "DELETED",
+            "DELETING",
+            "FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_FAILED",
+            "NETWORK_CONFIGURATION_ATTACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_ATTACH_SUCCESSFUL",
+            "NETWORK_CONFIGURATION_DETACH_FAILED",
+            "NETWORK_CONFIGURATION_DETACH_IN_PROGRESS",
+            "NETWORK_CONFIGURATION_DETACH_SUCCESSFUL",
+            "RESTARTING",
+            "STARTING",
+            "STOPPED",
+            "STOPPING",
+            "UPDATING"
+          ],
+          "pythonName": "state",
+          "required": true,
+          "type": "str"
+        },
+        "stateDetails": {
+          "enum": [],
+          "pythonName": "state_details",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedBy": {
+          "enum": [],
+          "pythonName": "stopped_by",
+          "required": false,
+          "type": "str"
+        },
+        "stoppedByName": {
+          "enum": [],
+          "pythonName": "stopped_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "subscription": {
+          "enum": [],
+          "pythonName": "subscription",
+          "required": false,
+          "type": "SubscriptionDetails"
+        },
+        "timeCreated": {
+          "enum": [],
+          "pythonName": "time_created",
+          "required": true,
+          "type": "datetime"
+        },
+        "timeUpdated": {
+          "enum": [],
+          "pythonName": "time_updated",
+          "required": false,
+          "type": "datetime"
+        },
+        "type": {
+          "enum": [
+            "AI_COMPUTE",
+            "USER"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        },
+        "updatedBy": {
+          "enum": [],
+          "pythonName": "updated_by",
+          "required": false,
+          "type": "str"
+        },
+        "updatedByName": {
+          "enum": [],
+          "pythonName": "updated_by_name",
+          "required": false,
+          "type": "str"
+        },
+        "workerConfig": {
+          "enum": [],
+          "pythonName": "worker_config",
+          "required": false,
+          "type": "WorkerConfig"
+        }
+      },
+      "variants": {}
+    },
+    "SparkRuntimeConfig": {
+      "bases": [
+        "ClusterRuntimeConfig"
+      ],
+      "constants": {},
+      "defaults": {
+        "initScripts": "None",
+        "sparkAdvancedConfigurations": "None",
+        "sparkEnvVariables": "None",
+        "sparkVersion": "None",
+        "type": "'SPARK'"
+      },
+      "fields": {
+        "initScripts": {
+          "enum": [],
+          "pythonName": "init_scripts",
+          "required": false,
+          "type": "list[InitScriptPath]"
+        },
+        "sparkAdvancedConfigurations": {
+          "enum": [],
+          "pythonName": "spark_advanced_configurations",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "sparkEnvVariables": {
+          "enum": [],
+          "pythonName": "spark_env_variables",
+          "required": false,
+          "type": "dict(str, str)"
+        },
+        "sparkVersion": {
+          "enum": [],
+          "pythonName": "spark_version",
+          "required": false,
+          "type": "str"
+        },
+        "type": {
+          "enum": [
+            "SPARK"
+          ],
+          "pythonName": "type",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "SubscriptionDetails": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "callbackUrl": "None",
+        "serviceName": "None"
+      },
+      "fields": {
+        "callbackUrl": {
+          "enum": [],
+          "pythonName": "callback_url",
+          "required": false,
+          "type": "str"
+        },
+        "serviceName": {
+          "enum": [],
+          "pythonName": "service_name",
+          "required": false,
+          "type": "str"
+        }
+      },
+      "variants": {}
+    },
+    "WorkerConfig": {
+      "bases": [],
+      "constants": {},
+      "defaults": {
+        "maxWorkerCount": "None",
+        "minWorkerCount": "None",
+        "workerShape": "None",
+        "workerShapeConfig": "None"
+      },
+      "fields": {
+        "maxWorkerCount": {
+          "enum": [],
+          "pythonName": "max_worker_count",
+          "required": false,
+          "type": "int"
+        },
+        "minWorkerCount": {
+          "enum": [],
+          "pythonName": "min_worker_count",
+          "required": false,
+          "type": "int"
+        },
+        "workerShape": {
+          "enum": [],
+          "pythonName": "worker_shape",
+          "required": false,
+          "type": "str"
+        },
+        "workerShapeConfig": {
+          "enum": [],
+          "pythonName": "worker_shape_config",
+          "required": false,
+          "type": "ShapeConfig"
+        }
+      },
+      "variants": {}
+    }
+  },
+  "operations": {
+    "cluster": {
+      "operationInventory": [
+        "clone_compute",
+        "create_cluster",
+        "delete_cluster",
+        "download_cluster_logs",
+        "export_compute_configuration",
+        "get_cluster",
+        "get_compute_configuration",
+        "get_default_cluster",
+        "import_compute_configuration",
+        "list_cluster_libraries",
+        "list_cluster_permissions",
+        "list_clusters",
+        "manage_cluster_permission",
+        "patch_cluster_library",
+        "query_replica_ids",
+        "restart_cluster",
+        "search_cluster_logs",
+        "search_maven_packages",
+        "start_cluster",
+        "stop_cluster",
+        "summarize_metrics_data",
+        "update_cluster"
+      ],
+      "operations": {
+        "create_cluster": {
+          "bodyEnumFields": {
+            "type": [
+              "USER",
+              "AI_COMPUTE"
+            ]
+          },
+          "bodyField": "create_cluster_details",
+          "bodyFields": {
+            "description": {
+              "required": false,
+              "type": "string"
+            },
+            "displayName": {
+              "required": true,
+              "type": "string"
+            },
+            "driverConfig": {
+              "modelName": "DriverConfig",
+              "required": true,
+              "type": "object"
+            },
+            "nodeType": {
+              "required": false,
+              "type": "string"
+            },
+            "type": {
+              "enumValues": [
+                "USER",
+                "AI_COMPUTE"
+              ],
+              "required": true,
+              "type": "string"
+            }
+          },
+          "bodyModel": "CreateClusterDetails",
+          "bodyRequiredFields": [
+            "displayName",
+            "driverConfig",
+            "type"
+          ],
+          "deprecated": false,
+          "fields": {
+            "ai_data_platform_id": {
+              "cliName": "ai-data-platform-id",
+              "in": "path",
+              "originalName": "aiDataPlatformId",
+              "required": true,
+              "type": "string"
+            },
+            "create_cluster_details": {
+              "cliName": "create-cluster-details",
+              "in": "body",
+              "modelName": "CreateClusterDetails",
+              "originalName": "CreateClusterDetails",
+              "required": true,
+              "type": "object"
+            },
+            "opc_request_id": {
+              "cliName": "opc-request-id",
+              "in": "header",
+              "originalName": "opc-request-id",
+              "required": false,
+              "type": "string"
+            },
+            "opc_retry_token": {
+              "cliName": "opc-retry-token",
+              "in": "header",
+              "originalName": "opc-retry-token",
+              "required": false,
+              "type": "string"
+            },
+            "should_update_recent": {
+              "cliName": "should-update-recent",
+              "in": "header",
+              "originalName": "should-update-recent",
+              "required": false,
+              "type": "boolean"
+            },
+            "workspace_key": {
+              "cliName": "workspace-key",
+              "in": "path",
+              "originalName": "workspaceKey",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "httpMethod": "POST",
+          "name": "create",
+          "operationId": "CreateCluster",
+          "path": "/aiDataPlatforms/{aiDataPlatformId}/workspaces/{workspaceKey}/clusters",
+          "responseModel": "Cluster",
+          "sdkMethodName": "create_cluster",
+          "signature": "self, ai_data_platform_id, workspace_key, create_cluster_details, **kwargs"
+        }
+      }
+    }
+  },
+  "sdkBasePath": "/20260430",
+  "sdkCreateImplementation": "FunctionDef(name='create_cluster', args=arguments(args=[arg(arg='self'), arg(arg='ai_data_platform_id'), arg(arg='workspace_key'), arg(arg='create_cluster_details')], kwarg=arg(arg='kwargs')), body=[Assign(targets=[Name(id='required_arguments', ctx=Store())], value=List(elts=[Constant(value='aiDataPlatformId'), Constant(value='workspaceKey')], ctx=Load())), Assign(targets=[Name(id='resource_path', ctx=Store())], value=Constant(value='/aiDataPlatforms/{aiDataPlatformId}/workspaces/{workspaceKey}/clusters')), Assign(targets=[Name(id='method', ctx=Store())], value=Constant(value='POST')), Assign(targets=[Name(id='operation_name', ctx=Store())], value=Constant(value='create_cluster')), Assign(targets=[Name(id='api_reference_link', ctx=Store())], value=Constant(value='')), Assign(targets=[Name(id='expected_kwargs', ctx=Store())], value=List(elts=[Constant(value='allow_control_chars'), Constant(value='enable_strict_url_encoding'), Constant(value='retry_strategy'), Constant(value='opc_retry_token'), Constant(value='opc_request_id'), Constant(value='should_update_recent')], ctx=Load())), Assign(targets=[Name(id='extra_kwargs', ctx=Store())], value=ListComp(elt=Name(id='_key', ctx=Load()), generators=[comprehension(target=Name(id='_key', ctx=Store()), iter=Call(func=Attribute(value=Name(id='six', ctx=Load()), attr='iterkeys', ctx=Load()), args=[Name(id='kwargs', ctx=Load())]), ifs=[Compare(left=Name(id='_key', ctx=Load()), ops=[NotIn()], comparators=[Name(id='expected_kwargs', ctx=Load())])], is_async=0)])), If(test=Name(id='extra_kwargs', ctx=Load()), body=[Raise(exc=Call(func=Name(id='ValueError', ctx=Load()), args=[JoinedStr(values=[Constant(value='create_cluster got unknown kwargs: '), FormattedValue(value=Name(id='extra_kwargs', ctx=Load()), conversion=114)])]))]), Assign(targets=[Name(id='path_params', ctx=Store())], value=Dict(keys=[Constant(value='aiDataPlatformId'), Constant(value='workspaceKey')], values=[Name(id='ai_data_platform_id', ctx=Load()), Name(id='workspace_key', ctx=Load())])), Assign(targets=[Name(id='path_params', ctx=Store())], value=DictComp(key=Name(id='k', ctx=Load()), value=Name(id='v', ctx=Load()), generators=[comprehension(target=Tuple(elts=[Name(id='k', ctx=Store()), Name(id='v', ctx=Store())], ctx=Store()), iter=Call(func=Attribute(value=Name(id='six', ctx=Load()), attr='iteritems', ctx=Load()), args=[Name(id='path_params', ctx=Load())]), ifs=[Compare(left=Name(id='v', ctx=Load()), ops=[IsNot()], comparators=[Name(id='missing', ctx=Load())])], is_async=0)])), For(target=Tuple(elts=[Name(id='k', ctx=Store()), Name(id='v', ctx=Store())], ctx=Store()), iter=Call(func=Attribute(value=Name(id='six', ctx=Load()), attr='iteritems', ctx=Load()), args=[Name(id='path_params', ctx=Load())]), body=[If(test=BoolOp(op=Or(), values=[Compare(left=Name(id='v', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), BoolOp(op=And(), values=[Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='v', ctx=Load()), Attribute(value=Name(id='six', ctx=Load()), attr='string_types', ctx=Load())]), Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Call(func=Attribute(value=Name(id='v', ctx=Load()), attr='strip', ctx=Load()))]), ops=[Eq()], comparators=[Constant(value=0)])])]), body=[Raise(exc=Call(func=Name(id='ValueError', ctx=Load()), args=[JoinedStr(values=[Constant(value='Parameter '), FormattedValue(value=Name(id='k', ctx=Load()), conversion=-1), Constant(value=' cannot be None, whitespace or empty string')])]))])]), Assign(targets=[Name(id='header_params', ctx=Store())], value=Dict(keys=[Constant(value='accept'), Constant(value='content-type'), Constant(value='opc-retry-token'), Constant(value='opc-request-id'), Constant(value='should-update-recent')], values=[Constant(value='application/json'), Constant(value='application/json'), Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='opc_retry_token'), Name(id='missing', ctx=Load())]), Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='opc_request_id'), Name(id='missing', ctx=Load())]), Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='should_update_recent'), Name(id='missing', ctx=Load())])])), Assign(targets=[Name(id='header_params', ctx=Store())], value=DictComp(key=Name(id='k', ctx=Load()), value=Name(id='v', ctx=Load()), generators=[comprehension(target=Tuple(elts=[Name(id='k', ctx=Store()), Name(id='v', ctx=Store())], ctx=Store()), iter=Call(func=Attribute(value=Name(id='six', ctx=Load()), attr='iteritems', ctx=Load()), args=[Name(id='header_params', ctx=Load())]), ifs=[BoolOp(op=And(), values=[Compare(left=Name(id='v', ctx=Load()), ops=[IsNot()], comparators=[Name(id='missing', ctx=Load())]), Compare(left=Name(id='v', ctx=Load()), ops=[IsNot()], comparators=[Constant(value=None)])])], is_async=0)])), Assign(targets=[Name(id='retry_strategy', ctx=Store())], value=Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='base_client', ctx=Load()), attr='get_preferred_retry_strategy', ctx=Load()), keywords=[keyword(arg='operation_retry_strategy', value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='retry_strategy')])), keyword(arg='client_retry_strategy', value=Attribute(value=Name(id='self', ctx=Load()), attr='retry_strategy', ctx=Load()))])), If(test=Compare(left=Name(id='retry_strategy', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), body=[Assign(targets=[Name(id='retry_strategy', ctx=Store())], value=Attribute(value=Name(id='retry', ctx=Load()), attr='DEFAULT_RETRY_STRATEGY', ctx=Load()))]), If(test=Name(id='retry_strategy', ctx=Load()), body=[If(test=UnaryOp(op=Not(), operand=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='retry_strategy', ctx=Load()), Attribute(value=Name(id='retry', ctx=Load()), attr='NoneRetryStrategy', ctx=Load())])), body=[Expr(value=Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='base_client', ctx=Load()), attr='add_opc_retry_token_if_needed', ctx=Load()), args=[Name(id='header_params', ctx=Load())])), Expr(value=Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='base_client', ctx=Load()), attr='add_opc_client_retries_header', ctx=Load()), args=[Name(id='header_params', ctx=Load())])), Expr(value=Call(func=Attribute(value=Name(id='retry_strategy', ctx=Load()), attr='add_circuit_breaker_callback', ctx=Load()), args=[Attribute(value=Name(id='self', ctx=Load()), attr='circuit_breaker_callback', ctx=Load())]))]), Return(value=Call(func=Attribute(value=Name(id='retry_strategy', ctx=Load()), attr='make_retrying_call', ctx=Load()), args=[Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='base_client', ctx=Load()), attr='call_api', ctx=Load())], keywords=[keyword(arg='resource_path', value=Name(id='resource_path', ctx=Load())), keyword(arg='method', value=Name(id='method', ctx=Load())), keyword(arg='path_params', value=Name(id='path_params', ctx=Load())), keyword(arg='header_params', value=Name(id='header_params', ctx=Load())), keyword(arg='body', value=Name(id='create_cluster_details', ctx=Load())), keyword(arg='response_type', value=Constant(value='Cluster')), keyword(arg='allow_control_chars', value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='allow_control_chars')])), keyword(arg='enable_strict_url_encoding', value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='enable_strict_url_encoding')])), keyword(arg='operation_name', value=Name(id='operation_name', ctx=Load())), keyword(arg='api_reference_link', value=Name(id='api_reference_link', ctx=Load())), keyword(arg='required_arguments', value=Name(id='required_arguments', ctx=Load()))]))], orelse=[Return(value=Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='base_client', ctx=Load()), attr='call_api', ctx=Load()), keywords=[keyword(arg='resource_path', value=Name(id='resource_path', ctx=Load())), keyword(arg='method', value=Name(id='method', ctx=Load())), keyword(arg='path_params', value=Name(id='path_params', ctx=Load())), keyword(arg='header_params', value=Name(id='header_params', ctx=Load())), keyword(arg='body', value=Name(id='create_cluster_details', ctx=Load())), keyword(arg='response_type', value=Constant(value='Cluster')), keyword(arg='allow_control_chars', value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='allow_control_chars')])), keyword(arg='enable_strict_url_encoding', value=Call(func=Attribute(value=Name(id='kwargs', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='enable_strict_url_encoding')])), keyword(arg='operation_name', value=Name(id='operation_name', ctx=Load())), keyword(arg='api_reference_link', value=Name(id='api_reference_link', ctx=Load())), keyword(arg='required_arguments', value=Name(id='required_arguments', ctx=Load()))]))])])",
+  "sdkResponseDeclarations": {
+    "create_cluster": "import * as model from '../model'; import common = require(\"oci-common\"); export interface CreateClusterResponse { 'aidpAsyncOperationKey': string; 'opcRequestId': string; 'etag': string; 'cluster': model.Cluster; }"
+  }
+}
